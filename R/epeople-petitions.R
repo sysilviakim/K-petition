@@ -33,14 +33,16 @@ pages <- "?pageIndex="
 ## Total page number -----------------------------------------------------------
 max_pages <- read_html(url) %>%
   html_nodes(".page_list") %>%
-  html_nodes("a") %>% 
-  html_text() %>% 
+  html_nodes("a") %>%
+  html_text() %>%
   as.numeric() %>%
   max(na.rm = TRUE)
 
 ## Create list of titles per page ----------------------------------------------
+## Initialize empty list
 pub_petition <- vector("list", max_pages)
 
+## Loop over page numbers
 for (p in 1:max_pages) {
   html <- read_html(paste0(url, pages, p))
   pub_petition[[p]] <- html %>%
@@ -48,35 +50,27 @@ for (p in 1:max_pages) {
     html_table()
   Sys.sleep(3)
 
-  ## Save mid-process ----------------------------------------------------------
+  ## Save mid-process
   if (p %% 50 == 0 | p == max_pages) {
-    cat("p = ", p, "\n")
-    save(pub_petition, file = here("output", "pub_petition.Rda"))
+    cat("Page", p, " finished.")
+    save(
+      pub_petition,
+      file = here(
+        "data", "raw", 
+        paste0("pub_petition_title_list_", format(Sys.Date(), "%Y%m%d"), ".Rda")
+      )
+    )
   }
 }
 
 ## Bind rows and save to CSV ---------------------------------------------------
 pub_petition <- do.call(rbind, pub_petition)
 write.csv(
-  file = here("data", "epeople-public-petition-titles.csv"), 
+  file = here(
+    "data", "raw", 
+    paste0(
+      "pub_petition_titles_", format(Sys.Date(), "%Y%m%d"), ".csv"
+    )
+  ),
   pub_petition, row.names = FALSE
 )
-
-## 실시제안
-url <- "https://www.epeople.go.kr/nep/prpsl/realize/selectXclncPrpslList.npaid"
-pages <- "?pageIndex="
-
-rel_petition <- NULL
-for (p in 1:max_pages) {
-  url.p <- paste0(url, pages, p)
-  html <- read_html(url.p)
-  tables <- html %>%
-    html_element(".brd1") %>%
-    html_table()
-
-  rel_petition <- rbind(rel_petition, tables)
-
-  if (p %% 50 == 0) cat("p = ", p, "\n")
-}
-
-write.csv(file = "data/국민신문고_실시제안.csv", rel_petition, row.names = FALSE)
