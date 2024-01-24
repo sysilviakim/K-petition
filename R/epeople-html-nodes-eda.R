@@ -19,7 +19,7 @@ for (i in seq(length(pub_petition_content))) {
     map_dfr(~ extract_pt_content(.x, date = date_scraped))
   temp_title[[i]] <- pub_petition_content[[i]] %>% 
     imap_dfr(~ .x$page_meta[.y, ])
-  cat("Iteration", i, "finished.")
+  cat("Iteration", i, "finished.\n")
 }
 
 ## Deduplicate
@@ -44,8 +44,8 @@ title_df <- title_df %>%
     title = `제목`, 
     views = `조회`,
     status2 = `추진상황`,
-    branch = `처리 기관`,
-    date_petitioned = `신청일`
+    branch2 = `처리 기관`,
+    date_petitioned2 = `신청일`
   )
 
 ## Append title metadata by title... but many to many relationship
@@ -53,5 +53,9 @@ title_df <- title_df %>%
 ## branches of the government, which counts as separate posts
 ## It might really be better to deal with it within extract_pt_content
 ## left_join(pub_df, title_df)
+
+## Missing info from pub_df that's only in title_df: views, numbers
+## But numbers, because they don't provide permanent URLs, are not very 
+## meaningful...
 
 # Save to CSV ==================================================================
