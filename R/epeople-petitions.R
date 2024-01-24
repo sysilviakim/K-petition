@@ -1,6 +1,6 @@
 ## Data collection: crawl 국민신문고 petitions list
 ## Note: the list contains petitions filed within one year
-here::here("R", "utilities.R")
+source(here::here("R", "utilities.R"))
 
 # Description of data source ===================================================
 ## 국민권익위원회가 운영하는 국민신문고
@@ -26,41 +26,57 @@ here::here("R", "utilities.R")
 ## 공개 제안(public petitions) ---> available for viewing/scraping
 ## 실시 제안(realized petitions) ---> available for viewing/scraping
 
-# Data collection ==============================================================
-## 공개제안
+# Data collection: 공개 제안(public petitions) =================================
 url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 pages <- "?pageIndex="
 
-pub.complaint <- NULL
-for (p in 1:287) {
-  url.p <- paste0(url, pages, p)
-  html <- read_html(url.p)
-  tables <- html %>%
+## Total page number -----------------------------------------------------------
+max_pages <- read_html(url) %>%
+  html_nodes(".page_list") %>%
+  html_nodes("a") %>% 
+  html_text() %>% 
+  as.numeric() %>%
+  max(na.rm = TRUE)
+
+## Create list of titles per page ----------------------------------------------
+pub_petition <- vector("list", max_pages)
+
+for (p in 1:max_pages) {
+  html <- read_html(paste0(url, pages, p))
+  pub_petition[[p]] <- html %>%
     html_element(".brd1") %>%
     html_table()
+  Sys.sleep(3)
 
-  pub.complaint <- rbind(pub.complaint, tables)
-
-  if (p %% 50 == 0) cat("p = ", p, "\n")
+  ## Save mid-process ----------------------------------------------------------
+  if (p %% 50 == 0 | p == max_pages) {
+    cat("p = ", p, "\n")
+    save(pub_petition, file = here("output", "pub_petition.Rda"))
+  }
 }
 
-write.csv(file = "data/국민신문고_공개제안.csv", pub.complaint, row.names = FALSE)
+## Bind rows and save to CSV ---------------------------------------------------
+pub_petition <- do.call(rbind, pub_petition)
+write.csv(
+  file = here("data", "epeople-public-petition-titles.csv"), 
+  pub_petition, row.names = FALSE
+)
 
 ## 실시제안
 url <- "https://www.epeople.go.kr/nep/prpsl/realize/selectXclncPrpslList.npaid"
 pages <- "?pageIndex="
 
-rel.complaint <- NULL
-for (p in 1:287) {
+rel_petition <- NULL
+for (p in 1:max_pages) {
   url.p <- paste0(url, pages, p)
   html <- read_html(url.p)
   tables <- html %>%
     html_element(".brd1") %>%
     html_table()
 
-  rel.complaint <- rbind(rel.complaint, tables)
+  rel_petition <- rbind(rel_petition, tables)
 
   if (p %% 50 == 0) cat("p = ", p, "\n")
 }
 
-write.csv(file = "data/국민신문고_실시제안.csv", rel.complaint, row.names = FALSE)
+write.csv(file = "data/국민신문고_실시제안.csv", rel_petition, row.names = FALSE)
