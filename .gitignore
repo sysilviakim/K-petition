@@ -48,6 +48,8 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# Mac
+# Mac and RSelenium
 .DS_Store
-
+*.jar
+CHANGELOG
+NOTICE

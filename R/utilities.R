@@ -8,6 +8,7 @@ library(here)
 library(tidytext)
 
 ## others
+library(RSelenium)
 library(assertthat)
 library(xtable)
 library(xml2)
