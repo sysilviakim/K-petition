@@ -26,125 +26,124 @@ source(here::here("R", "utilities.R"))
 ## 공개 제안(public petitions) ---> available for viewing/scraping
 ## 실시 제안(realized petitions) ---> available for viewing/scraping
 
-# 공개 제안(public petitions) titles ===========================================
+# 공개 제안(public petitions) content ==========================================
 url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 pages <- "?pageIndex="
 
-## Note that the default is only the last three months
-## So to properly scrape from the beginning, the dates must be specified
-
-## Total page number -----------------------------------------------------------
-max_pages <- read_html(url) %>%
-  html_nodes(".page_list") %>%
-  html_nodes("a") %>%
-  html_text() %>%
-  as.numeric() %>%
-  max(na.rm = TRUE)
-
-## Create list of titles per page ----------------------------------------------
-## Initialize empty list
-pub_petition_titles <- vector("list", max_pages)
-
-## Loop over page numbers
-for (p in 1:max_pages) {
-  html <- read_html(paste0(url, pages, p))
-  pub_petition_titles[[p]] <- html %>%
-    html_element(".brd1") %>%
-    html_table()
-  Sys.sleep(5)
-
-  ## Save mid-process
-  if (p %% 50 == 0 | p == max_pages) {
-    cat("Page", p, "finished.\n")
-    save(
-      pub_petition_titles,
-      file = here(
-        "data", "raw", 
-        paste0("pub_petition_title_list_", format(Sys.Date(), "%Y%m%d"), ".Rda")
-      )
-    )
-  }
-}
-
-## Bind rows and save to CSV ---------------------------------------------------
-pub_petition_titles <- do.call(rbind, pub_petition_titles)
-write.csv(
-  file = here(
-    "data", "raw", 
-    paste0(
-      "pub_petition_titles_", format(Sys.Date(), "%Y%m%d"), ".csv"
-    )
-  ),
-  pub_petition_titles, row.names = FALSE
-)
-
-# Public petitions: content ====================================================
-## Using RSelenium for JavaScript-rendered pages
+## Using RSelenium for JavaScript-rendered pages -------------------------------
 rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5555L)
 remDr <- rd$client
+remDr$navigate(url)
 
-## Initialize petition content list
-## Nested list: page number -> petition number -> content
-pub_petition_content <- vector("list", max_pages)
+## Set years to scrape ---------------------------------------------------------
+## Note that the default is only the last three months
+## So to properly scrape from the beginning, the dates must be specified
+## Manually checked that the data starts from 2002
+years <- seq(2002, 2024)
 
-for (p in 1:max_pages) {
-  remDr$navigate(paste0(url, pages, p))
-  Sys.sleep(5)
-  
-  ## First, find the table on the URL
-  tab <- remDr$findElement(using = "css selector", ".brd1")
-  tab <- tab$getPageSource()[[1]] %>% read_html() %>% html_table() %>% .[[1]]
-  
-  ## List clickable elements with javascript void
-  ## (i.e., the petition titles)
-  ## Find clickable links using a class
-  petitions <- remDr$findElements(using = "css selector", ".left a")
-  
-  ## Initialize nested list
-  pub_petition_content[[p]] <- vector("list", length(petitions))
-  
-  ## Loop over petitions
-  for (i in 1:length(petitions)) {
-    title <- petitions[[i]]$getElementText()
-    ## Click petition title
-    petitions[[i]]$clickElement()
-
-    ## Scrape content: deal with elements later
-    pub_petition_content[[p]][[i]] <- list(
-      title = title,
-      source = remDr$getPageSource()[[1]],
-      page_meta = tab
-    )
-    Sys.sleep(5)
-    
-    ## Go back to the parent page
-    remDr$navigate(paste0(url, pages, p))
-    petitions <- remDr$findElements(using = "css selector", ".left a")
-    
-    ## Save mid-process (10 petitions at maximum per page)
-    if (i == length(petitions)) {
-      save(
-        pub_petition_content,
-        file = here(
-          "data", "raw", 
-          paste0(
-            "pub_petition_content_list_", format(Sys.Date(), "%Y%m%d"), ".Rda"
-          )
-        )
-      )
-    }
-  }
-  
-  cat("Page", p, "finished.\n")
-  save(
-    pub_petition_content,
-    file = here(
-      "data", "raw", 
-      paste0(
-        "pub_petition_content_list_", format(Sys.Date(), "%Y%m%d"), ".Rda"
-      )
+## Loop ------------------------------------------------------------------------
+for (yr in years) {
+  ## Set #rqstStDt and #rqstEndDt ----------------------------------------------
+  remDr$executeScript(
+    paste0(
+      "document.getElementById('rqstStDt').value = '", yr, "-01-01';",
+      "document.getElementById('rqstEndDt').value = '", yr, "-12-31';"
     )
   )
+
+  ## Search button. Not sure why it requires [[2]] and not [[1]]
+  remDr$findElements(using = "css selector", ".black")[[2]]$clickElement()
+  Sys.sleep(5)
+  
+  ## Show more than 10 petitions per page ... never mind
+  ## remDr$findElements(using = "css selector", "#listCnt")[[1]]$clickElement()
+
+  ## Total page number ---------------------------------------------------------
+  max_pages <- read_html(remDr$getPageSource()[[1]]) %>%
+    html_nodes(".page_list") %>%
+    html_nodes("a") %>%
+    html_text() %>%
+    as.numeric() %>%
+    max(na.rm = TRUE)
+  
+  ## Uh... not sure how to go about this
+  ## remDr$findElements(using = "css selector", ".page_list")
+  ## remDr$findElements(using = "css selector", ".ds_number")
+  
+  ## Initialize petition content list
+  ## Nested list: page number -> petition number -> content
+  pub_petition_content <- vector("list", max_pages)
+  
+  ## Loop over pages that match the year ---------------------------------------
+  for (p in 1:max_pages) {
+    ## remDr$navigate(paste0(url, pages, p)) 
+    ## this will recent to most recent 3 months
+
+    ## First, find the table on the URL
+    tab <- remDr$findElement(using = "css selector", ".brd1")
+    tab <- tab$getPageSource()[[1]] %>% read_html() %>% html_table() %>% .[[1]]
+    
+    ## List clickable elements with javascript void
+    ## (i.e., the petition titles)
+    ## Find clickable links using a class
+    petitions <- remDr$findElements(using = "css selector", ".left a")
+    
+    ## Initialize nested list
+    pub_petition_content[[p]] <- vector("list", length(petitions))
+    
+    ## Loop over petitions
+    for (i in 1:length(petitions)) {
+      title <- petitions[[i]]$getElementText()
+      ## Click petition title
+      petitions[[i]]$clickElement()
+      
+      ## Scrape content: deal with elements later
+      pub_petition_content[[p]][[i]] <- list(
+        title = title,
+        source = remDr$getPageSource()[[1]],
+        page_meta = tab
+      )
+      Sys.sleep(5)
+      
+      ## Go back to the parent page ---> this will also reset to recent 3 months
+      ## remDr$navigate(paste0(url, pages, p))
+      ## petitions <- remDr$findElements(using = "css selector", ".left a")
+      remDr$goBack()
+      petitions <- remDr$findElements(using = "css selector", ".left a")
+      
+      ## Save mid-process (10 petitions at maximum per page)
+      if (i == length(petitions)) {
+        save(
+          pub_petition_content,
+          file = here(
+            "data", "raw", paste0("pub_petition_content_list_", yr, ".Rda")
+          )
+        )
+      }
+    }
+    
+    ## After a full iteration within a page, must click on an ... img... to 
+    ## progress to the next page
+    
+    if (p < max_pages) {
+      ## Click on the next page button
+      img_buttons <- remDr$findElements(using = "css selector", "img")
+      ## Not a great approach, but button location is hardcoded
+      img_buttons[[length(img_buttons) - 3]]$highlightElement()
+      img_buttons[[length(img_buttons) - 3]]$clickElement()
+    }
+    
+    cat("Page", p, "finished.\n")
+    save(
+      pub_petition_content,
+      file = here(
+        "data", "raw", paste0("pub_petition_content_list_", yr, ".Rda")
+      )
+    )
+  }
+  
+  cat("Year", yr, "finished.\n")
 }
+
 
 ## Make sure to deduplicate, given the speed at which new petitions come up
