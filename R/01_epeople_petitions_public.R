@@ -131,6 +131,7 @@ for (yr in years) {
       ## Not a great approach, but button location is hardcoded
       img_buttons[[length(img_buttons) - 3]]$highlightElement()
       img_buttons[[length(img_buttons) - 3]]$clickElement()
+      Sys.sleep(5)
     }
     
     cat("Page", p, "finished.\n")
