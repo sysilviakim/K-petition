@@ -107,7 +107,7 @@ for (p in 1:max_pages) {
     petitions[[i]]$clickElement()
 
     ## Scrape content: deal with elements later
-    pub_petition_content[[p]] <- list(
+    pub_petition_content[[p]][[i]] <- list(
       title = title,
       source = remDr$getPageSource()[[1]],
       page_meta = tab
