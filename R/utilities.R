@@ -20,6 +20,10 @@ extract_pt_content <- function(x, date = NULL) {
     stop("Input is not the right list.")
   }
   
+  ## Initialize as NULL for those which the script will fail
+  sec_content <- sec_titles <- title_text <- area <- attachment <- status <- 
+    date_petitioned <- branch <- NULL
+  
   out <- x$source %>%
     read_html()
 
@@ -40,10 +44,12 @@ extract_pt_content <- function(x, date = NULL) {
     gsub("\n|\t", "", .)
 
   ## I hate hardcoding, but here goes
-  title_text <- meta[[1]] ## 제목
-  area <- meta[[2]] ## 분야
-  stars <- meta[[3]] ## 평점
-  status <- meta[[4]] ## 추진상황
+  if (length(meta) > 0) {
+    title_text <- meta[[1]] ## 제목
+    area <- meta[[2]] ## 분야
+    attachment <- meta[[3]] ## 평점 또는 첨부파일
+    status <- meta[[4]] ## 추진상황
+  }
 
   ## Section titles
   sec_titles <- out %>%
@@ -59,47 +65,37 @@ extract_pt_content <- function(x, date = NULL) {
     ## Strip multiple whitespaces into one
     trimws()
   
-  ## Missed metadata (this is the bottleneck in speed)
+  ## Missed metadata
+  ## The first approach creates too much of a bottleneck
+  ## Matching with page_meta is a better approach, 
+  ## and let's do it outside the function ---> which has other problems!
+  
   misc <- out %>%
     html_nodes("div") %>%
     ## This is to avoid grabbing the entire page
     html_text() %>%
     trimws()
-  
+
   ## Keep only nodes with short text of under 200 characters
   misc <- misc[nchar(misc) < 200]
-  
-  ## Date petitioned
-  date_petitioned <- misc[grepl("신청일", misc)]
-  ## Find a pattern such as 2024-01-22
-  date_petitioned <- str_extract(date_petitioned, "\\d{4}-\\d{2}-\\d{2}")
+
+  ## Date petitioned: find a pattern such as 2024-01-22
+  date_petitioned <- str_extract(misc, "\\d{4}-\\d{2}-\\d{2}")
   ## Unique date
-  date_petitioned <- unique(date_petitioned)
-  
-  if (length(date_petitioned) != 1) {
-    stop("Check this particular petition.")
-    cat("Title:", title_text, "\n")
-    cat("Page", p, ", petition number", i, "\n")
-  }
-  
+  date_petitioned <- setdiff(unique(date_petitioned), NA)
+
   ## Branch of government petitioned to
   ## Messy approach, but find the "area" and take the next string
   branch <- misc[which(area == misc) + 1]
-
-  if (length(branch) != 1) {
-    stop("Check this particular petition.")
-    cat("Title:", title_text, "\n")
-    cat("Page", p, ", petition number", i, "\n")
-  }
   
   ## Combine into a tibble
   pub_content_df <- tibble(
     title = title_text,
-    date = date_petitioned,
     area = area,
-    branch = branch,
-    stars = stars,
+    attachment = attachment,
     status = status,
+    date_petitioned = date_petitioned, 
+    branch = branch,
     sec_titles = sec_titles,
     sec_content = sec_content
   ) %>%

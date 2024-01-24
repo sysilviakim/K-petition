@@ -30,6 +30,9 @@ source(here::here("R", "utilities.R"))
 url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 pages <- "?pageIndex="
 
+## Note that the default is only the last three months
+## So to properly scrape from the beginning, the dates must be specified
+
 ## Total page number -----------------------------------------------------------
 max_pages <- read_html(url) %>%
   html_nodes(".page_list") %>%
