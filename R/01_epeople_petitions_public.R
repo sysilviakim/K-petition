@@ -39,7 +39,7 @@ remDr$navigate(url)
 ## Note that the default is only the last three months
 ## So to properly scrape from the beginning, the dates must be specified
 ## Manually checked that the data starts from 2002
-years <- seq(2002, 2024)
+years <- seq(2002, 2012)
 
 ## One trouble with this approach is that, for years with large data,
 ## if Selenium stops in the middle, it's hard to reset it
