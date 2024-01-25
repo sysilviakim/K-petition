@@ -41,8 +41,14 @@ remDr$navigate(url)
 ## Manually checked that the data starts from 2002
 years <- seq(2002, 2024)
 
+## One trouble with this approach is that, for years with large data,
+## if Selenium stops in the middle, it's hard to reset it
+## e.g., 2012 stopped at 429; I must manually find 429 to enable it to restart
+
 ## Loop ------------------------------------------------------------------------
 for (yr in years) {
+  cat("Begin", yr, "\n")
+  
   ## Set #rqstStDt and #rqstEndDt ----------------------------------------------
   remDr$executeScript(
     paste0(
@@ -145,6 +151,5 @@ for (yr in years) {
   
   cat("Year", yr, "finished.\n")
 }
-
 
 ## Make sure to deduplicate, given the speed at which new petitions come up
