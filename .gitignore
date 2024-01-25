@@ -53,3 +53,8 @@ rsconnect/
 *.jar
 CHANGELOG
 NOTICE
+
+# Large datasets
+/data/raw/*.Rda
+/data/raw/old/*.Rda
+/data/raw/old/*.csv
