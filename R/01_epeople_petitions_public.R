@@ -26,7 +26,7 @@ source(here::here("R", "utilities.R"))
 ## 공개 제안(public petitions) ---> available for viewing/scraping
 ## 실시 제안(realized petitions) ---> available for viewing/scraping
 
-# 공개 제안(public petitions) content ==========================================
+# 공개 제안(public petitions): number over the years ===========================
 url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 pages <- "?pageIndex="
 
@@ -45,10 +45,61 @@ years <- seq(2002, 2024)
 ## if Selenium stops in the middle, it's hard to reset it
 ## e.g., 2012 stopped at 429; I must manually find 429 to enable it to restart
 
+total_list <- vector("list", length(years))
+names(total_list) <- paste0("year", years)
+for (yr in years) {
+  cat("Begin", yr, "\n")
+
+  ## Set #rqstStDt and #rqstEndDt
+  remDr$executeScript(
+    paste0(
+      "document.getElementById('rqstStDt').value = '", yr, "-01-01';",
+      "document.getElementById('rqstEndDt').value = '", yr, "-12-31';"
+    )
+  )
+
+  remDr$findElements(using = "css selector", ".black")[[2]]$clickElement()
+  Sys.sleep(5)
+  source <- remDr$getPageSource()[[1]]
+
+  ## Scrape the total number of petitions filed
+  total_list[[paste0("year", yr)]] <- read_html(source) %>%
+    html_nodes(".total span") %>%
+    html_text()
+
+  ## No need to go back for this one
+}
+
+pub_total <- total_list %>% map_dbl(parse_number)
+save(pub_total, file = here("data", "raw", "pub_petition_num_total.Rda"))
+
+## Quick figure
+p <- pub_total %>%
+  enframe(name = "year", value = "total") %>%
+  ggplot(aes(x = gsub("year", "", year), y = total)) +
+  ## colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(5)
+  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
+  ## Use ggrepel so that text will not overlap ---> bad idea, looks horrid
+  geom_text(
+    aes(label = formatC(total, format = "d", big.mark = ",")),
+    family = "CM Roman", vjust = -0.5, size = 3
+  ) +
+  labs(
+    ## Left align title and subtitle
+    title = "Number of Public Petitions Filed",
+    subtitle = "2002-2024",
+    x = "Year",
+    y = "Number of petitions"
+  ) +
+  scale_y_continuous(labels = scales::comma)
+Kmisc::pdf_default(p) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(here("fig", "pub_petition_num_total.pdf"), width = 8, height = 5)
+
+# 공개 제안(public petitions) content ==========================================
 ## Loop ------------------------------------------------------------------------
 for (yr in years) {
   cat("Begin", yr, "\n")
-  
+
   ## Set #rqstStDt and #rqstEndDt ----------------------------------------------
   remDr$executeScript(
     paste0(
@@ -60,7 +111,7 @@ for (yr in years) {
   ## Search button. Not sure why it requires [[2]] and not [[1]]
   remDr$findElements(using = "css selector", ".black")[[2]]$clickElement()
   Sys.sleep(5)
-  
+
   ## Show more than 10 petitions per page ... never mind
   ## remDr$findElements(using = "css selector", "#listCnt")[[1]]$clickElement()
 
@@ -71,38 +122,41 @@ for (yr in years) {
     html_text() %>%
     as.numeric() %>%
     max(na.rm = TRUE)
-  
+
   ## Uh... not sure how to go about this
   ## remDr$findElements(using = "css selector", ".page_list")
   ## remDr$findElements(using = "css selector", ".ds_number")
-  
+
   ## Initialize petition content list
   ## Nested list: page number -> petition number -> content
   pub_petition_content <- vector("list", max_pages)
-  
+
   ## Loop over pages that match the year ---------------------------------------
   for (p in 1:max_pages) {
-    ## remDr$navigate(paste0(url, pages, p)) 
+    ## remDr$navigate(paste0(url, pages, p))
     ## this will recent to most recent 3 months
 
     ## First, find the table on the URL
     tab <- remDr$findElement(using = "css selector", ".brd1")
-    tab <- tab$getPageSource()[[1]] %>% read_html() %>% html_table() %>% .[[1]]
-    
+    tab <- tab$getPageSource()[[1]] %>%
+      read_html() %>%
+      html_table() %>%
+      .[[1]]
+
     ## List clickable elements with javascript void
     ## (i.e., the petition titles)
     ## Find clickable links using a class
     petitions <- remDr$findElements(using = "css selector", ".left a")
-    
+
     ## Initialize nested list
     pub_petition_content[[p]] <- vector("list", length(petitions))
-    
+
     ## Loop over petitions
     for (i in 1:length(petitions)) {
       title <- petitions[[i]]$getElementText()
       ## Click petition title
       petitions[[i]]$clickElement()
-      
+
       ## Scrape content: deal with elements later
       pub_petition_content[[p]][[i]] <- list(
         title = title,
@@ -110,13 +164,13 @@ for (yr in years) {
         page_meta = tab
       )
       Sys.sleep(5)
-      
+
       ## Go back to the parent page ---> this will also reset to recent 3 months
       ## remDr$navigate(paste0(url, pages, p))
       ## petitions <- remDr$findElements(using = "css selector", ".left a")
       remDr$goBack()
       petitions <- remDr$findElements(using = "css selector", ".left a")
-      
+
       ## Save mid-process (10 petitions at maximum per page)
       if (i == length(petitions)) {
         save(
@@ -127,10 +181,10 @@ for (yr in years) {
         )
       }
     }
-    
-    ## After a full iteration within a page, must click on an ... img... to 
+
+    ## After a full iteration within a page, must click on an ... img... to
     ## progress to the next page
-    
+
     if (p < max_pages) {
       ## Click on the next page button
       img_buttons <- remDr$findElements(using = "css selector", "img")
@@ -139,7 +193,7 @@ for (yr in years) {
       img_buttons[[length(img_buttons) - 3]]$clickElement()
       Sys.sleep(5)
     }
-    
+
     cat("Page", p, "finished.\n")
     save(
       pub_petition_content,
@@ -148,7 +202,7 @@ for (yr in years) {
       )
     )
   }
-  
+
   cat("Year", yr, "finished.\n")
 }
 
