@@ -22,7 +22,7 @@ extract_pt_content <- function(x, date = NULL) {
   
   ## Initialize as NULL for those which the script will fail
   sec_content <- sec_titles <- title_text <- area <- attachment <- status <- 
-    date_petitioned <- branch <- NULL
+    date_answered <- date_petitioned <- branch <- NULL
   
   out <- x$source %>%
     read_html()
@@ -83,6 +83,19 @@ extract_pt_content <- function(x, date = NULL) {
   date_petitioned <- str_extract(misc, "\\d{4}-\\d{2}-\\d{2}")
   ## Unique date
   date_petitioned <- setdiff(unique(date_petitioned), NA)
+  
+  ## If there are multiple dates, likely it is the case that the first one is
+  ## the date petitioned, and the second one is the date notified of an answer
+  if (length(date_petitioned) > 2) {
+    stop("Check this particular petition.")
+  }
+  
+  if (length(date_petitioned) > 1) {
+    assert_that(date_petitioned[[1]] < date_petitioned[[2]])
+    assert_that("검토내용" %in% sec_titles)
+    date_answered <- date_petitioned[[2]]
+    date_petitioned <- date_petitioned[[1]]
+  }
 
   ## Branch of government petitioned to
   ## Messy approach, but find the "area" and take the next string
@@ -95,6 +108,7 @@ extract_pt_content <- function(x, date = NULL) {
     attachment = attachment,
     status = status,
     date_petitioned = date_petitioned, 
+    date_answered = date_answered,
     branch = branch,
     sec_titles = sec_titles,
     sec_content = sec_content
