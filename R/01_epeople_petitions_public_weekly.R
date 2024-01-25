@@ -4,6 +4,7 @@ source(here::here("R", "utilities.R"))
 # Setup ========================================================================
 rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5555L)
 remDr <- rd$client
+url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 remDr$navigate(url)
 
 ## Generate weeks within year, from 2013--2023
@@ -21,6 +22,7 @@ week_list <- seq(2013, 2023) %>%
 # 공개 제안(public petitions) content, weekly ==================================
 ## Loop ------------------------------------------------------------------------
 for (wk in week_list) {
+  wk <- as.Date(wk, origin = "1970-01-01")
   cat("Begin week", format(wk, "%Y%m%d"), "\n")
 
   ## Set #rqstStDt and #rqstEndDt ----------------------------------------------

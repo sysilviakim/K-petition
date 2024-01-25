@@ -65,6 +65,17 @@ extract_pt_content <- function(x, date = NULL) {
     ## Strip multiple whitespaces into one
     trimws()
   
+  if (length(sec_content) != length(sec_titles)) {
+    sec_content <- out %>%
+      html_nodes(xpath = "//*[@class='b_conItem']") %>%
+      html_text() %>%
+      trimws()
+  }
+  
+  if (length(sec_content) != length(sec_titles)) {
+    stop("Section title and content lengths do not match.")
+  }
+  
   ## Missed metadata
   ## The first approach creates too much of a bottleneck
   ## Matching with page_meta is a better approach, 
@@ -86,15 +97,20 @@ extract_pt_content <- function(x, date = NULL) {
   
   ## If there are multiple dates, likely it is the case that the first one is
   ## the date petitioned, and the second one is the date notified of an answer
-  if (length(date_petitioned) > 2) {
-    stop("Check this particular petition.")
-  }
-  
-  if (length(date_petitioned) > 1) {
+  if (length(date_petitioned) == 2) {
     assert_that(date_petitioned[[1]] < date_petitioned[[2]])
     assert_that("검토내용" %in% sec_titles)
     date_answered <- date_petitioned[[2]]
     date_petitioned <- date_petitioned[[1]]
+  } else if (length(date_petitioned) > 2) {
+    ## e.g., 2011, page 26, 더 많은 쓰레기통의배치
+    ## Date recognized from attachment file name
+    date_answered <- max(date_petitioned)
+    date_petitioned <- 
+      setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
+    if (length(date_petitioned) > 1) {
+      date_petitioned <- setdiff(date_petitioned, date_answered)
+    }
   }
 
   ## Branch of government petitioned to
