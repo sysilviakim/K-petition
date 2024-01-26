@@ -99,10 +99,17 @@ extract_pt_content <- function(x, date = NULL) {
   ## the date petitioned, and the second one is the date notified of an answer
   if (length(date_petitioned) == 2) {
     assert_that(date_petitioned[[1]] < date_petitioned[[2]])
-    assert_that("검토내용" %in% sec_titles)
-    date_answered <- date_petitioned[[2]]
-    date_petitioned <- date_petitioned[[1]]
+    ## assert_that("검토내용" %in% sec_titles)
+    if ("검토내용" %in% sec_titles) {
+      date_answered <- date_petitioned[[2]]
+      date_petitioned <- date_petitioned[[1]]
+    } else {
+      ## e.g., 2012, page 60, 결빙이 잦은 곳에는 지역 푯말 밑에 긴급연락망 ...
+      ## Date recognized from attachment file name
+      date_petitioned <- max(date_petitioned)
+    }
   } else if (length(date_petitioned) > 2) {
+    assert_that("검토내용" %in% sec_titles)
     ## e.g., 2011, page 26, 더 많은 쓰레기통의배치
     ## Date recognized from attachment file name
     date_answered <- max(date_petitioned)
