@@ -9,15 +9,7 @@ remDr$navigate(url)
 
 ## Generate weeks within year, from 2013--2023
 ## Otherwise, too many iterations for Selenium to handle in one go
-week_list <- seq(2013, 2023) %>%
-  map(
-    ~ seq(
-      as.Date(paste0(.x, "-01-01")), as.Date(paste0(.x, "-12-31")),
-      by = "week"
-    )
-  ) %>%
-  unlist() %>%
-  as.Date(., origin = "1970-01-01")
+week_list <- week_list_fxn(2013, 2023)
 
 # 공개 제안(public petitions) content, weekly ==================================
 ## Loop ------------------------------------------------------------------------

@@ -144,3 +144,37 @@ extract_pt_content <- function(x, date = NULL) {
   
   return(pub_content_df)
 }
+
+week_list_fxn <- function(year_from, year_to = NULL) {
+  if (is.null(year_to)) {
+    year_to <- year_from
+  }
+  week_list <- seq(year_from, year_to) %>%
+    map(
+      ~ seq(
+        as.Date(paste0(.x, "-01-01")), as.Date(paste0(.x, "-12-31")),
+        by = "week"
+      )
+    ) %>%
+    unlist() %>%
+    as.Date(., origin = "1970-01-01")
+  return(week_list)
+}
+
+pub_title_wrangle <- function(x) {
+  out <- x %>%
+    bind_rows() %>%
+    Kmisc::dedup() %>%
+    group_by(`번호`, `제목`) %>%
+    filter(`조회` == max(`조회`)) %>%
+    ungroup() %>%
+    rename(
+      number = `번호`,
+      title = `제목`,
+      views = `조회`,
+      status2 = `추진상황`,
+      branch2 = `처리 기관`,
+      date_petitioned2 = `신청일`
+    )
+  return(out)
+}
