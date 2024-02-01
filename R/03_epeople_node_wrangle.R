@@ -26,7 +26,9 @@ for (yr in seq(2002, 2012)) {
   }
 
   ## Deduplicate
-  pub_df <- temp %>% bind_rows() %>% Kmisc::dedup()
+  pub_df <- temp %>%
+    bind_rows() %>%
+    Kmisc::dedup()
   title_df <- pub_title_wrangle(temp_title)
 
   ## Some pages have not scraped properly and I'm not entirely sure why
@@ -57,7 +59,7 @@ week_list <- week_list_fxn(2013, 2023)
 for (wk in week_list) {
   wk <- as.Date(wk, origin = "1970-01-01")
   cat("Week", format(wk, "%Y%m%d"), "started.\n")
-  
+
   ## Load latest data ==========================================================
   fname <- list.files(
     here("data", "raw"),
@@ -78,21 +80,54 @@ for (wk in week_list) {
   }
 
   ## Deduplicate
-  pub_df <- temp %>% bind_rows() %>% Kmisc::dedup()
+  pub_df <- temp %>%
+    bind_rows() %>%
+    Kmisc::dedup()
   title_df <- pub_title_wrangle(temp_title)
-  
+
   ## Some pages have not scraped properly and I'm not entirely sure why
   nrow(pub_df)
   nrow(title_df)
-  
+
   ## Save to CSV ===============================================================
   write_csv(
     pub_df,
     here(
-      "data", "tidy", 
+      "data", "tidy",
       paste0("pub_petition_content_", format(wk, "%Y%m%d"), ".csv")
     )
   )
-  
+
   cat("Week", format(wk, "%Y%m%d"), "finished.\n")
+}
+
+# Are there missing weeks? =====================================================
+week_list %>%
+  set_names(., .) %>%
+  imap(
+    ~ here(
+      "data", "tidy",
+      paste0("pub_petition_content_", format(.x, "%Y%m%d"), ".csv")
+    )
+  ) %>%
+  map_lgl(~ !file.exists(.x)) %>%
+  which() %>%
+  names()
+
+# Does the total in annual tidy data match the total in the raw data? ==========
+## First, for weeklies, create a full CSV --------------------------------------
+for (yr in seq(2013, 2023)) {
+  pub_df <- week_list_fxn(yr, yr)[1:30] %>%
+    map_dfr(
+      function(x) {
+        here(
+          "data", "tidy",
+          paste0("pub_petition_content_", format(x, "%Y%m%d"), ".csv")
+        ) %>%
+          read_csv()
+      }
+    )
+  write_csv(
+    pub_df, here("data", "tidy", paste0("pub_petition_content_", yr, ".csv"))
+  )
 }
