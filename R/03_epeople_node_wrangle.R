@@ -125,19 +125,26 @@ for (yr in seq(2013, 2023)) {
           "data", "tidy",
           paste0("pub_petition_content_", format(x, "%Y%m%d"), ".csv")
         ) %>%
-          read_csv()
+          ## Read CSV but suppress warnings
+          {suppressMessages(read_csv(.))}
       }
     )
   if (pub_total[[paste0("year", yr)]] != nrow(pub_df)) {
-    cat("The total number of observations do not match.\n")
     cat(
       "For year", yr, "the weekly total is", nrow(pub_df), 
       "but the raw data says", pub_total[[paste0("year", yr)]], "\n"
     )
-    ## For year 2016 the weekly total is 15691 but the raw data says 16012
-    ## For year 2019 the weekly total is 15561 but the raw data says 17479
-    ## For year 2020 the weekly total is 11997 but the raw data says 12085
-    ## For year 2021 the weekly total is  9758 but the raw data says  9714
+    # For year 2013 the weekly total is 33524 but the raw data says 33085                                                  
+    # For year 2014 the weekly total is 32908 but the raw data says 32508                                                  
+    # For year 2015 the weekly total is 21998 but the raw data says 21806                                                  
+    # For year 2016 the weekly total is 15691 but the raw data says 16012                                                  
+    # For year 2017 the weekly total is 22530 but the raw data says 25703                                                  
+    # For year 2018 the weekly total is 11937 but the raw data says 25420                                                  
+    # For year 2019 the weekly total is 15561 but the raw data says 17479                                                  
+    # For year 2020 the weekly total is 11997 but the raw data says 12085                                                  
+    # For year 2021 the weekly total is  9758 but the raw data says  9714                                                    
+    # For year 2022 the weekly total is  8712 but the raw data says  8675                                                    
+    # For year 2023 the weekly total is 10131 but the raw data says  9993
   } else {
     cat("For year", yr, "number of rows match the total.\n")
   }
