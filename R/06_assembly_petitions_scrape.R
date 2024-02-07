@@ -1,3 +1,7 @@
+## crawling date
+## "Wed Feb  7 17:46:09 2024"
+## note that the dataset can change depending on the date of crawling
+
 ## Data collection: crawl 국회청원  petitions list
 source(here::here("R", "utilities.R"))
 
@@ -7,7 +11,7 @@ api.url <- "https://open.assembly.go.kr/portal/openapi/ncryefyuaflxnqbqo"
 api.key <- "REDACTED_API_KEY_ROTATED"
 ## pointless, the website allows to download the entire table. no need to access each petition using api
 
-## load table
+## load table for processed petitions
 petition.processed <- read_excel("data/raw/청원처리현황.xls")
 
 petition.processed <- petition.processed[-15,] ## one petition for which the petition file doesn't exist (this produces error in Selenium)
@@ -52,6 +56,45 @@ remote_driver <- rs_driver$client
 for(i in 1:N){
     ## url to ith petition
     url <- petition.processed$상세보기URL[i]
+    
+    ## Navigate to the webpage containing the hyperlink
+    remote_driver$navigate(url)
+
+    ## locate the petition document
+    petition.table <- remote_driver$findElement(using="class name","tableCol01")
+    petition.document <- petition.table$findChildElements(using="tag name","a")
+    ##petition.link <- petition.document[[2]]$getElementAttribute("href")
+    K <- length(petition.document)
+    petition.document[[K]]$clickElement()
+    
+    if(i %% 200 == 0) cat("i = ",i,"\n")
+}
+## Close the browser session
+remote_driver$close()
+
+## Stop the Selenium server
+driver$server$stop()
+
+
+
+
+
+## load table for petitions being processed
+petition.being.processed <- read_excel("data/raw/청원계류현황.xls")
+N <- nrow(petition.being.processed)
+
+## activate RSelenium
+chrome.drivers <- binman::list_versions("chromedriver")
+latest.chrome <- chrome.drivers[[1]][length(chrome.drivers[[1]])]
+rs_driver <- rsDriver(browser = "chrome",
+                      chromever = latest.chrome,
+                      verbose = FALSE,
+                      port=free_port())
+remote_driver <- rs_driver$client
+
+for(i in 1:N){
+    ## url to ith petition
+    url <- petition.being.processed$상세보기URL[i]
     
     ## Navigate to the webpage containing the hyperlink
     remote_driver$navigate(url)
