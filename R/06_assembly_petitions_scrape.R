@@ -39,9 +39,6 @@ mode <- "1"
 
 
 ## activate RSelenium
-library(RSelenium)
-library(netstat)
-
 binman::list_versions("chromedriver")
 ## Use appropriate webdriver for your browser (e.g., 'firefox', 'chrome')
 rs_driver <- rsDriver(browser = "chrome",
