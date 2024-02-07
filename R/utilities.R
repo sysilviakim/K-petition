@@ -12,6 +12,7 @@ library(RSelenium)
 library(assertthat)
 library(xtable)
 library(xml2)
+library(readxl)
 
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
