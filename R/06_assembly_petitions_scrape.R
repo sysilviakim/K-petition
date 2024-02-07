@@ -9,6 +9,8 @@ api.key <- "REDACTED_API_KEY_ROTATED"
 
 ## load table
 petition.processed <- read_excel("data/raw/청원처리현황.xls")
+
+petition.processed <- petition.processed[-15,] ## one petition for which the petition file doesn't exist (this produces error in Selenium)
 N <- nrow(petition.processed)
 
 ## toy
@@ -39,39 +41,29 @@ mode <- "1"
 
 
 ## activate RSelenium
-binman::list_versions("chromedriver")
-## Use appropriate webdriver for your browser (e.g., 'firefox', 'chrome')
+chrome.drivers <- binman::list_versions("chromedriver")
+latest.chrome <- chrome.drivers[[1]][length(chrome.drivers[[1]])]
 rs_driver <- rsDriver(browser = "chrome",
-                      chromever = "114.0.5735.90",
+                      chromever = latest.chrome,
                       verbose = FALSE,
                       port=free_port())
 remote_driver <- rs_driver$client
 
 for(i in 1:N){
+    ## url to ith petition
     url <- petition.processed$상세보기URL[i]
-    html <- html <- read_html(url)
     
     ## Navigate to the webpage containing the hyperlink
     remote_driver$navigate(url)
 
-    server <- "'https://likms.assembly.go.kr/filegate/servlet/FileGate'"
-    petition.location <- html %>%
-        html_element("tbody") %>%
-        html_element("a")
-    unique.id <- stringr::str_split(as.character(petition.location),pattern="\\,")[[1]][2]
-    mode <- "'1'" ## pdf
+    ## locate the petition document
+    petition.table <- remote_driver$findElement(using="class name","tableCol01")
+    petition.document <- petition.table$findChildElements(using="tag name","a")
+    ##petition.link <- petition.document[[2]]$getElementAttribute("href")
+    K <- length(petition.document)
+    petition.document[[K]]$clickElement()
     
-    ## Execute JavaScript to simulate a click event on the hyperlink
-    remote_driver$executeScript(
-                      paste0(
-                          "var link = document.querySelector(\"a[href='javascript:openBillFile(",server,",",
-                          unique.id,",",
-                          mode,
-                          ");']\");link.click();"
-                      )
-                  )
-    
-    if(i %% 100 == 0) cat("i = ",i,"\n")
+    if(i %% 200 == 0) cat("i = ",i,"\n")
 }
 ## Close the browser session
 remote_driver$close()
@@ -79,16 +71,3 @@ remote_driver$close()
 ## Stop the Selenium server
 driver$server$stop()
 
-
-
-
-
-
-
-
-
-    ## Execute JavaScript to simulate a click event on the hyperlink
-    remote_driver$executeScript("
-    var link = document.querySelector(\"a[href='javascript:openBillFile('https://likms.assembly.go.kr/filegate/servlet/FileGate','C1AD8828-40DF-150C-274E-D5C85775F1B8','1');']\");
-    link.click();
-")
