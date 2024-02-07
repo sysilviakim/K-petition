@@ -23,7 +23,7 @@ extract_pt_content <- function(x, date = NULL) {
   
   ## Initialize as NULL for those which the script will fail
   sec_content <- sec_titles <- title_text <- area <- attachment <- status <- 
-    date_answered <- date_petitioned <- branch <- NULL
+    date_implemented <- date_answered <- date_petitioned <- branch <- NULL
   
   out <- x$source %>%
     read_html()
@@ -96,29 +96,72 @@ extract_pt_content <- function(x, date = NULL) {
   ## Unique date
   date_petitioned <- setdiff(unique(date_petitioned), NA)
   
-  ## If there are multiple dates, likely it is the case that the first one is
-  ## the date petitioned, and the second one is the date notified of an answer
-  if (length(date_petitioned) == 2) {
-    assert_that(date_petitioned[[1]] < date_petitioned[[2]])
-    ## assert_that("검토내용" %in% sec_titles)
-    if ("검토내용" %in% sec_titles) {
-      date_answered <- date_petitioned[[2]]
-      date_petitioned <- date_petitioned[[1]]
+  ## Extremely dirty loop, but the patterns are all over the place
+  if (
+    ("검토내용" %in% sec_titles) & 
+    !("실시 결과" %in% sec_titles) & 
+    length(date_petitioned) > 1
+  ) {
+    ## If there are multiple dates, likely it is the case that the first one is
+    ## the date petitioned, and the second one is the date notified of an answer
+    if (length(date_petitioned) == 2) {
+      date_answered <- max(date_petitioned)
+      date_petitioned <- min(date_petitioned)
     } else {
+      ## 3 or more
       ## e.g., 2012, page 60, 결빙이 잦은 곳에는 지역 푯말 밑에 긴급연락망 ...
       ## Date recognized from attachment file name
-      date_petitioned <- max(date_petitioned)
+      date_answered <- max(date_petitioned)
+      ## Redo pattern recognition
+      date_petitioned <- 
+        setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
+      if (length(date_petitioned) == 2) {
+        date_petitioned <- setdiff(date_petitioned, date_answered)
+      }
+      ## If the length is still larger, stop the loop
+      if (length(date_petitioned) > 1) {
+        stop("Date petitioned is still problematic.")
+      }
     }
-  } else if (length(date_petitioned) > 2) {
-    assert_that("검토내용" %in% sec_titles)
-    ## e.g., 2011, page 26, 더 많은 쓰레기통의배치
-    ## Date recognized from attachment file name
-    date_answered <- max(date_petitioned)
-    date_petitioned <- 
-      setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
-    if (length(date_petitioned) > 1) {
-      date_petitioned <- setdiff(date_petitioned, date_answered)
+  } else if (
+    ## This part needs to be thoroughly checked...
+    ("검토내용" %in% sec_titles) & 
+    ("실시 결과" %in% sec_titles) & 
+    length(date_petitioned) > 1
+  ) {
+    if (length(date_petitioned) == 3) {
+      cat("실시 결과 in", i, "\n")
+      date_implemented <- max(date_petitioned)
+      date_answered <- max(setdiff(date_petitioned, date_implemented))
+      date_petitioned <- min(date_petitioned)
+    } else if (length(date_petitioned) > 3) {
+      ## 4 or more, again, date recognized from attachment file name
+      date_implemented <- max(date_petitioned)
+      date_answered <- max(setdiff(date_petitioned, date_implemented))
+      ## Redo pattern recognition
+      date_petitioned <- 
+        setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
+      if (length(date_petitioned) == 3) {
+        date_petitioned <- 
+          setdiff(date_petitioned, c(date_answered, date_implemented))
+      }
+      ## If the length is still larger, stop the loop
+      if (length(date_petitioned) > 1) {
+        stop("Date petitioned is still problematic.")
+      }
+    } else {
+      ## This is interesting; length is less than 3
+      ## Jan 7, 2015: 행정자치부 국가상징(대통령표장)안내 개선
+      date_implemented <- date_answered <- max(date_petitioned)
+      date_petitioned <- min(date_petitioned)
     }
+  } else if (
+    !("검토내용" %in% sec_titles) & 
+    !("실시 결과" %in% sec_titles) & 
+    length(date_petitioned) > 1
+  ) {
+    ## Still need the max
+    date_petitioned <- max(date_petitioned)
   }
 
   ## Branch of government petitioned to
@@ -133,6 +176,7 @@ extract_pt_content <- function(x, date = NULL) {
     status = status,
     date_petitioned = date_petitioned, 
     date_answered = date_answered,
+    date_implemented = date_implemented,
     branch = branch,
     sec_titles = sec_titles,
     sec_content = sec_content
