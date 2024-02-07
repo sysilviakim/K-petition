@@ -73,7 +73,7 @@ for(i in 1:N){
 remote_driver$close()
 
 ## Stop the Selenium server
-driver$server$stop()
+rs_driver$server$stop()
 
 
 
@@ -106,11 +106,11 @@ for(i in 1:N){
     K <- length(petition.document)
     petition.document[[K]]$clickElement()
     
-    if(i %% 200 == 0) cat("i = ",i,"\n")
+    if(i %% 50 == 0) cat("i = ",i,"\n")
 }
 ## Close the browser session
 remote_driver$close()
 
 ## Stop the Selenium server
-driver$server$stop()
+rs_driver$server$stop()
 
