@@ -1095,6 +1095,16 @@
       ],
       "Hash": "6dfe8bf774944bd5595785e3229d8771"
     },
+    "netstat": {
+      "Package": "netstat",
+      "Version": "0.1.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "utils"
+      ],
+      "Hash": "1c681b7c30e54f5f0be2bef92f4ba7de"
+    },
     "nlme": {
       "Package": "nlme",
       "Version": "3.1-163",
