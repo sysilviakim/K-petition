@@ -194,7 +194,7 @@ for (i in 1:nrow(petition_list$processed)) {
   ## If two files, one is an hwp and the other a pdf
   ## But in 소관위 회의정보, there may be a summary
 
-  ## Some exceptions: 
+  ## Some exceptions:
   ## e.g., [2100086] 여성가족부 폐지 반대에 관한 청원(김**외 50,000인)
   if (length(petition_docs) > 0) {
     for (j in 1:length(petition_docs)) {
@@ -205,7 +205,7 @@ for (i in 1:nrow(petition_list$processed)) {
         for (k in 1:K) {
           petition_docs[[j]][[k]]$clickElement()
           Sys.sleep(5)
-          
+
           ## Close all other tabs except the one active
           tabs <- remDr$getWindowHandles()
           if (length(tabs) > 1) {
@@ -242,35 +242,35 @@ meta_list <- vector("list", nrow(petition_list$pending))
 for (i in 1:nrow(petition_list$pending)) {
   ## url to ith petition
   url <- petition_list$pending$상세보기URL[i]
-  
+
   ## Navigate to the webpage containing the hyperlink
   remDr$navigate(url)
   page_source <- remDr$getPageSource()[[1]] %>% read_html()
-  
+
   ## Create metadata table
   petition_number <- page_source %>%
     html_elements("td") %>%
     html_text() %>%
     .[[1]] %>%
     trimws()
-  
+
   title <- page_source %>%
     html_elements(".titCont") %>%
     html_text()
-  
+
   petition_summary <- page_source %>%
     html_elements(".boxType01") %>%
     html_text() %>%
     trimws()
-  
+
   petition_stage <- page_source %>%
     html_elements(".boxType01") %>%
     html_elements("span") %>%
     html_text() %>%
     paste(collapse = "|")
-  
+
   petition_tables <- remDr$findElements(using = "class name", "tableCol01")
-  
+
   ## If length is 5,
   ## -- 청원접수정보
   ## -- 소관위 심사정보
@@ -285,15 +285,15 @@ for (i in 1:nrow(petition_list$pending)) {
         html_table() %>%
         .[[1]]
     )
-  
+
   ## 청원원문: locate the petition document (will not be available from source)
   petition_docs <- petition_tables %>%
     map(~ .x$findChildElements(using = "tag name", "a")) %>%
     keep(~ length(.) > 0)
-  
+
   length(petition_docs) ## 3
   petition_docs %>% map_dbl(length) ## 2 4 6
-  
+
   meta_list[[i]] <- list(
     petition_number = petition_number,
     title = title,
@@ -301,11 +301,11 @@ for (i in 1:nrow(petition_list$pending)) {
     petition_stage = petition_stage,
     tables = table_list
   )
-  
+
   ## If two files, one is an hwp and the other a pdf
   ## But in 소관위 회의정보, there may be a summary
-  
-  ## Some exceptions: 
+
+  ## Some exceptions:
   ## e.g., [2100086] 여성가족부 폐지 반대에 관한 청원(김**외 50,000인)
   if (length(petition_docs) > 0) {
     for (j in 1:length(petition_docs)) {
@@ -316,7 +316,7 @@ for (i in 1:nrow(petition_list$pending)) {
         for (k in 1:K) {
           petition_docs[[j]][[k]]$clickElement()
           Sys.sleep(5)
-          
+
           ## Close all other tabs except the one active
           tabs <- remDr$getWindowHandles()
           if (length(tabs) > 1) {
@@ -333,10 +333,10 @@ for (i in 1:nrow(petition_list$pending)) {
       }
     }
   }
-  
+
   cat("Petition", i, "finished.\n")
   Sys.sleep(3)
-  
+
   save(
     meta_list,
     file = file.path(
@@ -358,10 +358,12 @@ rd$server$stop()
 ## Delete duplicated files in save_dir
 ## Anything with -[0-9].pdf or -[0-9].hwp
 file_list <- list.files(save_dir, full.names = TRUE)
-file_list <- file_list[grepl("-[0-9].pdf$|-[0-9].hwp$", tolower(file_list))]
+file_list <-
+  file_list[grepl("-[0-9]{1,2}.pdf$|-[0-9]{1,2}.hwp$", tolower(file_list))]
 for (f in file_list) file.remove(f)
 
 file_list <- list.files(save_dir, full.names = TRUE)
-file_list <- 
-  file_list[grepl("\\([0-9]\\).pdf$|\\([0-9]\\).hwp$", tolower(file_list))]
+file_list <- file_list[
+  grepl("\\([0-9]{1,2}\\).pdf$|\\([0-9]{1,2}\\).hwp$", tolower(file_list))
+]
 for (f in file_list) file.remove(f)
