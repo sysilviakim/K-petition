@@ -356,3 +356,7 @@ remDr$close()
 rd$server$stop()
 
 ## Delete duplicated files in save_dir
+## Anything with -[0-9].pdf or -[0-9].hwp
+file_list <- list.files(save_dir, full.names = TRUE)
+file_list <- file_list[grepl("-[0-9].pdf$|-[0-9].hwp$", tolower(file_list))]
+for (f in file_list) file.remove(f)
