@@ -58,33 +58,33 @@ table_url_list <- read_html(page_source) %>%
 
 ## 계류현황 --------------------------------------------------------------------
 ## URL click (it seems like it changes every time)
-remDr$navigate(table_url_list[[1]])
-
 ## After downloading, need to immediately rename file with today's date
-remDr$findElement(using = "css", "#sheet-excel-button")$clickElement()
-Sys.sleep(10)
-
-assert_that(file.exists(here("data", "raw", "청원계류현황.xls")))
-file.rename(
-  here("data", "raw", "청원계류현황.xls"),
-  here(
-    "data", "raw", paste0("청원계류현황_", format(Sys.Date(), "%Y%m%d"), ".xls")
-  )
+fname <- here(
+  "data", "raw", paste0("청원계류현황_", format(Sys.Date(), "%Y%m%d"), ".xls")
 )
+
+if (!file.exists(fname)) {
+  remDr$navigate(table_url_list[[1]])
+  remDr$findElement(using = "css", "#sheet-excel-button")$clickElement()
+  Sys.sleep(10)
+  
+  assert_that(file.exists(here("data", "raw", "청원계류현황.xls")))
+  file.rename(here("data", "raw", "청원계류현황.xls"), fname)
+}
 
 ## 처리현황 --------------------------------------------------------------------
-remDr$navigate(table_url_list[[2]])
-
-remDr$findElement(using = "css", "#sheet-excel-button")$clickElement()
-Sys.sleep(10)
-
-assert_that(file.exists(here("data", "raw", "청원처리현황.xls")))
-file.rename(
-  here("data", "raw", "청원처리현황.xls"),
-  here(
-    "data", "raw", paste0("청원처리현황_", format(Sys.Date(), "%Y%m%d"), ".xls")
-  )
+fname <- here(
+  "data", "raw", paste0("청원처리현황_", format(Sys.Date(), "%Y%m%d"), ".xls")
 )
+
+if (!file.exists(fname)) {
+  remDr$navigate(table_url_list[[2]])
+  remDr$findElement(using = "css", "#sheet-excel-button")$clickElement()
+  Sys.sleep(10)
+  
+  assert_that(file.exists(here("data", "raw", "청원처리현황.xls")))
+  file.rename(here("data", "raw", "청원처리현황.xls"), fname)
+}
 
 # Import table for processed petitions =========================================
 petition_list <- list(
