@@ -194,27 +194,31 @@ for (i in 1:nrow(petition_list$processed)) {
   ## If two files, one is an hwp and the other a pdf
   ## But in 소관위 회의정보, there may be a summary
 
-  for (j in 1:length(petition_docs)) {
-    K <- length(petition_docs[[j]])
-    if (length(K) == 0) {
-      cat("For", i, "th petition, no petition document found.\n")
-    } else {
-      for (k in 1:K) {
-        petition_docs[[j]][[k]]$clickElement()
-        Sys.sleep(5)
-
-        ## Close all other tabs except the one active
-        tabs <- remDr$getWindowHandles()
-        if (length(tabs) > 1) {
-          ## Except for the current one, close all windows
-          for (tab in tabs[-1]) {
-            remDr$switchToWindow(tab)
-            remDr$closeWindow()
-            remDr$switchToWindow(remDr$getWindowHandles()[[1]])
+  ## Some exceptions: 
+  ## e.g., [2100086] 여성가족부 폐지 반대에 관한 청원(김**외 50,000인)
+  if (length(petition_docs) > 0) {
+    for (j in 1:length(petition_docs)) {
+      K <- length(petition_docs[[j]])
+      if (length(K) == 0) {
+        cat("For", i, "th petition, no petition document found.\n")
+      } else {
+        for (k in 1:K) {
+          petition_docs[[j]][[k]]$clickElement()
+          Sys.sleep(5)
+          
+          ## Close all other tabs except the one active
+          tabs <- remDr$getWindowHandles()
+          if (length(tabs) > 1) {
+            ## Except for the current one, close all windows
+            for (tab in tabs[-1]) {
+              remDr$switchToWindow(tab)
+              remDr$closeWindow()
+              remDr$switchToWindow(remDr$getWindowHandles()[[1]])
+            }
           }
+          Sys.sleep(5)
+          ## No need to rename these
         }
-        Sys.sleep(5)
-        ## No need to rename these
       }
     }
   }
