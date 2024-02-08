@@ -58,3 +58,6 @@ NOTICE
 /data/raw/*.Rda
 /data/raw/old/*.Rda
 /data/raw/old/*.csv
+/data/raw/assembly/*.pdf
+/data/raw/assembly/*.hwp
+/data/tidy/*.csv
