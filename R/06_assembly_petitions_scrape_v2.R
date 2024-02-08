@@ -360,3 +360,8 @@ rd$server$stop()
 file_list <- list.files(save_dir, full.names = TRUE)
 file_list <- file_list[grepl("-[0-9].pdf$|-[0-9].hwp$", tolower(file_list))]
 for (f in file_list) file.remove(f)
+
+file_list <- list.files(save_dir, full.names = TRUE)
+file_list <- 
+  file_list[grepl("\\([0-9]\\).pdf$|\\([0-9]\\).hwp$", tolower(file_list))]
+for (f in file_list) file.remove(f)
