@@ -51,7 +51,7 @@ max_pages <- read_html(url) %>%
   max(na.rm = TRUE)
 
 # Web scraping =================================================================
-rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5550L)
+rd <- rsDriver(browser = "firefox", chromever = NULL, port = free_port())
 remDr <- rd$client
 
 ## Initialize petition content list

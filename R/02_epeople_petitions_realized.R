@@ -17,7 +17,7 @@ max_pages <- read_html(url) %>%
 
 # Realized petitions: content ==================================================
 ## Using RSelenium for JavaScript-rendered pages
-rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5554L)
+rd <- rsDriver(browser = "firefox", chromever = NULL, port = free_port())
 remDr <- rd$client
 remDr$navigate(url)
 

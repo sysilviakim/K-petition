@@ -31,7 +31,7 @@ url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 pages <- "?pageIndex="
 
 ## Using RSelenium for JavaScript-rendered pages -------------------------------
-rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5555L)
+rd <- rsDriver(browser = "firefox", chromever = NULL, port = free_port())
 remDr <- rd$client
 remDr$navigate(url)
 
