@@ -3,7 +3,7 @@
 source(here::here("R", "utilities.R"))
 
 library(KoNLP)
-petition <- read.csv("data/tidy/pub_petition_content_2002.csv")
+petition <- read.csv("data/tidy/pub_petition_content_2012.csv")
 names(petition)[7] <- c("bodytext")
 
 petition$year <- substr(petition$date_petitioned,1,4)
@@ -46,9 +46,10 @@ voca.df.out <- bind_rows(voca.df.n, voca.df.p) %>%
     filter(nchar(pos_cleaned) < 10) %>%
     select(title,area,year,month,pos_cleaned)
     
-voca.ko <- unique(voca.df.out$pos_cleaned)
-tb.voca <- sort(table(voca.ko),decreasing=TRUE)
-tb.voca[1:10]
+tb.voca <- table(voca.df.out$pos_cleaned)
+voca.ko <- names(tb.voca)
+tb.voca.sorted <- sort(tb.voca, decreasing=TRUE)
+tb.voca.sorted[1:10]
 
 
 ## ----------------------------------------- ##
@@ -66,6 +67,7 @@ voca.df.out <- voca.df.out %>%
 voca.df.out <- voca.df.out %>%
     filter(!grepl("[0-9]", pos_cleaned))
 
-## 3. K-stopwords (keep adding)
-K.stopwords <- c("를","라고","으로","까지","입니다","에도","껍니다","겁니다")
-
+tb.voca <- table(voca.df.out$pos_cleaned)
+voca.ko <- names(tb.voca)
+tb.voca.sorted <- sort(tb.voca, decreasing=TRUE)
+tb.voca.sorted[1:10]
