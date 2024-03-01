@@ -42,6 +42,9 @@ for(i in 1:50){
 
     cat("---------------------------------\n\n\n")
     flush.console()
+    
     time.required <- nchar(sample.petitions$현황.및.문제점[i])
-    Sys.sleep(time.required/15)
+
+    start <- Sys.time()
+    while((as.numeric(Sys.time()) - as.numeric(start))<time.required/15){}
 }
