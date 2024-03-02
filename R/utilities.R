@@ -6,6 +6,8 @@ library(lubridate)
 library(rvest)
 library(here)
 library(tidytext)
+library(readxl)
+library(writexl)
 
 ## others
 library(RSelenium)
