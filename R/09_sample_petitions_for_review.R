@@ -35,10 +35,16 @@ scoreboard$계속성 <- NA
 scoreboard$창의성 <- NA
 scoreboard$총점 <- NA
 
-write_xlsx(scoreboard, here("data/sample/scoreboard_BK.xlsx"))
+if (sessionInfo()$running == "macOS Sonoma 14.2.1") {
+  write_xlsx(scoreboard, here("data/sample/scoreboard_SK.xlsx"))
+} else {
+  write_xlsx(scoreboard, here("data/sample/scoreboard_BK.xlsx"))
+}
 
+## Externally open scoreboard.xlsx and fill in the review scores
+## 1-10 natural numbers scale
 ## auto page turner for petition review
-for (i in 1:50) {
+for (i in seq(nrow(scoreboard))) {
   cat("i=", i, "\n")
   cat("Title:", sample.petitions$title[i], "\n\n") ## title
 
@@ -53,8 +59,14 @@ for (i in 1:50) {
   cat("---------------------------------\n\n\n")
   flush.console()
 
-  time.required <- nchar(sample.petitions$현황.및.문제점[i])
+  time.required <- max(
+    nchar(sample.petitions$현황.및.문제점[i]),
+    700
+  )
 
   start <- Sys.time()
   while ((as.numeric(Sys.time()) - as.numeric(start)) < time.required / 15) {}
+  
+  ## wipe screen
+  cat("\014")
 }
