@@ -9,7 +9,7 @@ remDr$navigate(url)
 
 ## Generate weeks within year, from 2013--2023
 ## Otherwise, too many iterations for Selenium to handle in one go
-week_list <- week_list_fxn(2013, 2023)
+week_list <- week_list_fxn(2013, 2024)
 
 # 공개 제안(public petitions) content, weekly ==================================
 ## Loop ------------------------------------------------------------------------
