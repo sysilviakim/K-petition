@@ -41,11 +41,46 @@ petition.df <- petition.df %>%
     select(-last_chr)
 ##-- caution: argumentative rules end --##
 
-## create feature space
-tb.voca <- table(petition.df$pos_cleaned)
-voca.ko <- names(tb.voca)
-tb.voca.sorted <- sort(tb.voca, decreasing=TRUE)
-tb.voca.sorted[1:50]
+## group by words in each petition
+petition.df <- petition.df %>%
+    count(title,pos_cleaned) %>%
+    group_by(title) %>%
+    mutate(total = sum(n)) %>%
+    ungroup()
+nrow(petition.df) ## 438617
+
+## another clean-up
+petition.df <- petition.df %>%
+    mutate(title = str_replace_all(title,"\\s+", " ")) %>% ## remove extra white spaces
+    mutate(title = str_trim(title,side="both")) ## remove white space at the beginning and end
+
+
+## basic topic model
+## compute tf-idf
+petition.df <- petition.df %>%
+    bind_tf_idf(pos_cleaned, title, n)
+
+quantile(petition.df$tf_idf)
+##          0%          25%          50%          75%         100% 
+##0.0009080714 0.0329332617 0.0631300368 0.1232115592 9.4872900578
+
+## extremely common/uncommon words
+common_terms <- petition.df %>%
+    filter(tf_idf < 0.025) %>%
+    select(pos_cleaned)
+## common, but not safe to remove
+
+rare_terms <- petition.df %>%
+    filter(tf_idf > 5) %>%
+    select(pos_cleaned)
+## safe to remove
+
+
+
+## pick up from here..ㅜㅜ
+
+
+
 
 ## top 10 words for each year and area
 areas <- unique(petition.df$area)
@@ -80,20 +115,8 @@ threshold <- quantile(wc.df$Freq,0.99)
 wc.df <- wc.df %>%
     filter(Freq > threshold)
 wordcloud2(wc.df) %>%
-    saveWidget("output/wc.pdf", selfcontained = TRUE)
+    saveWidget("output/wc.pdf")
 
 wordcloud2(wc.df,figPath="data/kor_penin.png",size=1.5) ## doesn't work...
-
-
-
-
-## basic Topic Models
-## create document feature matrix
-library(quanteda)
-petition.dfm <- petition.df %>%
-    select(title,pos_cleaned) %>%
-    table()
-dim(petition.dfm)
-petition.dfm[1:10,1:10]
 
 
