@@ -3,9 +3,10 @@
 
 source(here::here("R", "utilities.R"))
 
-fname <- here("data/sample/sample_petitions.rds")
+# Create sample to be reviewed =================================================
+fname <- here("data/sample/sample_petitions_2002_to_2023.rds")
 if (!file.exists(fname)) {
-  years <- 2002:2012
+  years <- 2002:2023
   file.names <- paste0("data/tidy/pub_petition_content_", years, ".csv")
   all.petition.df <- as_tibble(map_dfr(file.names, read.csv))
   N <- nrow(all.petition.df) ## 13747
@@ -17,7 +18,7 @@ if (!file.exists(fname)) {
   saveRDS(file = fname, sample.petitions)
 }
 
-## create scoreboard
+# Create a scoreboard ==========================================================
 ## get rid of variables that can bias the review score
 sample.petitions <- readRDS(fname)
 scoreboard <- sample.petitions %>%
@@ -35,12 +36,14 @@ scoreboard$계속성 <- NA
 scoreboard$창의성 <- NA
 scoreboard$총점 <- NA
 
+## Check system info on BK's computer
 if (sessionInfo()$running == "macOS Sonoma 14.2.1") {
   write_xlsx(scoreboard, here("data/sample/scoreboard_SK.xlsx"))
 } else {
   write_xlsx(scoreboard, here("data/sample/scoreboard_BK.xlsx"))
 }
 
+# Evaluate each petition =======================================================
 ## Externally open scoreboard.xlsx and fill in the review scores
 ## 1-10 natural numbers scale
 ## auto page turner for petition review
