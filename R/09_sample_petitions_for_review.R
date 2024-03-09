@@ -47,7 +47,7 @@ if (sessionInfo()$running == "macOS Sonoma 14.2.1") {
 
 write_xlsx(scoreboard, fname)
 ## Open file externally in Excel after writing
-shell.exec(here("data/sample/score13-23-SK.xlsx"))
+shell.exec(fname)
 
 # Evaluate each petition =======================================================
 ## Externally open scoreboard.xlsx and fill in the review scores
