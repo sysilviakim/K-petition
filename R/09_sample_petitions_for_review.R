@@ -29,32 +29,38 @@ scoreboard <- sample.petitions %>%
       실시.결과, status
     )
   )
-scoreboard$실시가능성 <- NA
-scoreboard$효율성 <- NA
-scoreboard$적용범위 <- NA
-scoreboard$계속성 <- NA
-scoreboard$창의성 <- NA
+
+## Previously, 실시가능성, 효율성, 적용범위, 계속성, 창의성
+scoreboard$`문제 구체성` <- NA
+scoreboard$`문제 타당성` <- NA
+scoreboard$`제안 구체성` <- NA
+scoreboard$`제안 현실성` <- NA
+scoreboard$`매너` <- NA
 scoreboard$총점 <- NA
 
 ## Check system info on BK's computer
 if (sessionInfo()$running == "macOS Sonoma 14.2.1") {
-  write_xlsx(scoreboard, here("data/sample/scoreboard_SK.xlsx"))
+  fname <- here("data/sample/score13-23-SK.xlsx")
 } else {
-  write_xlsx(scoreboard, here("data/sample/scoreboard_BK.xlsx"))
+  fname <- here("data/sample/score13-23-BK.xlsx")
 }
+
+write_xlsx(scoreboard, fname)
+## Open file externally in Excel after writing
+shell.exec(here("data/sample/score13-23-SK.xlsx"))
 
 # Evaluate each petition =======================================================
 ## Externally open scoreboard.xlsx and fill in the review scores
 ## 1-10 natural numbers scale
 ## auto page turner for petition review
 for (i in seq(nrow(scoreboard))) {
+  ## wipe screen
+  cat("\014")
+
   cat("i=", i, "\n")
   cat("Title:", sample.petitions$title[i], "\n\n") ## title
-
   cat("Area:", sample.petitions$area[i], "\n\n") ## area
-
   cat("Date:", sample.petitions$date_petitioned[i], "\n\n") ## date
-
   cat(sample.petitions$현황.및.문제점[i], "\n\n") ## body text1
   cat(sample.petitions$개선방안[i], "\n\n") ## body text2
   cat(sample.petitions$기대효과[i], "\n\n") ## body text3
