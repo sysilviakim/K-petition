@@ -17,6 +17,10 @@ library(xml2)
 library(readxl)
 library(netstat)
 
+## https://mrchypark.github.io/post/KoNLP-설치-방법/
+## devtools::install_github('haven-jeon/KoNLP')
+library(KoNLP)
+
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
   ## List of length three that has title, source, and page_meta
