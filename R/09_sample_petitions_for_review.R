@@ -125,3 +125,21 @@ lm(SK ~ BK, data = df_wide) %>% summary()
 ## SK gives harsher assessment to low-scoring petitions (indistinguishable)
 ## but otherwise the two researchers' assessments are highly correlated
 
+## How about within each element of the rubric?
+df_wide <- df %>%
+  select(title, researcher, `문제 구체성`, `문제 타당성`, `제안 구체성`, `제안 현실성`, `매너`) %>%
+  pivot_longer(
+    cols = `문제 구체성`:`매너`,
+    names_to = "element",
+    values_to = "score"
+  ) %>%
+  unite("elem_researcher", element, researcher, sep = "_") %>%
+  pivot_wider(names_from = elem_researcher, values_from = score)
+
+cor(df_wide$`문제 구체성_SK`, df_wide$`문제 구체성_BK`) ## 0.58
+cor(df_wide$`문제 타당성_SK`, df_wide$`문제 타당성_BK`) ## 0.62
+cor(df_wide$`제안 구체성_SK`, df_wide$`제안 구체성_BK`) ## 0.64
+cor(df_wide$`제안 현실성_SK`, df_wide$`제안 현실성_BK`) ## 0.58
+cor(df_wide$`매너_SK`, df_wide$`매너_BK`) ## 0.47 (low)
+
+## So perhaps the components cancel out
