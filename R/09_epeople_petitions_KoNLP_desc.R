@@ -30,7 +30,8 @@ petition.df <- petition.df %>%
 ## words that ends with 다
 verb.df <- petition.df %>%
   mutate(
-    last_chr = substr(pos_cleaned, nchar(pos_cleaned), nchar(pos_cleaned))) %>%
+    last_chr = substr(pos_cleaned, nchar(pos_cleaned), nchar(pos_cleaned))
+  ) %>%
   filter(last_chr %in% c("다", "요")) %>%
   select(-last_chr)
 
@@ -39,7 +40,8 @@ verb.ko <- names(tb.verb) ## 5153
 
 petition.df <- petition.df %>%
   mutate(
-    last_chr = substr(pos_cleaned, nchar(pos_cleaned), nchar(pos_cleaned))) %>%
+    last_chr = substr(pos_cleaned, nchar(pos_cleaned), nchar(pos_cleaned))
+  ) %>%
   filter(!last_chr %in% c("다", "요")) %>%
   select(-last_chr)
 ## -- caution: argumentative rules end --##
@@ -94,19 +96,19 @@ nrow(petition.dfm) ## 438617
 ## another clean-up
 petition.df <- petition.df %>%
   ## remove extra white spaces
-  mutate(title = str_replace_all(title, "\\s+", " ")) %>% 
+  mutate(title = str_replace_all(title, "\\s+", " ")) %>%
   mutate(title = str_replace(title, "\\\"", "'")) %>% ## quotation
   mutate(title = str_replace(title, "\\\"", "'")) %>% ## quotation
   ## remove white space at the beginning and end
-  mutate(title = str_trim(title, side = "both")) 
+  mutate(title = str_trim(title, side = "both"))
 
 petition.dfm <- petition.dfm %>%
   ## remove extra white spaces
-  mutate(title = str_replace_all(title, "\\s+", " ")) %>% 
+  mutate(title = str_replace_all(title, "\\s+", " ")) %>%
   mutate(title = str_replace(title, "\\\"", "'")) %>% ## quotation
   mutate(title = str_replace(title, "\\\"", "'")) %>% ## quotation
   ## remove white space at the beginning and end
-  mutate(title = str_trim(title, side = "both")) 
+  mutate(title = str_trim(title, side = "both"))
 
 ## compute tf-idf
 petition.dfm <- petition.dfm %>%
@@ -121,7 +123,7 @@ common_terms <- petition.dfm %>%
   filter(tf_idf < 0.01) %>%
   select(pos_cleaned) %>%
   distinct()
-## words appearing in many documents: 
+## words appearing in many documents:
 ## 문제점, 심각, 우리나라, 낭비, 정부, 시간, 사람
 
 rare_terms <- petition.dfm %>%
@@ -225,7 +227,7 @@ doc.prob.k <- doc.prob.k %>%
   left_join(petition.df.idx, by = c("document" = "title"), multiple = "any")
 
 topN.terms.mat <- as.data.frame(topN.terms.mat)
-colnames(topN.terms.mat) <- 
+colnames(topN.terms.mat) <-
   c("energy", "telecomm", "primary school", "college", "social welfare")
 writexl::write_xlsx(topN.terms.mat, "output/topic_term.xlsx")
 
@@ -233,12 +235,13 @@ doc.prob.k <- doc.prob.k %>%
   mutate(
     topic_label = dplyr::recode(
       topic,
-    "1" = "energy",
-    "2" = "telecomm",
-    "3" = "primary school",
-    "4" = "college",
-    "5" = "social welfare"
-  ))
+      "1" = "energy",
+      "2" = "telecomm",
+      "3" = "primary school",
+      "4" = "college",
+      "5" = "social welfare"
+    )
+  )
 
 ## distribution of topics over time
 f <- ggplot(data = doc.prob.k) +
