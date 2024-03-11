@@ -7,7 +7,9 @@ petition_list <- seq(2002, 2023) %>%
   set_names(., .) %>%
   map(
     ~ {
-      temp <- read.csv(here(paste0("data/tidy/pub_petition_content_", .x, ".csv"))) %>%
+      temp <- read.csv(
+        here(paste0("data/tidy/pub_petition_content_", .x, ".csv"))
+      ) %>%
         rename(
           body_problem = `현황.및.문제점`,
           body_proposal = `개선방안`,
@@ -216,55 +218,3 @@ p <- petition %>%
 p
 ## pdf_default(p)
 ggsave(here("fig", "petition_weekdays_by_year.pdf"), width = 8, height = 5)
-
-# Tidytext =====================================================================
-## extract nouns to create unique(feature list)
-voca <- unlist(sapply(petition$bodytext, extractNoun, USE.NAMES = FALSE))
-tb.voca <- sort(table(voca), decreasing = TRUE)
-tb.voca[1:10]
-
-## a more precise preprocessing with KoNLP
-voca.df <- petition %>%
-  unnest_tokens(pos, bodytext, SimplePos09)
-
-## extract 용언 (불용어 제거)
-voca.df.n <- voca.df %>%
-  filter(str_detect(pos, "/n")) %>%
-  mutate(pos_cleaned = str_remove(pos, "/.*$"))
-
-## 어미 통일
-voca.df.p <- voca.df %>%
-  filter(str_detect(pos, "/p")) %>%
-  mutate(pos_cleaned = str_replace_all(pos, "/.*$", "다"))
-
-## n + p
-voca.df.out <- bind_rows(voca.df.n, voca.df.p) %>%
-  filter(nchar(pos_cleaned) > 1) %>%
-  filter(nchar(pos_cleaned) < 10) %>%
-  select(title, area, year, month, pos_cleaned)
-
-tb.voca <- table(voca.df.out$pos_cleaned)
-voca.ko <- names(tb.voca)
-tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
-tb.voca.sorted[1:10]
-
-
-# Tentative rules for further preprocessing ====================================
-## 1. special characters (underbar, emoji, semicolon, hyphen, comma, ...) ------
-voca.df.out$pos_cleaned <- str_replace_all(
-  string = voca.df.out$pos_cleaned, pattern = "[[:punct:]]", replace = ""
-)
-voca.df.out <- distinct(voca.df.out)
-voca.df.out <- voca.df.out %>% filter(pos_cleaned != "")
-
-voca.df.out <- voca.df.out %>%
-  filter(!grepl("\\^|<|>|~", pos_cleaned))
-
-## 2. remove words that contain numbers (dates, counts) ------------------------
-voca.df.out <- voca.df.out %>%
-  filter(!grepl("[0-9]", pos_cleaned))
-
-tb.voca <- table(voca.df.out$pos_cleaned)
-voca.ko <- names(tb.voca)
-tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
-tb.voca.sorted[1:10]
