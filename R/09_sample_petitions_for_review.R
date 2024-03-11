@@ -79,3 +79,49 @@ for (i in seq(nrow(scoreboard))) {
   ## wipe screen
   cat("\014")
 }
+
+# Load data for comparing researcher assessment ================================
+df_list <- list(
+  SK_01 = read_excel(here("data/sample/score02-12-SK.xlsx")),
+  SK_02 = read_excel(here("data/sample/score13-23-SK.xlsx")),
+  BK_01 = read_excel(here("data/sample/score02-12-BK.xlsx")),
+  BK_02 = read_excel(here("data/sample/score13-23-BK.xlsx"))
+)
+
+## Combine and prune
+df <- bind_rows(df_list, .id = "source") %>%
+  select(-`1-dim score`) %>%
+  filter(!is.na(`총점`)) %>%
+  filter(`총점` != 0) %>%
+  rowwise() %>%
+  mutate(researcher = str_sub(source, 1, 2)) %>%
+  ungroup()
+
+# Checking assessment consistency ==============================================
+## Inconsistencies within assessor (possible)
+df %>%
+  filter(title == "국민신문고 정책제안 처리결과 공개") %>%
+  select(-area, -branch)
+
+## Delete multiple assessments of the same petition within researcher
+df <- df %>%
+  distinct(researcher, title, .keep_all = TRUE)
+
+## Inconsistencies between assessors
+df_wide <- df %>%
+  select(title, researcher, `총점`) %>%
+  pivot_wider(names_from = researcher, values_from = `총점`)
+
+## Correlation coefficient: 0.7
+cor(df_wide$SK, df_wide$BK, use = "pairwise.complete.obs")
+ggplot(df_wide, aes(x = SK, y = BK)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "SK", y = "BK")
+
+## In terms of linear regression, slope coef. is 1.10, intercept -2.23
+lm(SK ~ BK, data = df_wide) %>% summary()
+
+## SK gives harsher assessment to low-scoring petitions (indistinguishable)
+## but otherwise the two researchers' assessments are highly correlated
+
