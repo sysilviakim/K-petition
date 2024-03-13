@@ -50,3 +50,11 @@ for(year in years){
 
     cat("years ", year, " complete \n")
 }
+
+## 2013 - present
+file.list <- list.files("data/raw",pattern="pub_petition_content_list_week_")
+
+for(file in file.list){
+    file.path <- paste0("data/raw/",file)
+    load(file.path) ## sth wrong with crawling? body text shows full html scrips
+}
