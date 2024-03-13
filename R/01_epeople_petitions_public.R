@@ -92,7 +92,8 @@ p <- pub_total %>%
     y = "Number of petitions"
   ) +
   scale_y_continuous(labels = scales::comma)
-Kmisc::pdf_default(p) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+## pdf_default(p) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(here("fig", "pub_petition_num_total.pdf"), width = 8, height = 5)
 
 # 공개 제안(public petitions) content ==========================================

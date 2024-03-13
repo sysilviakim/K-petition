@@ -16,6 +16,11 @@ library(xtable)
 library(xml2)
 library(readxl)
 library(netstat)
+library(patchwork)
+
+## https://mrchypark.github.io/post/KoNLP-설치-방법/
+## devtools::install_github('haven-jeon/KoNLP')
+library(KoNLP)
 
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
