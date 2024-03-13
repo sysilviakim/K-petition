@@ -1,5 +1,3 @@
-## Studying KoNLP with petitions data
-
 source(here::here("R", "utilities.R"))
 
 # Load all data, wrangle, bind, and save =======================================
@@ -101,6 +99,56 @@ saveRDS(petition, here("data", "tidy", "petition_konlp_all_years.rds"))
 
 # Exploratory analysis: load data ==============================================
 petition <- readRDS(here("data", "tidy", "petition_konlp_all_years.rds"))
+
+# What is the distribution of the number of petitions per year? --> already done
+# What is the distribution of the length of petitions? =========================
+
+body_nchar <- petition %>%
+  select(body_problem, body_proposal, body_expectation, year) %>%
+  unite("body", contains("body"), sep = " ", na.rm = TRUE) %>%
+  mutate(body_nchar = nchar(body))
+
+## Median value: 502 characters, max 246,122(!)
+summary(body_nchar$body_nchar)
+
+## Draw the distribution over all years ----------------------------------------
+p <- body_nchar %>%
+  ggplot(aes(x = body_nchar)) +
+  geom_histogram() +
+  labs(x = "Number of Characters", y = "Frequency (1,000 Petitions)") +
+  scale_x_continuous(labels = scales::comma) +
+  scale_y_continuous(labels = function(x) x / 1000) +
+  theme_bw()
+p
+## pdf_default(p)
+ggsave(here("fig", "petition_length_distribution.pdf"), width = 5, height = 3)
+
+## Logged version because it's very skewed
+p <- body_nchar %>%
+  ggplot(aes(x = log(body_nchar))) +
+  geom_histogram() +
+  labs(x = "Number of Characters (Logged)", y = "Frequency (1,000 Petitions)") +
+  scale_x_continuous(labels = scales::comma) +
+  scale_y_continuous(labels = function(x) x / 1000) +
+  theme_bw()
+p
+## pdf_default(p)
+ggsave(here("fig", "petition_length_dist_logged.pdf"), width = 5, height = 3)
+
+## Average values over years? --------------------------------------------------
+p <- body_nchar %>%
+  group_by(year) %>%
+  summarise(mean_nchar = median(body_nchar)) %>%
+  ggplot(aes(x = year, y = mean_nchar)) +
+  geom_col() +
+  labs(x = "Year", y = "Average Number of Characters") +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p
+## pdf_default(p)
+ggsave(here("fig", "petition_length_avg_over_years.pdf"), width = 5, height = 3)
+
+# Is the response rate increasing over time? ===================================
 
 # Which areas were the petitions concentrated on? ==============================
 ## First, check for missing values ---> none!
