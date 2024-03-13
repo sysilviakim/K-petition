@@ -114,7 +114,7 @@ summary(body_nchar$body_nchar)
 ## Draw the distribution over all years ----------------------------------------
 p <- body_nchar %>%
   ggplot(aes(x = body_nchar)) +
-  geom_histogram() +
+  geom_histogram(colour = "#C6DBEF", fill = "#C6DBEF") +
   labs(x = "Number of Characters", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
@@ -126,7 +126,7 @@ ggsave(here("fig", "petition_length_distribution.pdf"), width = 5, height = 3)
 ## Logged version because it's very skewed
 p <- body_nchar %>%
   ggplot(aes(x = log(body_nchar))) +
-  geom_histogram() +
+  geom_histogram(colour = "#C6DBEF", fill = "#C6DBEF") +
   labs(x = "Number of Characters (Logged)", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
@@ -140,7 +140,7 @@ p <- body_nchar %>%
   group_by(year) %>%
   summarise(mean_nchar = median(body_nchar)) %>%
   ggplot(aes(x = year, y = mean_nchar)) +
-  geom_col() +
+  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
   labs(x = "Year", y = "Average Number of Characters") +
   theme_bw() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -149,6 +149,69 @@ p
 ggsave(here("fig", "petition_length_avg_over_years.pdf"), width = 5, height = 3)
 
 # Is the response rate increasing over time? ===================================
+
+## What is the raw response rate?
+petition %>% 
+  count(status) %>% 
+  mutate(perc = formatC(n / sum(n) * 100, digits = 1, format = "f")) %>%
+  arrange(desc(perc))
+#     status      n perc
+# 1 답변완료 187156 89.8
+# 2 제안심사  11633  5.6
+# 3 제안추진   4631  2.2
+# 4 제안실현   3998  1.9
+# 5            1076  0.5
+
+## 99.5% of the petitions have been responded to
+## 0.5% is actually likely lost due to time when aggregating, given 2002--2004
+
+answer_rate <- petition %>% 
+  group_by(year) %>%
+  group_split(.keep = TRUE) %>%
+  `names<-`({.} %>% map(~ .x$year[1]) %>% unlist()) %>%
+  map(
+    ~ .x %>% 
+      count(status) %>% 
+      mutate(perc = n / sum(n)) %>%
+      arrange(desc(perc))
+  ) %>%
+  bind_rows(.id = "year")
+
+## Consider only 제안추진 / 제안실현 as an acceptance rate
+answer_rate <- answer_rate %>%
+  ## Early years have too few petitions to make this meaningful
+  filter(year > 2011) %>%
+  filter(status %in% c("제안추진", "제안실현")) %>%
+  mutate(status = "제안추진/실현") %>%
+  group_by(year) %>%
+  summarise(perc = sum(perc))
+
+## Draw... actually with the number of petitions over the years
+p1 <- answer_rate %>%
+  ggplot(aes(x = year, y = perc)) +
+  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
+  labs(x = "Year", y = "Percentage of Accepted Petitions") +
+  theme_bw() + 
+  scale_y_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+load(here("data", "raw", "pub_petition_num_total.Rda"))
+p2 <- pub_total %>%
+  enframe(name = "year", value = "total") %>%
+  mutate(year = as.numeric(gsub("year", "", year))) %>%
+  filter(year > 2011 & year < 2024) %>%
+  ggplot(aes(x = year, y = total)) +
+  geom_col(colour = "#6baed6", fill = "#6baed6") +
+  labs(x = "Year", y = "Number of Petitions") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_continuous(breaks = seq(2012, 2023, 1)) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+## p2 <- pdf_default(p2) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+## p1 <- pdf_default(p1) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p1 + p2
+ggsave(here("fig", "petition_acceptance_rate.pdf"), width = 8, height = 3.5)
 
 # Which areas were the petitions concentrated on? ==============================
 ## First, check for missing values ---> none!
