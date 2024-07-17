@@ -10,7 +10,7 @@ library(topicmodels)
 years <- 2002:2023
 file.names <- paste0("data/tidy/petition_konlp", years, ".rds")
 petition.df <- as_tibble(map_dfr(file.names, readRDS))
-nrow(petition.df) ## 865235
+nrow(petition.df) ## 1041038
 
 ## further preprocessing
 ## special characters (underbar, emoji, semicolon, hyphen, comma, period)
@@ -45,6 +45,8 @@ petition.df <- petition.df %>%
   filter(!last_chr %in% c("다", "요")) %>%
   select(-last_chr)
 ## -- caution: argumentative rules end --##
+
+nrow(petition.df) ## 770121
 
 # Word frequencies =============================================================
 ## top 10 words for each year and area
@@ -86,12 +88,12 @@ wordcloud2(wc.df, figPath = "data/kor_penin.png", size = 1.5) ## doesn't work...
 
 # Basic topic model ============================================================
 ## group by words in each petition
-petition.dfm <- petition.df %>%
+petition.dfn <- petition.df %>%
   count(title, pos_cleaned) %>%
   group_by(title) %>%
   mutate(total = sum(n)) %>%
   ungroup()
-nrow(petition.dfm) ## 438617
+nrow(petition.dfn) ## 609816
 
 ## another clean-up
 petition.df <- petition.df %>%
@@ -102,7 +104,7 @@ petition.df <- petition.df %>%
   ## remove white space at the beginning and end
   mutate(title = str_trim(title, side = "both"))
 
-petition.dfm <- petition.dfm %>%
+petition.dfn <- petition.dfn %>%
   ## remove extra white spaces
   mutate(title = str_replace_all(title, "\\s+", " ")) %>%
   mutate(title = str_replace(title, "\\\"", "'")) %>% ## quotation
@@ -111,29 +113,30 @@ petition.dfm <- petition.dfm %>%
   mutate(title = str_trim(title, side = "both"))
 
 ## compute tf-idf
-petition.dfm <- petition.dfm %>%
+petition.dfn <- petition.dfn %>%
   bind_tf_idf(pos_cleaned, title, n)
 
-quantile(petition.dfm$tf_idf)
+quantile(petition.dfn$tf_idf)
 ##          0%          25%          50%          75%         100%
-## 0.0009080714 0.0329332617 0.0631300368 0.1232115592 9.4872900578
+## 0.002128447  0.064261383  0.150426537  2.240160670 12.079749497 
 
-## extremely common/uncommon words
-common_terms <- petition.dfm %>%
+## words with very low tf-idf scores (common words appearing across many documents)
+common_terms <- petition.dfn %>%
   filter(tf_idf < 0.01) %>%
   select(pos_cleaned) %>%
   distinct()
 ## words appearing in many documents:
 ## 문제점, 심각, 우리나라, 낭비, 정부, 시간, 사람
 
-rare_terms <- petition.dfm %>%
+## words with too high tf-idf scores (likely words appearing frequently in only a few documents)
+rare_terms <- petition.dfn %>%
   filter(tf_idf > 3) %>%
   select(pos_cleaned) %>%
   distinct()
-## words appearing in few documents: names of cities and regions, typoes
+## words appearing in few documents: names of cities and regions, typos
 
-## remove rare and common terms
-petition.dfm <- petition.dfm %>%
+## remove words with too low or too high tf-idf scores
+petition.dfn <- petition.dfn %>%
   filter(tf_idf > 0.01 & tf_idf < 3)
 
 ## append year
@@ -141,18 +144,18 @@ petition.df.idx <- petition.df %>%
   select(-pos_cleaned) %>%
   distinct()
 
-petition.dfm <- petition.dfm %>%
+petition.dfn <- petition.dfn %>%
   left_join(petition.df.idx, by = "title", multiple = "any")
 
 ## turn to document-term matrix
 ## first run for 2010 to 2012
-dtm <- petition.dfm %>%
+petition.dfm <- petition.dfn %>%
   filter(year >= 2010) %>%
-  cast_dtm(document = title, term = pos_cleaned, value = n)
+  cast_dfm(document = title, term = pos_cleaned, value = n)
 
 ## fit LDA
 K <- 5
-lda.fit <- LDA(dtm, k = K)
+lda.fit <- LDA(petition.dfm, k = K)
 print(lda.fit)
 
 ## describe topics: top 10 terms for each topic
@@ -191,12 +194,14 @@ table(doc.prob.k$topic)
 
 ## All years
 ## first run for 2010 to 2012
-dtm <- petition.dfm %>%
-  cast_dtm(document = title, term = pos_cleaned, value = n)
+petition.dfm <- petition.dfn %>%
+  cast_dfm(document = title, term = pos_cleaned, value = n)
+
+saveRDS(petition.dfm,"data/DFM.rds")
 
 ## fit LDA
 K <- 5
-lda.fit <- LDA(dtm, k = K)
+lda.fit <- LDA(petition.dfm, k = K)
 
 saveRDS(lda.fit, "output/lda_out_5.rds")
 
