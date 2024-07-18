@@ -11,6 +11,8 @@ years <- 2002:2023
 file.names <- paste0("your_dropbox/data/tidy/pub_petition_content_", years, ".csv") ## this should be the path to the data in dropbox folder
 meta_df <- as_tibble(map_dfr(file.names, read_csv))
 
+## this may be generating duplicates, examine!
+
 ## generate y for dfm (days to response)
 meta_df <- meta_df %>%
     mutate(date_petitioned = as.Date(date_petitioned),
@@ -38,15 +40,28 @@ quantile(meta_df$implement_respond_delay,na.rm=TRUE)
 ## probably the reason why responses are so slow?
 
 ## merge y with dfm
-df <- as.matrix(petition_dfm)
-df <- as_tibble(df)
-df$doc_name <- quanteda::docnames(petition_dfm)
+doc_name <- quanteda::docnames(petition_dfm)
+words <- quanteda::featnames(petition_dfm)
 
+df <- as.matrix(petition_dfm)
+
+col.idx <- colSums(df) > 1
+df <- df[,col.idx] ## keep words that are used at least twice across petitions
+words <- words[col.idx]
+
+row.idx <- rowSums(df) != 0
+df <- df[row.idx,] ## keep petitions that are more than one word
+doc_name <- doc_name[row.idx]
+
+doc_df <- tibble("docs"=doc_name)
 meta_df <- meta_df %>%
     select(title,respond_delay,implement_petition_delay,implement_respond_delay,area,date_petitioned,date_answered,date_implemented)
-df <- df %>%
-    left_join(meta_df, by=c("doc_name"="title"))
+
+doc_df <- doc_df %>%
+    left_join(meta_df, by=c("docs"="title"))
+## duplicates!
 
 ## run ML algorithms
 ## 1. LASSO regression
+library(glmnet)
 
