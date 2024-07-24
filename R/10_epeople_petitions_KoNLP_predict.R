@@ -11,7 +11,28 @@ years <- 2002:2023
 file.names <- paste0("your_dropbox/data/tidy/pub_petition_content_", years, ".csv") ## this should be the path to the data in dropbox folder
 meta_df <- as_tibble(map_dfr(file.names, read_csv))
 
-## this may be generating duplicates, examine!
+## duplicates detected
+meta_df <- distinct(meta_df)
+tb <- table(meta_df$title)
+table(tb)
+##     1      2      3      4      5      6      7      8      9     10     11 
+##188461   6239   1061    359    200     74     35     23     13     13      8 
+##    12     13     14     15     16     17     18     19     20     21     23 
+##     7      4      3      5      3      2      6      1      1      2      2 
+##    24     25     37 
+##     1      1      1 
+tb[ tb == 37 ]
+## "아동복지예산 중앙환원을 촉구합니다."
+meta_df %>% filter(title=="아동복지예산 중앙환원을 촉구합니다.")
+
+## there are some common titles that people use (less than 5% of the petitions)
+## not a lot of duplicates, ignore them for now
+## to-do-list: merge title with petition-date to address duplicate titles
+
+## for now: get rid of dup titles
+dup_titles <- names(tb[ tb > 1 ])
+meta_df <- meta_df %>%
+    filter(!title %in% dup_titles)
 
 ## generate y for dfm (days to response)
 meta_df <- meta_df %>%
@@ -53,15 +74,49 @@ row.idx <- rowSums(df) != 0
 df <- df[row.idx,] ## keep petitions that are more than one word
 doc_name <- doc_name[row.idx]
 
+## save memory
+rm(list=c("petition_dfm","col.idx","row.idx"))
+
 doc_df <- tibble("docs"=doc_name)
 meta_df <- meta_df %>%
     select(title,respond_delay,implement_petition_delay,implement_respond_delay,area,date_petitioned,date_answered,date_implemented)
 
 doc_df <- doc_df %>%
     left_join(meta_df, by=c("docs"="title"))
-## duplicates!
+
+
 
 ## run ML algorithms
-## 1. LASSO regression
+## 1. LASSO regression: which words are predictive of the outcome?
 library(glmnet)
+
+## y = whether responded
+responded <- as.matrix(!is.na(doc_df$respond_delay))
+cv_lasso_out <- cv.glmnet(x = df,y = responded, alpha = 1, nfolds = 10)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
+
+coef(lasso_out_res)
+
+## y = days to response
+## note: selection issue
+days_to_response <- as.matrix(doc_df$respond_delay)
+## treat missings
+NAs <- is.na(days_to_response)
+cv_lasso_out <- cv.glmnet(x = df[!NAs,],y = days_to_response[!NAs,], alpha = 1, nfolds = 10)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_d2res <- glmnet(x = df[!NAs,], y = days_to_response[!NAs,], alpha = 1, lambda = opt_lambda)
+
+coef(lasso_out_d2res)
+
+## y = days to implement
+## note: selection issue
+days_to_implement <- as.matrix(doc_df$respond_delay)
+## treat missings
+NAs <- is.na(days_to_implement)
+cv_lasso_out <- cv.glmnet(x = df[!NAs,],y = days_to_implement[!NAs,], alpha = 1, nfolds = 10)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_d2imp <- glmnet(x = df[!NAs,], y = days_to_implement[!NAs,], alpha = 1, lambda = opt_lambda)
+
+coef(lasso_out_d2imp)
 
