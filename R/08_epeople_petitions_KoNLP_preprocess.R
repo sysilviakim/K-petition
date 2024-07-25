@@ -55,6 +55,7 @@ voca_list <- list(
   assessment = petition %>% unnest_tokens(pos, body_assessment, SimplePos09),
   result = petition %>% unnest_tokens(pos, body_result, SimplePos09)
 )
+save(voca_list, file = here("data", "tidy", "voca_list.Rda"))
 
 ## Some error messages:
 ## java.lang.ArrayIndexOutOfBoundsException: 
