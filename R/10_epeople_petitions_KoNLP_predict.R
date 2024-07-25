@@ -107,7 +107,7 @@ responded <- as.matrix(!is.na(doc_df$respond_delay))
 cv_lasso_out <- cv.glmnet(x = df, y = responded, alpha = 1, nfolds = 10)
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
-
+save(lasso_out_res, file = here("output", "lasso_out_res.Rda"))
 coef(lasso_out_res)
 
 ## y = days to response
@@ -122,7 +122,7 @@ opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_d2res <- glmnet(
   x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, lambda = opt_lambda
 )
-
+save(lasso_out_d2res, file = here("output", "lasso_out_d2res.Rda"))
 coef(lasso_out_d2res)
 
 ## y = days to implement
@@ -137,5 +137,5 @@ opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_d2imp <- glmnet(
   x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, lambda = opt_lambda
 )
-
+save(lasso_out_d2imp, file = here("output", "lasso_out_d2imp.Rda"))
 coef(lasso_out_d2imp)
