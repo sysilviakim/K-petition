@@ -2,97 +2,109 @@
 ## "Wed Jul 17 17:03:32 2024"
 
 source(here::here("R", "utilities.R"))
+library(glmnet)
 
+# Load data ====================================================================
 ## load dfm
-petition_dfm <- readRDS("data/DFM.rds")
+petition_dfm <- readRDS(here("data/DFM.rds"))
 
 ## load meta data
 years <- 2002:2023
-file.names <- paste0("your_dropbox/data/tidy/pub_petition_content_", years, ".csv") ## this should be the path to the data in dropbox folder
+## this should be the path to the data in dropbox folder
+file.names <- here(paste0("data/tidy/pub_petition_content_", years, ".csv"))
 meta_df <- as_tibble(map_dfr(file.names, read_csv))
 
+# Deduplicate ==================================================================
 ## duplicates detected
 meta_df <- distinct(meta_df)
 tb <- table(meta_df$title)
 table(tb)
-##     1      2      3      4      5      6      7      8      9     10     11 
-##188461   6239   1061    359    200     74     35     23     13     13      8 
-##    12     13     14     15     16     17     18     19     20     21     23 
-##     7      4      3      5      3      2      6      1      1      2      2 
-##    24     25     37 
-##     1      1      1 
-tb[ tb == 37 ]
+##     1      2      3      4      5      6      7      8      9     10     11
+## 188461   6239   1061    359    200     74     35     23     13     13      8
+##    12     13     14     15     16     17     18     19     20     21     23
+##     7      4      3      5      3      2      6      1      1      2      2
+##    24     25     37
+##     1      1      1
+tb[tb == 37]
 ## "아동복지예산 중앙환원을 촉구합니다."
-meta_df %>% filter(title=="아동복지예산 중앙환원을 촉구합니다.")
+meta_df %>% filter(title == "아동복지예산 중앙환원을 촉구합니다.")
 
 ## there are some common titles that people use (less than 5% of the petitions)
 ## not a lot of duplicates, ignore them for now
 ## to-do-list: merge title with petition-date to address duplicate titles
 
 ## for now: get rid of dup titles
-dup_titles <- names(tb[ tb > 1 ])
+dup_titles <- names(tb[tb > 1])
 meta_df <- meta_df %>%
-    filter(!title %in% dup_titles)
+  filter(!title %in% dup_titles)
 
-## generate y for dfm (days to response)
+# Generate y for dfm (days to response) ========================================
 meta_df <- meta_df %>%
-    mutate(date_petitioned = as.Date(date_petitioned),
-           date_answered = as.Date(date_answered)) %>%
-    mutate(respond_delay = date_answered - date_petitioned, ## days to response
-           implement_petition_delay = date_implemented - date_petitioned, ## days from petition to implementation
-           implement_respond_delay = date_implemented - date_answered) ## days from response to implmentation 
+  mutate(
+    date_petitioned = as.Date(date_petitioned),
+    date_answered = as.Date(date_answered)
+  ) %>%
+  mutate(
+    ## days to response
+    respond_delay = date_answered - date_petitioned,
+    ## days from petition to implementation
+    implement_petition_delay = date_implemented - date_petitioned,
+    ## days from response to implementation
+    implement_respond_delay = date_implemented - date_answered
+  )
 
-quantile(meta_df$respond_delay,na.rm=TRUE)
+quantile(meta_df$respond_delay, na.rm = TRUE)
 ## Time differences in days
-##   0%  25%  50%  75% 100% 
+##   0%  25%  50%  75% 100%
 ##    1   17   29   39 4725
 ## some petitions get response after more than 10 years...!
 
-quantile(meta_df$implement_petition_delay,na.rm=TRUE)
+quantile(meta_df$implement_petition_delay, na.rm = TRUE)
 ## Time differences in days
-##   0%  25%  50%  75% 100% 
+##   0%  25%  50%  75% 100%
 ##    1   17   27   33 3911
 
-quantile(meta_df$implement_respond_delay,na.rm=TRUE)
+quantile(meta_df$implement_respond_delay, na.rm = TRUE)
 ## Time differences in days
-##   0%  25%  50%  75% 100% 
-##    0    0    0    0  230 
+##   0%  25%  50%  75% 100%
+##    0    0    0    0  230
 ## most responses accompany almost immediate implementation
 ## probably the reason why responses are so slow?
 
-## merge y with dfm
+# Merge y with dfm =============================================================
 doc_name <- quanteda::docnames(petition_dfm)
 words <- quanteda::featnames(petition_dfm)
 
 df <- as.matrix(petition_dfm)
 
 col.idx <- colSums(df) > 1
-df <- df[,col.idx] ## keep words that are used at least twice across petitions
+df <- df[, col.idx] ## keep words that are used at least twice across petitions
 words <- words[col.idx]
 
 row.idx <- rowSums(df) != 0
-df <- df[row.idx,] ## keep petitions that are more than one word
+df <- df[row.idx, ] ## keep petitions that are more than one word
 doc_name <- doc_name[row.idx]
 
 ## save memory
-rm(list=c("petition_dfm","col.idx","row.idx"))
+rm(list = c("petition_dfm", "col.idx", "row.idx"))
 
-doc_df <- tibble("docs"=doc_name)
+doc_df <- tibble("docs" = doc_name)
 meta_df <- meta_df %>%
-    select(title,respond_delay,implement_petition_delay,implement_respond_delay,area,date_petitioned,date_answered,date_implemented)
+  select(
+    title, respond_delay, implement_petition_delay,
+    implement_respond_delay, area,
+    date_petitioned, date_answered, date_implemented
+  )
 
 doc_df <- doc_df %>%
-    left_join(meta_df, by=c("docs"="title"))
+  left_join(meta_df, by = c("docs" = "title"))
 
-
-
-## run ML algorithms
+# Run ML algorithms ============================================================
 ## 1. LASSO regression: which words are predictive of the outcome?
-library(glmnet)
 
 ## y = whether responded
 responded <- as.matrix(!is.na(doc_df$respond_delay))
-cv_lasso_out <- cv.glmnet(x = df,y = responded, alpha = 1, nfolds = 10)
+cv_lasso_out <- cv.glmnet(x = df, y = responded, alpha = 1, nfolds = 10)
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
 
@@ -103,9 +115,13 @@ coef(lasso_out_res)
 days_to_response <- as.matrix(doc_df$respond_delay)
 ## treat missings
 NAs <- is.na(days_to_response)
-cv_lasso_out <- cv.glmnet(x = df[!NAs,],y = days_to_response[!NAs,], alpha = 1, nfolds = 10)
+cv_lasso_out <- cv.glmnet(
+  x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, nfolds = 10
+)
 opt_lambda <- cv_lasso_out$lambda.min
-lasso_out_d2res <- glmnet(x = df[!NAs,], y = days_to_response[!NAs,], alpha = 1, lambda = opt_lambda)
+lasso_out_d2res <- glmnet(
+  x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, lambda = opt_lambda
+)
 
 coef(lasso_out_d2res)
 
@@ -114,9 +130,12 @@ coef(lasso_out_d2res)
 days_to_implement <- as.matrix(doc_df$respond_delay)
 ## treat missings
 NAs <- is.na(days_to_implement)
-cv_lasso_out <- cv.glmnet(x = df[!NAs,],y = days_to_implement[!NAs,], alpha = 1, nfolds = 10)
+cv_lasso_out <- cv.glmnet(
+  x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, nfolds = 10
+)
 opt_lambda <- cv_lasso_out$lambda.min
-lasso_out_d2imp <- glmnet(x = df[!NAs,], y = days_to_implement[!NAs,], alpha = 1, lambda = opt_lambda)
+lasso_out_d2imp <- glmnet(
+  x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, lambda = opt_lambda
+)
 
 coef(lasso_out_d2imp)
-
