@@ -156,3 +156,17 @@ assert_that(!identical(lasso_out_d2res, lasso_out_d2imp))
 assert_that(!identical(y1, y2))
 assert_that(!identical(y1, y3))
 assert_that(!identical(y2, y3))
+
+## Intersections?
+## y2/y3 coefs go in similar directions.
+## On the other hand... no response or delayed response
+sort(setdiff(intersect(names(y1[y1 < 0]), names(y2[y2 > 0])), "(Intercept)"))
+#  [1] "가능"     "같습니"   "개발"     "겁니"     "고등학교" "납부"     "누구"     "뉴스"    
+#  [9] "대학"     "도움"     "만원"     "몇자"     "무궁화"   "문제점"   "바랍니"   "부모"    
+# [17] "사고"     "사람"     "사용"     "생각"     "소식"     "시간"     "시중"     "시행"    
+# [25] "실제"     "아이들"   "안녕"     "여건"     "우리나라" "있습니"   "자격증"   "전기"    
+# [33] "제정"     "출근"     "표시"     "하루"     "학교"     "한번"     "합니"     "현행"    
+# [41] "현황"
+
+sort(setdiff(intersect(names(y1[y1 > 0]), names(y2[y2 < 0])), "(Intercept)"))
+# [1] "국민신문고" "국토교통"
