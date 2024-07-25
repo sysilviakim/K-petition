@@ -108,7 +108,10 @@ cv_lasso_out <- cv.glmnet(x = df, y = responded, alpha = 1, nfolds = 10)
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
 save(lasso_out_res, file = here("output", "lasso_out_res.Rda"))
-coef(lasso_out_res)
+coef_matrix <- coef(lasso_out_res)
+coef_matrix
+y1 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
+y1
 
 ## y = days to response
 ## note: selection issue
@@ -123,7 +126,10 @@ lasso_out_d2res <- glmnet(
   x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, lambda = opt_lambda
 )
 save(lasso_out_d2res, file = here("output", "lasso_out_d2res.Rda"))
-coef(lasso_out_d2res)
+coef_matrix <- coef(lasso_out_d2res)
+coef_matrix
+y2 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
+y2
 
 ## y = days to implement
 ## note: selection issue
@@ -138,4 +144,15 @@ lasso_out_d2imp <- glmnet(
   x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, lambda = opt_lambda
 )
 save(lasso_out_d2imp, file = here("output", "lasso_out_d2imp.Rda"))
-coef(lasso_out_d2imp)
+coef_matrix <- coef(lasso_out_d2imp)
+coef_matrix
+y3 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
+y3
+
+## Sanity checks
+assert_that(!identical(lasso_out_res, lasso_out_d2res))
+assert_that(!identical(lasso_out_res, lasso_out_d2imp))
+assert_that(!identical(lasso_out_d2res, lasso_out_d2imp))
+assert_that(!identical(y1, y2))
+assert_that(!identical(y1, y3))
+assert_that(!identical(y2, y3))
