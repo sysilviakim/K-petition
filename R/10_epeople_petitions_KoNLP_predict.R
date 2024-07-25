@@ -170,3 +170,12 @@ sort(setdiff(intersect(names(y1[y1 < 0]), names(y2[y2 > 0])), "(Intercept)"))
 
 sort(setdiff(intersect(names(y1[y1 > 0]), names(y2[y2 < 0])), "(Intercept)"))
 # [1] "국민신문고" "국토교통"
+
+setdiff(
+  intersect(intersect(names(y1), names(y2)), names(y3)),
+  "(Intercept)"
+)
+#  [1] "합니"     "안녕"     "같습니"   "몇자"     "하루"     "누구"     "사용"    
+#  [8] "뉴스"     "소식"     "실제"     "가능"     "아이들"   "생각"     "현행"    
+# [15] "표시"     "우리나라" "문제점"   "한번"     "시간"     "사람"     "도움"    
+# [22] "대학"     "사고"     "시행"     "출근"     "개발"     "현황"    
