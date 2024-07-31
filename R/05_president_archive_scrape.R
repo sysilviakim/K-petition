@@ -26,23 +26,24 @@ root_url <- "http://webarchives.pa.go.kr/19th/www.president.go.kr/petitions/"
 ## 50: 문화/예술/체육/언론
 ## 51: 기타
 
-# Loop and save through scrapes ================================================
-## Because these are only valid if they have gathered 200,000 signatures,
-## only a few hundred petitions are available for scraping
-page_count <- 37
-scrape_list <- vector("list", page_count)
+# Loop scrapes: ongoing petitions ==============================================
+page_count <- 37 ## total 253 that are unanswered
+scrape_unanswered_list <- vector("list", page_count)
 
 for (i in seq(page_count)) {
   ## url <- paste0(root_url, "?c=", 35, "&only=1&page=", 1, "&order=1")
-  url <- paste0(root_url, "?only=1&page=", i, "&order=1")
+  url <- paste0(root_url, "?c=0&only=1&page=", i, "&order=1")
   remDr$navigate(url)
+  
+  ## Takes some time to load
+  Sys.sleep(5)
   source_url <- remDr$getPageSource()[[1]]
   temp <- read_html(source_url) %>%
     html_nodes(".petition_list") %>%
     .[[1]] %>%
     html_nodes(".bl_wrap")
   
-  scrape_list[[i]] <- tibble(
+  scrape_unanswered_list[[i]] <- tibble(
     category = temp %>%
       html_nodes(".bl_category") %>%
       html_text(),
@@ -60,8 +61,86 @@ for (i in seq(page_count)) {
       html_text()
   )
   
+  save(
+    scrape_unanswered_list,
+    file = here("data", "raw", "moon_president_petitions_unanswered.Rda")
+  )
   Sys.sleep(5)
   message(paste0("Page ", i, " scraped."))
 }
 
-save(scrape_list, file = here("data", "raw", "moon_president_petitions.Rda"))
+## Assert that non of them have zero rows
+assert_that(all(sapply(scrape_unanswered_list, nrow) > 0))
+
+## Bind rows
+scrape_df_unanswered <- bind_rows(scrape_unanswered_list) %>%
+  mutate(answered = FALSE)
+
+# Loop scrapes: answered petitions =============================================
+## Not quite DRY, but convenient to run separately
+page_count <- 65698 ## Manually found
+scrape_answered_list <- vector("list", page_count)
+
+for (i in seq(page_count)) {
+  url <- paste0(root_url, "?c=0&only=2&page=", i, "&order=1")
+  remDr$navigate(url)
+
+  ## Takes some time to load
+  Sys.sleep(5)
+  source_url <- remDr$getPageSource()[[1]]
+  temp <- read_html(source_url) %>%
+    html_nodes(".petition_list") %>%
+    .[[1]] %>%
+    html_nodes(".bl_wrap")
+  
+  scrape_answered_list[[i]] <- tibble(
+    category = temp %>%
+      html_nodes(".bl_category") %>%
+      html_text(),
+    URL = temp %>% 
+      html_nodes(".relpy_w") %>% 
+      html_attr("href"),
+    title = temp %>%
+      html_nodes(".relpy_w") %>% 
+      html_text(),
+    date = temp %>% 
+      html_nodes(".bl_date") %>% 
+      html_text(),
+    participants = temp %>% 
+      html_nodes(".bl_agree") %>% 
+      html_text()
+  )
+  
+  if (i %% 10 == 0) {
+    save(
+      scrape_answered_list,
+      file = here("data", "raw", "moon_president_petitions_answered.Rda")
+    )
+  }
+  Sys.sleep(5)
+  message(paste0("Page ", i, " scraped."))
+}
+
+## Assert that non of them have zero rows
+assert_that(all(sapply(scrape_answered_list, nrow) > 0))
+
+## Bind rows
+scrape_df_answered <- bind_rows(scrape_answered_list) %>%
+  mutate(answered = TRUE)
+
+# Now actually go to the URLs and scrape the contents ==========================
+for (i in seq(nrow(scrape_df))) {
+  url <- scrape_df$URL[i]
+  remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
+  source_url <- remDr$getPageSource()[[1]]
+  
+  Sys.sleep(5)
+  ## Not sure why but must run again to get the results
+  source_url <- remDr$getPageSource()[[1]]
+  temp <- read_html(source_url) %>%
+    html_nodes(".petitionsView") %>%
+    .[[1]] %>%
+    html_nodes(".View_write")
+  
+  scrape_df$content
+}
