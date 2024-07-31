@@ -142,7 +142,7 @@ p <- body_nchar %>%
   ggplot(aes(x = year, y = mean_nchar)) +
   geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
   labs(x = "Year", y = "Average Number of Characters") +
-  theme_bw() + 
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p
 ## pdf_default(p)
@@ -151,8 +151,8 @@ ggsave(here("fig", "petition_length_avg_over_years.pdf"), width = 5, height = 3)
 # Is the response rate increasing over time? ===================================
 
 ## What is the raw response rate?
-petition %>% 
-  count(status) %>% 
+petition %>%
+  count(status) %>%
   mutate(perc = formatC(n / sum(n) * 100, digits = 1, format = "f")) %>%
   arrange(desc(perc))
 #     status      n perc
@@ -165,13 +165,13 @@ petition %>%
 ## 99.5% of the petitions have been responded to
 ## 0.5% is actually likely lost due to time when aggregating, given 2002--2004
 
-answer_rate <- petition %>% 
+answer_rate <- petition %>%
   group_by(year) %>%
   group_split(.keep = TRUE) %>%
   `names<-`({.} %>% map(~ .x$year[1]) %>% unlist()) %>%
   map(
-    ~ .x %>% 
-      count(status) %>% 
+    ~ .x %>%
+      count(status) %>%
       mutate(perc = n / sum(n)) %>%
       arrange(desc(perc))
   ) %>%
@@ -191,7 +191,7 @@ p1 <- answer_rate %>%
   ggplot(aes(x = year, y = perc)) +
   geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
   labs(x = "Year", y = "Percentage of Accepted Petitions") +
-  theme_bw() + 
+  theme_bw() +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -204,7 +204,7 @@ p2 <- pub_total %>%
   geom_col(colour = "#6baed6", fill = "#6baed6") +
   labs(x = "Year", y = "Number of Petitions") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_continuous(breaks = seq(2012, 2023, 1)) + 
+  scale_x_continuous(breaks = seq(2012, 2023, 1)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -251,6 +251,24 @@ ggsave(here("fig", "petition_area_over_time.pdf"), width = 10, height = 5.5)
 ## the current structure/distribution is stable from 2012 onwards
 ## so I'm guessing this is a data generating process problem
 ## i.e., which departments are responsible for the petitions
+
+## I'd rather draw a version from 2012--2023
+p <- petition %>%
+  filter(year_petitioned > 2011 & year_petitioned < 2024) %>%
+  ggplot(aes(x = year_petitioned, fill = area)) +
+  geom_bar(position = "fill") +
+  ylab("") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() +
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(breaks = seq(2012, 2023, 1))
+p + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 3))
+## pdf_default(p) + theme(legend.position = "bottom") +
+##   guides(fill = guide_legend(nrow = 3))
+ggsave(
+  here("fig", "petition_area_over_time_truncated.pdf"),
+  width = 10, height = 5.5
+)
 
 # Is there a seasonality in filing petitions? ==================================
 ## Month of petition -----------------------------------------------------------
