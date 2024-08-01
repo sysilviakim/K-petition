@@ -1,4 +1,6 @@
 ## http://webarchives.pa.go.kr/19th/www.president.go.kr/petitions
+## Moon presidency petitions (Yoon presidency ones cannot be scraped
+## as they are not public)
 ## Jul 8, 2019 to May 9, 2022
 source(here::here("R", "utilities.R"))
 
@@ -34,7 +36,7 @@ for (i in seq(page_count)) {
   ## url <- paste0(root_url, "?c=", 35, "&only=1&page=", 1, "&order=1")
   url <- paste0(root_url, "?c=0&only=1&page=", i, "&order=1")
   remDr$navigate(url)
-  
+
   ## Takes some time to load
   Sys.sleep(5)
   source_url <- remDr$getPageSource()[[1]]
@@ -42,39 +44,35 @@ for (i in seq(page_count)) {
     html_nodes(".petition_list") %>%
     .[[1]] %>%
     html_nodes(".bl_wrap")
-  
+
   scrape_unanswered_list[[i]] <- tibble(
     category = temp %>%
       html_nodes(".bl_category") %>%
       html_text(),
-    URL = temp %>% 
-      html_nodes(".relpy_w") %>% 
+    URL = temp %>%
+      html_nodes(".relpy_w") %>%
       html_attr("href"),
     title = temp %>%
-      html_nodes(".relpy_w") %>% 
+      html_nodes(".relpy_w") %>%
       html_text(),
-    date = temp %>% 
-      html_nodes(".bl_date") %>% 
+    date = temp %>%
+      html_nodes(".bl_date") %>%
       html_text(),
-    participants = temp %>% 
-      html_nodes(".bl_agree") %>% 
+    participants = temp %>%
+      html_nodes(".bl_agree") %>%
       html_text()
   )
-  
+
   save(
     scrape_unanswered_list,
     file = here("data", "raw", "moon_president_petitions_unanswered.Rda")
   )
-  Sys.sleep(5)
+  Sys.sleep(2.5)
   message(paste0("Page ", i, " scraped."))
 }
 
 ## Assert that non of them have zero rows
 assert_that(all(sapply(scrape_unanswered_list, nrow) > 0))
-
-## Bind rows
-scrape_df_unanswered <- bind_rows(scrape_unanswered_list) %>%
-  mutate(answered = FALSE)
 
 # Loop scrapes: answered petitions =============================================
 ## Not quite DRY, but convenient to run separately
@@ -92,55 +90,132 @@ for (i in seq(page_count)) {
     html_nodes(".petition_list") %>%
     .[[1]] %>%
     html_nodes(".bl_wrap")
-  
+
   scrape_answered_list[[i]] <- tibble(
     category = temp %>%
       html_nodes(".bl_category") %>%
       html_text(),
-    URL = temp %>% 
-      html_nodes(".relpy_w") %>% 
+    URL = temp %>%
+      html_nodes(".relpy_w") %>%
       html_attr("href"),
     title = temp %>%
-      html_nodes(".relpy_w") %>% 
+      html_nodes(".relpy_w") %>%
       html_text(),
-    date = temp %>% 
-      html_nodes(".bl_date") %>% 
+    date = temp %>%
+      html_nodes(".bl_date") %>%
       html_text(),
-    participants = temp %>% 
-      html_nodes(".bl_agree") %>% 
+    participants = temp %>%
+      html_nodes(".bl_agree") %>%
       html_text()
   )
-  
-  if (i %% 10 == 0) {
+
+  if (i %% 10 == 0 | i == page_count)) {
     save(
       scrape_answered_list,
       file = here("data", "raw", "moon_president_petitions_answered.Rda")
     )
   }
-  Sys.sleep(5)
+  Sys.sleep(2.5)
   message(paste0("Page ", i, " scraped."))
 }
 
 ## Assert that non of them have zero rows
 assert_that(all(sapply(scrape_answered_list, nrow) > 0))
 
-## Bind rows
-scrape_df_answered <- bind_rows(scrape_answered_list) %>%
-  mutate(answered = TRUE)
-
 # Now actually go to the URLs and scrape the contents ==========================
-for (i in seq(nrow(scrape_df))) {
-  url <- scrape_df$URL[i]
+load(here("data", "raw", "moon_president_petitions_unanswered.Rda"))
+load(here("data", "raw", "moon_president_petitions_answered.Rda"))
+
+## Bind rows
+scrape_df_unanswered <- bind_rows(scrape_unanswered_list) %>%
+  mutate(answered = FALSE) %>%
+  ## From each dataframe, extract ID of the petition
+  ## i.e., from "/19th/www.president.go.kr/petitions/605368", extract 605368
+  mutate(ID = str_extract(URL, "\\d+$"))
+scrape_df_answered <- bind_rows(scrape_answered_list) %>%
+  mutate(answered = TRUE) %>%
+  mutate(ID = str_extract(URL, "\\d+$"))
+
+## Loop: unanswered petitions --------------------------------------------------
+scrape_content_unanswered <- vector("list", nrow(scrape_df_unanswered))
+names(scrape_content_unanswered) <- scrape_df_unanswered$ID
+for (i in seq(nrow(scrape_df_unanswered))) {
+  url <- scrape_df_unanswered$URL[i]
   remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
-  source_url <- remDr$getPageSource()[[1]]
-  
+
   Sys.sleep(5)
-  ## Not sure why but must run again to get the results
-  source_url <- remDr$getPageSource()[[1]]
-  temp <- read_html(source_url) %>%
-    html_nodes(".petitionsView") %>%
-    .[[1]] %>%
-    html_nodes(".View_write")
-  
-  scrape_df$content
+  source_url <- read_html(remDr$getPageSource()[[1]])
+
+  scrape_content_unanswered[[scrape_df_unanswered$ID[i]]] <- tibble(
+    title = source_url %>%
+      html_nodes(".petitionsView_title") %>%
+      .[[1]] %>%
+      html_text() %>%
+      trimws(),
+    category = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      ## Extract <li>\n<p>카테고리</p>기타</li> -> "기타"
+      html_text() %>%
+      .[[1]] %>%
+      gsub("카테고리", "", .),
+    start_date = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[2]] %>%
+      gsub("청원시작", "", .) %>%
+      trimws(),
+    end_date = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[3]] %>%
+      gsub("청원마감", "", .) %>%
+      trimws(),
+    petitioner = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[4]] %>%
+      gsub("청원인", "", .) %>%
+      trimws(),
+    status = source_url %>%
+      html_nodes(".petitions_txt_ing") %>%
+      html_text(),
+    text = source_url %>%
+      html_nodes(".View_write") %>%
+      .[[1]] %>%
+      html_text() %>%
+      trimws(),
+    participants = source_url %>%
+      html_nodes(".Reply_area_agree") %>%
+      html_text() %>%
+      gsub(" 명$|^청원동의 ", "", .),
+    URL = url
+  )
+  if (i %% 10 == 0 | i == nrow(scrape_df_unanswered)) {
+    save(
+      scrape_content_unanswered,
+      file = here(
+        "data", "raw", "moon_president_petitions_unanswered_content.Rda"
+      )
+    )
+  }
+  Sys.sleep(2.5)
+  message(
+    paste0("Page ", i, " scraped out of ", nrow(scrape_df_unanswered), ".")
+  )
 }
+
+scrape_content_unanswered %>%
+  bind_rows(.id = "ID") %>%
+  write_csv(
+    here("data", "raw", "moon_petitions_unanswered_content.csv")
+  )
+
+## Loop: answered petitions ----------------------------------------------------
