@@ -109,7 +109,7 @@ for (i in seq(page_count)) {
       html_text()
   )
 
-  if (i %% 10 == 0 | i == page_count)) {
+  if (i %% 10 == 0 | i == page_count) {
     save(
       scrape_answered_list,
       file = here("data", "raw", "moon_president_petitions_answered.Rda")
@@ -219,3 +219,84 @@ scrape_content_unanswered %>%
   )
 
 ## Loop: answered petitions ----------------------------------------------------
+scrape_content_answered <- vector("list", 459886)
+names(scrape_content_answered) <- scrape_df_answered$ID
+for (i in seq(nrow(scrape_df_answered))) {
+  url <- scrape_df_answered$URL[i]
+  remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
+  
+  Sys.sleep(5)
+  source_url <- read_html(remDr$getPageSource()[[1]])
+  
+  scrape_content_answered[[scrape_df_answered$ID[i]]] <- tibble(
+    title = source_url %>%
+      html_nodes(".petitionsView_title") %>%
+      .[[1]] %>%
+      html_text() %>%
+      trimws(),
+    category = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      ## Extract <li>\n<p>카테고리</p>기타</li> -> "기타"
+      html_text() %>%
+      .[[1]] %>%
+      gsub("카테고리", "", .),
+    start_date = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[2]] %>%
+      gsub("청원시작", "", .) %>%
+      trimws(),
+    end_date = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[3]] %>%
+      gsub("청원마감", "", .) %>%
+      trimws(),
+    petitioner = source_url %>%
+      html_nodes(".petitionsView_info_list") %>%
+      .[[1]] %>%
+      html_nodes("li") %>%
+      html_text() %>%
+      .[[4]] %>%
+      gsub("청원인", "", .) %>%
+      trimws(),
+    status = source_url %>%
+      html_nodes(".petitions_txt_ing") %>%
+      html_text(),
+    text = source_url %>%
+      html_nodes(".View_write") %>%
+      .[[1]] %>%
+      html_text() %>%
+      trimws(),
+    participants = source_url %>%
+      html_nodes(".Reply_area_agree") %>%
+      html_text() %>%
+      gsub(" 명$|^청원동의 ", "", .),
+    URL = url
+  )
+  if (i %% 10 == 0 | i == nrow(scrape_df_answered)) {
+    save(
+      scrape_content_answered,
+      file = here(
+        "data", "raw", "moon_president_petitions_answered_content.Rda"
+      )
+    )
+  }
+  Sys.sleep(2.5)
+  message(
+    paste0("Page ", i, " scraped out of ", nrow(scrape_df_answered), ".")
+  )
+}
+
+scrape_content_answered %>%
+  bind_rows(.id = "ID") %>%
+  write_csv(
+    here("data", "raw", "moon_petitions_answered_content.csv")
+  )
+
