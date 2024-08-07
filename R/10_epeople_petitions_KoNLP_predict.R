@@ -75,7 +75,9 @@ quantile(meta_df$implement_respond_delay, na.rm = TRUE)
 doc_name <- quanteda::docnames(petition_dfm)
 words <- quanteda::featnames(petition_dfm)
 
-df <- as.matrix(petition_dfm)
+## df <- as.matrix(petition_dfm)
+## use sparse matrix
+df <- Matrix(petition_dfm, sparse = TRUE)
 
 col.idx <- colSums(df) > 1
 df <- df[, col.idx] ## keep words that are used at least twice across petitions
@@ -103,7 +105,8 @@ doc_df <- doc_df %>%
 ## 1. LASSO regression: which words are predictive of the outcome?
 
 ## y = whether responded
-responded <- as.matrix(!is.na(doc_df$respond_delay))
+responded <- as.matrix(ifelse(is.na(doc_df$respond_delay),0,1))
+##responded <- as.matrix(!is.na(doc_df$respond_delay))
 cv_lasso_out <- cv.glmnet(x = df, y = responded, alpha = 1, nfolds = 10)
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
@@ -111,19 +114,36 @@ save(lasso_out_res, file = here("output", "lasso_out_res.Rda"))
 coef_matrix <- coef(lasso_out_res)
 coef_matrix
 y1 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
-y1
+length(y1)
+
+y1_pos <- sort(coef_matrix[coef_matrix[, 1] > 0, ])
+names(y1_pos[1:10])
+## [1] "블리자드코리아" "집중폭우"       "국토교통"       "민원내용"      
+## [5] "경찰들"         "폭우"           "택시요금"       "공개수업"      
+## [9] "지원자격"       "국민제안"
+y1_neg <- sort(coef_matrix[coef_matrix[, 1] < 0, ])
+names(y1_neg[1:10])
+## [1] "인사혁신"       "해양수산"       "여성가족"       "기획재정"      
+## [5] "문화체육관광"   "식품의약품안전" "서울특별"       "제주특별자치"  
+## [9] "울산광역"       "국세" 
+## if petitions contain specific subjects, they are more likely to get responded
+## if petitions contain specific branches of the government or regions, they are less likely to get responded
+## do not know if this is due to the nature of the petitions or the capacity of the branches that these petitions are directed
 
 ## y = days to response
 ## note: selection issue
 days_to_response <- as.matrix(doc_df$respond_delay)
+## transform to address skewness
+ln_days_to_response <- log(days_to_response + 1)
+
 ## treat missings
 NAs <- is.na(days_to_response)
 cv_lasso_out <- cv.glmnet(
-  x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, nfolds = 10
+  x = df[!NAs, ], y = ln_days_to_response[!NAs, ], alpha = 1, nfolds = 10
 )
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_d2res <- glmnet(
-  x = df[!NAs, ], y = days_to_response[!NAs, ], alpha = 1, lambda = opt_lambda
+  x = df[!NAs, ], y = ln_days_to_response[!NAs, ], alpha = 1, lambda = opt_lambda
 )
 save(lasso_out_d2res, file = here("output", "lasso_out_d2res.Rda"))
 coef_matrix <- coef(lasso_out_d2res)
@@ -131,23 +151,43 @@ coef_matrix
 y2 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
 y2
 
+y2_pos <- sort(coef_matrix[coef_matrix[, 1] > 0, ])
+names(y2_pos[1:10])
+## [1] "특별사법경찰관" "경찰관서"       "참조해"         "보도"          
+## [5] "기차"           "시민들"         "경우"           "제작"          
+## [9] "우리"           "지방" 
+y2_neg <- sort(coef_matrix[coef_matrix[, 1] < 0, ])
+names(y2_neg[1:10])
+## [1] "행정안전"   "국토교통"   "국민신문고"
+
 ## y = days to implement
 ## note: selection issue
-days_to_implement <- as.matrix(doc_df$respond_delay)
+days_to_implement <- as.matrix(doc_df$implement_petition_delay)
+ln_days_to_implement <- log(days_to_implement + 1)
+
 ## treat missings
 NAs <- is.na(days_to_implement)
 cv_lasso_out <- cv.glmnet(
-  x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, nfolds = 10
+  x = df[!NAs, ], y = ln_days_to_implement[!NAs, ], alpha = 1, nfolds = 10
 )
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_d2imp <- glmnet(
-  x = df[!NAs, ], y = days_to_implement[!NAs, ], alpha = 1, lambda = opt_lambda
+  x = df[!NAs, ], y = ln_days_to_implement[!NAs, ], alpha = 1, lambda = opt_lambda
 )
 save(lasso_out_d2imp, file = here("output", "lasso_out_d2imp.Rda"))
 coef_matrix <- coef(lasso_out_d2imp)
 coef_matrix
 y3 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
 y3
+
+y3_pos <- sort(coef_matrix[coef_matrix[, 1] > 0, ])
+names(y3_pos[1:10])
+## [1] "특별사법경찰관" "경찰관서"       "참조해"         "보도"          
+## [5] "기차"           "시민들"         "경우"           "제작"          
+## [9] "우리"           "지방"
+y3_neg <- sort(coef_matrix[coef_matrix[, 1] < 0, ])
+names(y3_neg[1:10])
+## [1] "행정안전"   "국토교통"   "국민신문고"
 
 ## Sanity checks
 assert_that(!identical(lasso_out_res, lasso_out_d2res))
@@ -179,3 +219,109 @@ setdiff(
 #  [8] "뉴스"     "소식"     "실제"     "가능"     "아이들"   "생각"     "현행"    
 # [15] "표시"     "우리나라" "문제점"   "한번"     "시간"     "사람"     "도움"    
 # [22] "대학"     "사고"     "시행"     "출근"     "개발"     "현황"    
+
+## predictive analysis
+## use 70% of data as training set
+samp_idx <- sample(c(TRUE,FALSE),nrow(df),replace=TRUE,prob=c(0.7,0.3))
+train_df <- df[samp_idx,]
+test_df <- df[!samp_idx,]
+
+## 1. whether responded
+train_responded <- responded[samp_idx,]
+test_responded <- responded[!samp_idx,]
+
+cv_lasso_out <- cv.glmnet(x = train_df, y = train_responded, alpha = 1, nfolds = 10)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_res <- glmnet(x = train_df, y = train_responded, alpha = 1, lambda = opt_lambda)
+
+pred_responded <- predict(lasso_out_res, s = opt_lambda, newx = train_df)
+pred_out_train <- cbind(pred_responded,train_responded)
+
+pred_responded <- predict(lasso_out_res, s = opt_lambda, newx = test_df)
+pred_out_test <- cbind(pred_responded,test_responded)
+
+pdf("output/lasso_responded.pdf",width=10,height=6)
+par(mfrow=c(1,2))
+plot(pred_out_train,xlab="Predicted Vals",ylab="True Vals",main="Whether Responded: Predict on Train Set")
+plot(pred_out_test,xlab="Predicted Vals",ylab="True Vals",main="Whether Responded: Predict on Test Set")
+dev.off()
+
+## 2. days to response
+train_days_to_response <- log(days_to_response[samp_idx,]+1)
+test_days_to_response <- log(days_to_response[!samp_idx,]+1)
+
+NAs <- is.na(train_days_to_response)
+cv_lasso_out <- cv.glmnet(
+  x = train_df[!NAs, ],
+  y = train_days_to_response[!NAs],
+  alpha = 1, nfolds = 10
+)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_d2res <- glmnet(
+  x = train_df[!NAs, ],
+  y = train_days_to_response[!NAs],
+  alpha = 1, lambda = opt_lambda
+)
+
+pred_d2res <- predict(lasso_out_d2res, s = opt_lambda, newx = train_df)
+pred_out_train <- cbind(pred_d2res,train_days_to_response)
+
+pred_d2res <- predict(lasso_out_d2res, s = opt_lambda, newx = test_df)
+pred_out_test <- cbind(pred_d2res,test_days_to_response)
+pdf("output/lasso_d2r.pdf",width=10,height=6)
+plot(pred_out_train,xlab="Predicted Vals",ylab="True Vals",main="Days to Response: Predict on Train Set")
+abline(a=0,b=1,col="tomato")
+plot(pred_out_test,xlab="Predicted Vals",ylab="True Vals",main="Days to Response: Predict on Test Set")
+abline(a=0,b=1,col="tomato")
+dev.off()
+
+## 3. days to implement
+train_days_to_implement <- log(days_to_implement[samp_idx,]+1)
+test_days_to_implement <- log(days_to_implement[!samp_idx,]+1)
+
+NAs <- is.na(train_days_to_implement)
+cv_lasso_out <- cv.glmnet(
+  x = train_df[!NAs, ],
+  y = train_days_to_implement[!NAs],
+  alpha = 1, nfolds = 10
+)
+opt_lambda <- cv_lasso_out$lambda.min
+lasso_out_d2imp <- glmnet(
+  x = train_df[!NAs, ],
+  y = train_days_to_implement[!NAs],
+  alpha = 1, lambda = opt_lambda
+) ## all coefficients to 0
+
+pred_d2imp <- predict(lasso_out_d2imp, s = opt_lambda, newx = train_df)
+pred_out_train <- cbind(pred_d2imp,train_days_to_implement)
+
+pred_d2imp <- predict(lasso_out_d2imp, s = opt_lambda, newx = test_df)
+pred_out_test <- cbind(pred_d2imp,test_days_to_implement)
+pdf("output/lasso_d2i.pdf",width=10,height=6)
+par(mfrow=c(1,2))
+plot(pred_out_train,xlab="Predicted Vals",ylab="True Vals",main="Days to Implementation: Predict on Train Set")
+abline(a=0,b=1,col="tomato")
+plot(pred_out_test,xlab="Predicted Vals",ylab="True Vals",main="Days to Implementation: Predict on Test Set")
+abline(a=0,b=1,col="tomato")
+dev.off()
+
+#### xgboost
+library(xgboost)
+
+## convert to DMatrix for optimal performance
+train_dmat <- xgb.DMatrix(data = train_df, label = train_responded)
+
+## set model parameters
+params <- list(
+  objective = "binary:logistic",
+  max_depth = 6,                   # Maximum depth of the trees
+  eta = 0.3,                       # Learning rate
+  nthread = 2                      # Number of parallel threads to use
+)
+
+## 1. whether responded
+xgb_out_res <- xgb.train(
+  params = params,
+  data = train_dmat,
+  nrounds = 100
+)
