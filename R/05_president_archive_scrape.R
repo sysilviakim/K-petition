@@ -119,7 +119,8 @@ for (i in seq(page_count)) {
   message(paste0("Page ", i, " scraped."))
 }
 
-## Assert that non of them have zero rows
+## Assert that non of them have zero rows; if not, re-run the loop for those
+assert_that(scrape_answered_list %>% map_lgl(~ !is.null(.x)) %>% all())
 assert_that(all(sapply(scrape_answered_list, nrow) > 0))
 
 # Now actually go to the URLs and scrape the contents ==========================
@@ -221,7 +222,8 @@ scrape_content_unanswered %>%
 ## Loop: answered petitions ----------------------------------------------------
 scrape_content_answered <- vector("list", 459886)
 names(scrape_content_answered) <- scrape_df_answered$ID
-for (i in seq(nrow(scrape_df_answered))) {
+## scrape_content_answered %>% map_lgl(~ !is.null(.x)) %>% which() %>% max() 
+for (i in seq(132780, nrow(scrape_df_answered))) {
   url <- scrape_df_answered$URL[i]
   remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
   
