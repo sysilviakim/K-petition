@@ -112,13 +112,13 @@ for (i in seq(nrow(title_df))) {
   
   ## Crude, but only way to do it
   main_text <- read_html(temp) %>%
-    html_nodes("p") %>%
+    html_nodes(".pet-doc__cont") %>%
     html_text() %>%
     trimws() %>%
     .[[1]]
-  if (length(possible_date) == 1) {
+  if (length(main_text) == 0) {
     main_text <- read_html(temp) %>%
-      html_nodes(".pet-doc__cont") %>%
+      html_nodes("p") %>%
       html_text() %>%
       trimws() %>%
       .[[1]]
