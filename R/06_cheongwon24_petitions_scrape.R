@@ -100,15 +100,29 @@ for (i in seq(nrow(title_df))) {
     {.[which(grepl("진행", .))]} %>%
     gsub("현재 진행중인 단계", "", .)
   
+  possible_date <- read_html(temp) %>%
+    html_nodes("p") %>%
+    html_text() %>%
+    trimws()
   response_date <- ifelse(
     process == "종결",
-    read_html(temp) %>%
-      html_nodes("p") %>%
-      html_text() %>%
-      trimws() %>%
-      .[[2]],
+    ifelse(length(possible_date) > 1, possible_date[[2]], possible_date),
     NA
   )
+  
+  ## Crude, but only way to do it
+  main_text <- read_html(temp) %>%
+    html_nodes("p") %>%
+    html_text() %>%
+    trimws() %>%
+    .[[1]]
+  if (length(possible_date) == 1) {
+    main_text <- read_html(temp) %>%
+      html_nodes(".pet-doc__cont") %>%
+      html_text() %>%
+      trimws() %>%
+      .[[1]]
+  }
   
   content_list[[i]] <- tibble(
     stage = stage,
@@ -117,8 +131,8 @@ for (i in seq(nrow(title_df))) {
       html_nodes(".link") %>% 
       html_nodes("div") %>%
       html_text() %>%
-      gsub("조회 수", "", ) %>%
-      trimws(),
+      gsub("조회 수|\\s", "", .) %>%
+      as.numeric(),
     category = read_html(temp) %>% 
       html_nodes(".category") %>%
       html_text() %>%
@@ -127,12 +141,7 @@ for (i in seq(nrow(title_df))) {
       html_nodes(".subject") %>% 
       html_text() %>%
       trimws(),
-    ## Crude, but only way to do it
-    text = read_html(temp) %>%
-      html_nodes("p") %>%
-      html_text() %>%
-      trimws() %>%
-      .[[1]],
+    text = main_text,
     attachments = read_html(temp) %>%
       html_nodes(".pet-doc__file") %>%
       html_nodes("a") %>%
@@ -184,3 +193,6 @@ for (i in seq(nrow(title_df))) {
 ## Check that all is scraped
 assert_that(!any(is.null(content_list)))
 content_list %>% map_dbl(nrow) %>% {which(. == 0)}
+
+content_df <- content_list %>%
+  bind_rows()
