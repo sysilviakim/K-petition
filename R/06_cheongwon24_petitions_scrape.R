@@ -195,4 +195,12 @@ assert_that(!any(is.null(content_list)))
 content_list %>% map_dbl(nrow) %>% {which(. == 0)}
 
 content_df <- content_list %>%
-  bind_rows()
+  bind_rows() %>%
+  bind_cols(., title_df %>% select(date, URL))
+save(
+  content_df,
+  file = here(
+    "data", "raw", 
+    paste0("cheongwon_content_", format(Sys.Date(), "%Y%m%d"), ".Rda")
+  )
+)
