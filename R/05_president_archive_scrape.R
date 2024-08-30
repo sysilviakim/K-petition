@@ -220,10 +220,11 @@ scrape_content_unanswered %>%
   )
 
 ## Loop: answered petitions ----------------------------------------------------
+## load(here("data", "raw", "moon_president_petitions_answered_content.Rda"))
 scrape_content_answered <- vector("list", 459886)
 names(scrape_content_answered) <- scrape_df_answered$ID
 ## scrape_content_answered %>% map_lgl(~ !is.null(.x)) %>% which() %>% max() 
-for (i in seq(132780, nrow(scrape_df_answered))) {
+for (i in seq(179981, nrow(scrape_df_answered))) {
   url <- scrape_df_answered$URL[i]
   remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
   

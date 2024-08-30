@@ -20,6 +20,7 @@ library(patchwork)
 
 ## https://mrchypark.github.io/post/KoNLP-설치-방법/
 ## devtools::install_github('haven-jeon/KoNLP')
+## https://blog.naver.com/song_sec/221800361879
 library(KoNLP)
 
 # Functions ====================================================================
