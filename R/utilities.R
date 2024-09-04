@@ -23,6 +23,9 @@ library(patchwork)
 ## https://blog.naver.com/song_sec/221800361879
 library(KoNLP)
 
+## devtools::install_github("ben-aaron188/rgpt3")
+library(rgpt3)
+
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
   ## List of length three that has title, source, and page_meta

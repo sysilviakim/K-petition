@@ -1,7 +1,5 @@
 ## toy run to test GPT API
 source(here::here("R", "utilities.R"))
-## devtools::install_github("ben-aaron188/rgpt3")
-library(rgpt3)
 
 # Toy run for 2010 =============================================================
 ## get petitions with no spacing
