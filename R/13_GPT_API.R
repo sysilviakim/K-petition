@@ -51,3 +51,56 @@ kor_response <- rgpt(
 kor_response[[1]]$gpt_content
 ## "우리 주변에 불우 이웃들이 학교도 못 가고 있다."
 ## works!
+
+
+# Run for all data =============================================================
+## set up the task
+prompt_text0 <- paste0(
+    "")
+rgpt(
+  prompt_role_var = "user",
+  prompt_content_var = prompt_text0,
+  param_model = "gpt-4o",
+  param_temperature = 0.5, 
+  ## between 0 and 2. high temperature introduces more randomness, 
+  ## low temperature makes it more deterministic
+  param_max_tokens = 100,
+  param_n = 1
+)
+
+## create df
+years <- 2002:2023
+file.names <- paste0(paste0("data/tidy/pub_petition_content_", years, ".csv"))
+petition_df <- as_tibble(map_dfr(file.names, read_csv))
+nrow(petition_df) ## 208494
+
+colnames(petition_df)[7] <- c("bodytext")
+
+## append id and date variable
+petition_df$id <- 1:nrow(petition_df)
+petition_df$year <- substr(petition_df$date_petitioned, 1, 4)
+petition_df$month <- substr(petition_df$date_petitioned, 6, 7)
+
+no_space_petition <- petition_df %>%
+  filter(str_detect(word(bodytext, 1), "[[:alnum:]]{10,}"))
+nrow(no_space_petition) ## 2566
+
+no_space_petition$nid <- 1:nrow(no_space_petition)
+no_space_petition$corrected_bodytext <- NA
+for(i in 1:nrow(no_space_petition)){
+    prompt_text <- paste0("한국어 문장의 잘못된 띄어쓰기를 교정하려고 한다. 다 문장의 잘못된 띄어쓰기를 교정하여 새로 써줘. \n\n", no_space_petition$bodytext[i])
+    
+    no_space_petition$corrected_bodytext[i] <-
+        rgpt(
+            prompt_role_var = "user",
+            prompt_content_var = prompt_text,
+            param_model = "gpt-4o",
+            param_temperature = 0.5, 
+            ## between 0 and 2. high temperature introduces more randomness, 
+            ## low temperature makes it more deterministic
+            param_max_tokens = 100,
+            param_n = 1
+        )[[1]]$gpt_content
+
+    if(i %% 500 == 0) cat("i = ",i,"\n")
+}
