@@ -88,7 +88,7 @@ nrow(no_space_petition) ## 2566
 no_space_petition$nid <- 1:nrow(no_space_petition)
 no_space_petition$corrected_bodytext <- NA
 for(i in 1:nrow(no_space_petition)){
-    prompt_text <- paste0("한국어 문장의 잘못된 띄어쓰기를 교정하려고 한다. 다 문장의 잘못된 띄어쓰기를 교정하여 새로 써줘. \n\n", no_space_petition$bodytext[i])
+    prompt_text <- paste0("한국어 문장의 잘못된 띄어쓰기를 교정하려고 한다. 다음 문장의 잘못된 띄어쓰기를 교정하고 교정된 문장만 출력해줘. \n\n", no_space_petition$bodytext[i])
     
     no_space_petition$corrected_bodytext[i] <-
         rgpt(
@@ -98,7 +98,7 @@ for(i in 1:nrow(no_space_petition)){
             param_temperature = 0.5, 
             ## between 0 and 2. high temperature introduces more randomness, 
             ## low temperature makes it more deterministic
-            param_max_tokens = 100,
+            param_max_tokens = 500,
             param_n = 1
         )[[1]]$gpt_content
 
