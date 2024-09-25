@@ -70,7 +70,7 @@ rgpt(
 
 ## create df
 years <- 2002:2023
-file.names <- paste0(paste0("data/tidy/pub_petition_content_", years, ".csv"))
+file.names <- paste0("data/tidy/pub_petition_content_", years, ".csv")
 petition_df <- as_tibble(map_dfr(file.names, read_csv))
 nrow(petition_df) ## 208494
 
