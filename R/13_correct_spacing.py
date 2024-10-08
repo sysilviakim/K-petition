@@ -116,10 +116,16 @@ X = vectorizer.fit_transform(petition_text)
 dfm = X.toarray()
 vocab = vectorizer.get_feature_names_out()
 
-import numpy as np
+##import numpy as np
+##np.savetxt('data/tidy/pub_petition_dfm.txt', dfm)
 
-np.savetxt('data/tidy/pub_petition_dfm.txt', dfm)
+from scipy.sparse import coo_matrix
+from scipy.io import mmwrite
 
-with open('feature_names.txt', 'w') as f:
+sparse_matrix = coo_matrix(dfm)
+mmwrite('data/tidy/pub_petition_dfm.mtx', sparse_matrix) ## loadable in R using Matrix package, readMM("pub_petition_dfm.mtx")
+## got killed..?!
+
+with open('data/tidy/feature_names.txt', 'w') as f:
     for token in vocab:
         f.write(f"{token}\n")
