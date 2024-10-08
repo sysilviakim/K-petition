@@ -35,8 +35,7 @@ petition_df['corrected_bodytext'] = petition_df['bodytext'].apply(correct_spacin
 petition_df.to_csv("data/tidy/pub_petition_corrected.csv",index=False)
 
 
-## next steps
-## clean up
+## 1. preprocess corrected_bodytext using above
 ## typos, special characters, ...
 ## reference: https://chocolemon.tistory.com/139
 import re
@@ -64,9 +63,7 @@ def cleanup(text):
 
 petition_df['corrected_bodytext'] = petition_df['corrected_bodytext'].apply(cleanup)
 
-## tokenize
-## preprocessing
-## remove stopwords
+## tokenize (remove stopwords)
 from kiwipiepy.utils import Stopwords
 stopwords = Stopwords()
 
@@ -79,39 +76,50 @@ stopwords = Stopwords()
 
 ## strategy1: keep only nouns, verbs, and adjectives
 def extract_nva(text):
-    tokens = kiwi.tokenize(text, normalize_coda = True, z_coda = True, stopwords=stopwords)
     nva = []
-    for result in tokens:
-        morpheme, tag, start, end = result
+    if isinstance(text, str):
+        tokens = kiwi.tokenize(text, normalize_coda = True, z_coda = True, stopwords=stopwords)
+        for result in tokens:
+            morpheme, tag, start, end = result
+            
+            if tag.startswith(('NN', 'VV', 'VA')):  ## keep only nouns, verbs, and adjectives
+                nva.append(morpheme)  ## append the base form of morphemes
         
-        if tag.startswith(('NN', 'VV', 'VA')):  ## keep only nouns, verbs, and adjectives
-            nva.append(morpheme)  ## append the base form of morphemes
-    
     return " ".join(nva)  ## reassemble nouns, verbs, and adjectives
 
 ## strategy2: lemmatize, then keep only nouns, verbs, and adjectives
 def extract_nva(text):
-    tokens = kiwi.analyze(text, normalize_coda = True, z_coda = True)
     nva = []
-    for result in tokens[0][0]:
-        morpheme, tag, start, end = result
-        
-        if tag.startswith(('NN', 'VV', 'VA')):  ## keep only nouns, verbs, and adjectives
-            if (morpheme, tag) not in stopwords: ## remove stopwords
-                nva.append(morpheme)  ## append the base form of morphemes
     
+    if isinstance(text, str):
+        tokens = kiwi.analyze(text, normalize_coda = True, z_coda = True)
+        for result in tokens[0][0]:
+            morpheme, tag, start, end = result
+            
+            if tag.startswith(('NN', 'VV', 'VA')):  ## keep only nouns, verbs, and adjectives
+                if (morpheme, tag) not in stopwords: ## remove stopwords
+                    nva.append(morpheme)  ## append the base form of morphemes
+                    
     return " ".join(nva)  ## reassemble nouns, verbs, and adjectives
 
-## 1. preprocess corrected_bodytext using above
-## 2. separate out as list preprocessed_texts = petition_df['corrected_bodytext']
-## 3. use below to turn the list into BoW
+## 2. tokenize and save output as a separate list (takes about 30 minutes)
+petition_text = petition_df['corrected_bodytext'].apply(extract_nva)
 
-## Bag of Words
+## 3. use below to turn the list into DFM
 from sklearn.feature_extraction.text import CountVectorizer
 
+## Bag of Words
 vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(preprocessed_texts)
+X = vectorizer.fit_transform(petition_text)
 
-# Convert to a dense matrix and display the feature names (i.e., the words)
-bow = X.toarray()
+## Convert to a dense matrix and display the feature names (i.e., the words)
+dfm = X.toarray()
 vocab = vectorizer.get_feature_names_out()
+
+import numpy as np
+
+np.savetxt('data/tidy/pub_petition_dfm.txt', dfm)
+
+with open('feature_names.txt', 'w') as f:
+    for token in vocab:
+        f.write(f"{token}\n")
