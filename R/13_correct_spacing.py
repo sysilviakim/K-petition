@@ -105,6 +105,11 @@ def extract_nva(text):
 ## 2. tokenize and save output as a separate list (takes about 30 minutes)
 petition_text = petition_df['corrected_bodytext'].apply(extract_nva)
 
+petition_text.to_csv("data/tidy/pub_petition_corrected_lm.csv",index=False)
+
+## -- codes below don't work nicely -- ##
+## use R to create DFM as sparse matrix object
+
 ## 3. use below to turn the list into DFM
 from sklearn.feature_extraction.text import CountVectorizer
 
