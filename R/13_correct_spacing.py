@@ -67,6 +67,18 @@ petition_df['corrected_bodytext'] = petition_df['corrected_bodytext'].apply(clea
 from kiwipiepy.utils import Stopwords
 stopwords = Stopwords()
 
+## save the Korean stopwords dictionary into a separate csv file 
+import csv
+
+with open("kiwipiepy_stopwords.csv", mode="w", encoding="utf-8", newline="") as file:
+    writer = csv.writer(file)
+    # Write headers
+    writer.writerow(["Stopword", "POS"])
+    
+    # Write each stopword and its POS as a row in the CSV file
+    for word, pos in stopwords.stopwords:
+        writer.writerow([word, pos])
+
 ## tokenize command
 ## each argument, when toggled true, will improve quality of preprocessing but will slow it down
 ## kiwi.tokenize("text", 

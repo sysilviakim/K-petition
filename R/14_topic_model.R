@@ -2,27 +2,87 @@
 source(here::here("R", "utilities.R"))
 
 ## this code runs topic models to generate topic vectors for petitions
-## load lemmatized text
 petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
-petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv")
+petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
-petition_lm$id <- 1:nrow(petition_lm)
-petition_lm$title <- petition_df$title
-petition_lm$date <- petition_df$date_petitioned
+## type <- "lemmatized"
+type <- "original"
+if(type == "lemmatized") petition <- petition_lm ## use lemmatized text
+if(type == "original") petition <- petition_df ## use original text
+
+petition$id <- 1:nrow(petition)
+petition$title <- petition_df$title
+petition$date <- petition_df$date_petitioned
 
 ## note: duplicate titles!
-petition_lm <- petition_lm %>%
+petition <- petition %>%
     mutate(title = paste0(id,":",title))
 
-petition_lm <- petition_lm %>%
+petition <- petition %>%
     select(id,date,title,corrected_bodytext)
 
-petition_df <- petition_lm %>%
+petition <- petition %>%
     unnest_tokens(words,token="ngrams",n=1,corrected_bodytext) %>%
     count(title,words)
 
-
 ## some pruning
+## 0. special characters, one-character words, stopwords
+## remove stopwords
+stopwords <- read_csv("data/kiwipiepy_stopwords.csv")
+stopwords <- stopwords$Stopword
+petition <- petition %>%
+    filter(!words %in% stopwords)
+
+## remove special characters, numbers
+petition <- petition %>%
+    mutate(words = gsub("[^가-힣\\s]", "", words)) %>%
+    filter(words != "")
+
+## one-character words
+petition <- petition %>%
+    mutate(nchar = nchar(words))
+
+## 788826 occasions, 1742 unique occasions
+onechar <- petition %>% filter(nchar == 1) %>% select(words) %>% distinct()
+
+## further cleaning + lemmatization using KoNLP
+library(KoNLP)
+petition <- petition %>%
+    mutate(lm_words = unlist(strsplit(SimplePos09(words)[[1]],"/"))[1])
+
+petition <- petition %>%
+  mutate(lemmatized_words = sapply(words, function(w) {
+      tuple <- SimplePos09(w)
+    
+      cleaned_word <- unlist(lapply(tuple, function(x) {
+          decomp <- str_split(x, "/")[[1]]
+          terms <- ""
+          if(decomp[2] == "N" | decomp[2] == "P"){
+              terms <- decomp[1]
+          }
+      }))
+  }))
+
+sub <- petition %>% slice(1:15)
+
+## fix this code
+sub <- sub %>%
+  mutate(lm_words = sapply(words, function(w) {
+      tuple <- SimplePos09(w)[[1]] ## keep only the 어미, lemmatize by cleaning up what follows the 어미
+    
+      cleaned_word <- unlist(lapply(tuple, function(x) {
+          decomp <- unlist(str_split(x, "/"))
+          terms <- ""
+          if(decomp[2] == "N" | decomp[2] == "P"){
+              terms <- decomp[1]
+          }
+      }))
+
+      return(str_trim(cleaned_word,side="both"))
+  })[[1]])
+
+
+
 ## 1. TF-IDF
 petition_df <- petition_df %>%
     bind_tf_idf(words, title, n)
