@@ -147,10 +147,10 @@ for (year in 2002:2024) {
 # Simplified parameters for testing
 params <- list(
     serviceKey = api_key, # API Key (required)
-    regFrom = "20200101", # Start date for testing (YYYYMMDD)
-    regTo = "20201231", # End date for testing (YYYYMMDD)
+    regFrom = "20200701", # Start date for testing (YYYYMMDD)
+    regTo = "20200731", # End date for testing (YYYYMMDD)
     firstIndex = 1, # Page number
-    recordCountPerPage = 1000 #
+    recordCountPerPage = 2000 #
 )
 
 # Make the GET request with the defined parameters
