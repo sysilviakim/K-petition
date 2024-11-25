@@ -1,6 +1,6 @@
 ## Getting Data from OpenAPI
 ## API key for public_petition
-## Gn4r43PDuekpvZV8ULhDM7Xw63ZAz6ASLvPHKYK4FCN0d2lV+UFtCqNd2bG+HVi9O9gXeJj1R+mCiDwpEutc/g==
+## data.go.kr -- make your own account and get the API key
 ## Decoding Key works -- error in documentation
 
 library(tidyverse)
