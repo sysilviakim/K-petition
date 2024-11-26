@@ -5,6 +5,11 @@ source(here::here("R", "utilities.R"))
 petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
 petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
+## limit scope to post 2013
+idx <- petition_df$year >= 2013
+petition_df <- petition_df[idx,]
+petition_lm <- petition_lm[idx,]
+
 ## petition_df$lemm <- petition_lm
 
 type <- "lemmatized"
@@ -207,21 +212,20 @@ par(mfrow=c(1,2))
 plot(eval_df$K, eval_df$Coherence, type="o", main="Coherence")
 plot(eval_df$K, eval_df$Perplexity, type="o", main="Perplexity")
 
-## increase/decrease slows down at K=13
-K <- 13
+## increase/decrease slows down at K=11
+K <- 11
 lda_out <- LDA(dfm,k=K,control=list(seed=1234))
 
 lda_topic_words <- tidy(lda_out, matrix="beta")
 writexl::write_xlsx(lda_topic_words %>%
           group_by(topic) %>%
           slice_max(beta, n=5),
-          "output/topic_term_df_k13.xlsx")
+          "output/topic_term_df_k11.xlsx")
 
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out@beta
-colnames(beta) <- vocab
 
-saveRDS(lda_out,"data/TopicK13.rds")
+saveRDS(lda_out,"data/TopicK11.rds")
 
 ## prep regression data frame 
 title <- rownames(dfm)
