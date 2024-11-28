@@ -54,7 +54,7 @@ for (yr in seq(2002, 2012)) {
 }
 
 # Loop over weeks ==============================================================
-week_list <- week_list_fxn(2013, 2023)
+week_list <- week_list_fxn(2013, 2024)
 
 for (wk in week_list) {
   wk <- as.Date(wk, origin = "1970-01-01")

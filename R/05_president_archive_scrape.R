@@ -221,10 +221,10 @@ scrape_content_unanswered %>%
 
 ## Loop: answered petitions ----------------------------------------------------
 ## load(here("data", "raw", "moon_president_petitions_answered_content.Rda"))
-scrape_content_answered <- vector("list", 459886)
+scrape_content_answered <- vector("list", 459885)
 names(scrape_content_answered) <- scrape_df_answered$ID
 ## scrape_content_answered %>% map_lgl(~ !is.null(.x)) %>% which() %>% max() 
-for (i in seq(179981, nrow(scrape_df_answered))) {
+for (i in seq(nrow(scrape_df_answered))) {
   url <- scrape_df_answered$URL[i]
   remDr$navigate(paste0("http://webarchives.pa.go.kr", url))
   
@@ -296,6 +296,11 @@ for (i in seq(179981, nrow(scrape_df_answered))) {
     paste0("Page ", i, " scraped out of ", nrow(scrape_df_answered), ".")
   )
 }
+
+## Assert that non of them have zero rows; if not, re-run the loop for those
+assert_that(scrape_content_answered %>% map_lgl(~ !is.null(.x)) %>% all())
+## xx <- scrape_content_answered %>% map_lgl(~ is.null(.x)) %>% which()
+assert_that(all(sapply(scrape_content_answered, nrow) > 0))
 
 scrape_content_answered %>%
   bind_rows(.id = "ID") %>%
