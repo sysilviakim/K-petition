@@ -5,7 +5,12 @@ source(here::here("R", "utilities.R"))
 petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
 petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
-petition_df$lemm <- petition_lm
+## limit scope to post 2013
+idx <- petition_df$year >= 2013
+petition_df <- petition_df[idx,]
+petition_lm <- petition_lm[idx,]
+
+## petition_df$lemm <- petition_lm
 
 type <- "lemmatized"
 ## type <- "original"
@@ -55,11 +60,13 @@ onechar %>% slice(1:10)
 ## 1. TF-IDF
 petition <- petition %>%
     bind_tf_idf(words, title, n)
-quantile(petition$tf_idf)
+
+lower <- quantile(petition$tf_idf)[2]
+upper <- quantile(petition$tf_idf)[4]
 
 ## low TF-IDF: low term frequency, high document frequency
 petition %>%
-    filter(tf_idf < 0.03) %>%
+    filter(tf_idf < lower) %>%
     select(words) %>% slice(1:50)
 ## 1 가족  
 ## 2 공무원
@@ -74,7 +81,7 @@ petition %>%
 
 ## high TF-IDF: high term frequency, low document frequency
 petition %>%
-    filter(tf_idf > 0.12) %>%
+    filter(tf_idf > upper) %>%
     select(words) %>% slice(1:50)
 ## 1 답        
 ## 2 대지      
@@ -87,12 +94,9 @@ petition %>%
 ## 9 소유      
 ##10 소유권드기
 
-## mid-level TF-IDF
+## mid-level TF-IDF (25% ~ 75% quantile)
 petition <- petition %>%
-    filter(tf_idf < 0.12 & tf_idf > 0.03)
-
-table(petition$n)
-## 80% of words appear only once in a document...!
+    filter(tf_idf < upper & tf_idf > lower)
 
 ## turn into DFM
 dfm <- cast_dfm(petition,
@@ -104,7 +108,14 @@ vocab <- colnames(dfm)
 doc_id <- gsub("\\:.*","",rownames(dfm))
 dim(dfm)
 
-## a lot of pruning still needed!
+## further pruning
+## remove words that appear only once in the data
+## remove documents that only have one word
+word_count <- Matrix::colSums(dfm)
+one_time_words <- word_count[word_count == 1]
+dfm <- dfm[,word_count > 1]
+doc_count <- Matrix::rowSums(dfm)
+dfm <- dfm[doc_count > 1,]
 
 ## fit LDA
 library(topicmodels)
@@ -117,28 +128,31 @@ lda_topic_words <- tidy(lda_out10, matrix="beta")
 writexl::write_xlsx(lda_topic_words %>%
           group_by(topic) %>%
           slice_max(beta, n=5),
-          "data/topic_term_df_k10.xlsx")
+          "output/topic_term_df_k10.xlsx")
 
 lda_doc_topics <- tidy(lda_out10, matrix="gamma")
 lda_doc_topics %>%
     group_by(topic) %>%
-    slice_max(gamma,n=2)
+    summarise(topic_prop = mean(gamma))
+lda_doc_topics %>%
+    group_by(topic) %>%
+    slice_max(gamma,n=1)
 
 ## evaluate the model fit
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out10@beta
-colnames(beta) <- vocab
+colnames(beta) <- colnames(dfm)
 
 ## coherence score (0.3 ~ 0.5 acceptable)
 ## evaluates semantic similarity between words in a topic
 ## higher coherence score: coherent topics (on average)
 coherence <- CalcProbCoherence(beta, sparse_mat_dfm)
-mean(coherence) ## 0.05
+mean(coherence) 
 
 ## perpexlity
 ## lower perplexity means better out-of-sample prediction (generalizable)
 perplexity_score <- perplexity(lda_out10) 
-perplexity_score ## 2288.672
+perplexity_score
 
 ## k=15
 lda_out15 <- LDA(dfm,k=15,control=list(seed=1234))
@@ -147,18 +161,18 @@ lda_topic_words <- tidy(lda_out15, matrix="beta")
 writexl::write_xlsx(lda_topic_words %>%
           group_by(topic) %>%
           slice_max(beta, n=5),
-          "data/topic_term_df_k15.xlsx")
+          "output/topic_term_df_k15.xlsx")
 
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out15@beta
-colnames(beta) <- vocab
+colnames(beta) <- colnames(dfm)
 
 ## coherence score (0.3 ~ 0.5 acceptable)
 coherence <- CalcProbCoherence(beta, sparse_mat_dfm)
-mean(coherence) ## 0.04
+mean(coherence) 
 
 perplexity_score <- perplexity(lda_out15) 
-perplexity_score ## 2231
+perplexity_score 
 
 ## metrics on increasing model complexity
 eval_df <- data.frame(K=seq(5,20,by=2),
@@ -170,7 +184,7 @@ for(K in seq(5,20,by=2)){
 
     sparse_mat_dfm <- as(dfm, "sparseMatrix")
     beta <- lda_out@beta
-    colnames(beta) <- vocab
+    colnames(beta) <- colnames(dfm)
 
     coherence <- CalcProbCoherence(beta, sparse_mat_dfm)
     eval_df[count,"Coherence"] <- mean(coherence)  
@@ -198,17 +212,33 @@ par(mfrow=c(1,2))
 plot(eval_df$K, eval_df$Coherence, type="o", main="Coherence")
 plot(eval_df$K, eval_df$Perplexity, type="o", main="Perplexity")
 
-## increase/decrease slows down at K=13
-lda_out <- LDA(dfm,k=13,control=list(seed=1234))
+## increase/decrease slows down at K=11
+K <- 11
+lda_out <- LDA(dfm,k=K,control=list(seed=1234))
 
 lda_topic_words <- tidy(lda_out, matrix="beta")
 writexl::write_xlsx(lda_topic_words %>%
           group_by(topic) %>%
           slice_max(beta, n=5),
-          "data/topic_term_df_k13.xlsx")
+          "output/topic_term_df_k11.xlsx")
 
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out@beta
-colnames(beta) <- vocab
 
-saveRDS(lda_out,"data/TopicK13.rds")
+saveRDS(lda_out,"data/TopicK11.rds")
+
+## prep regression data frame 
+title <- rownames(dfm)
+topic_df <- as_tibble(cbind(lda_out@gamma,title)) %>%
+    rename_with(~str_replace(.,"V","Topic")) %>%
+    select(last_col(), everything()) %>%
+    mutate(across(2:(K+1),as.numeric))
+
+## merge with other covariates
+df <- petition_df %>%
+    select(title,area,status,date_petitioned,branch,date_answered,date_implemented) %>%
+    mutate(id = 1:nrow(petition_df)) %>%
+    mutate(title = paste0(id,":",title)) %>%
+    left_join(topic_df, by="title")
+
+saveRDS(df,"data/tidy/pub_petition_02-23_cleaned.rds")
