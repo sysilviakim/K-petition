@@ -19,5 +19,8 @@ df <- df %>%
   filter(status == "답변완료")
 
 ## Export
+## Preserve Korean UTF-8
 df %>%
-  write_csv(here("data", "tidy", "pub_petition_content_birth_2021-2024.csv"))
+  readr::write_excel_csv(
+    here("data", "tidy", "pub_petition_content_birth_2021-2024.csv")
+  )
