@@ -24,3 +24,66 @@ df %>%
   readr::write_excel_csv(
     here("data", "tidy", "pub_petition_content_birth_2021-2024.csv")
   )
+
+# Manually evaluated for 2024 ==================================================
+evaluated <- bind_rows(
+  readxl::read_excel(
+    here("data/tidy/pub_petition_content_birth_2021-2024_SK_evaluated.xlsx")
+  ) %>%
+    mutate(eval = "SK"),
+  readxl::read_excel(
+    here("data/tidy/pub_petition_content_birth_2021-2024_KY_evaluated.xlsx")
+  ) %>%
+    mutate(eval = "KY")
+) %>%
+  filter(year == 2024 | eval == "KY") %>%
+  filter(!is.na(`personal?`)) %>%
+  select(
+    eval, date_petitioned, title,
+    `personal?`, `emotional?`, `good writing?`, `feasible?`, `concrete?`,
+    `현황 및 문제점`, `개선방안`, `기대효과`
+  ) %>%
+  group_by(title, `현황 및 문제점`) %>%
+  filter(n() > 1) %>%
+  arrange(title, eval)
+
+## Delete duplicates
+evaluated <- evaluated[!duplicated(evaluated), ]
+
+## Completely agree: 18 pairs
+evaluated <- evaluated %>%
+  mutate(
+    personal_agree = case_when(
+      `personal?`[[1]] == `personal?`[[2]] ~ 1,
+      TRUE ~ 0
+    ),
+    emotional_agree = case_when(
+      `emotional?`[[1]] == `emotional?`[[2]] ~ 1,
+      TRUE ~ 0
+    ),
+    good_writing_agree = case_when(
+      `good writing?`[[1]] == `good writing?`[[2]] ~ 1,
+      TRUE ~ 0
+    ),
+    feasible_agree = case_when(
+      `feasible?`[[1]] == `feasible?`[[2]] ~ 1,
+      TRUE ~ 0
+    ),
+    concrete_agree = case_when(
+      `concrete?`[[1]] == `concrete?`[[2]] ~ 1,
+      TRUE ~ 0
+    ),
+    agree = 
+      personal_agree + emotional_agree + good_writing_agree + 
+      feasible_agree + concrete_agree
+  ) %>%
+  select(-matches("_agree")) %>%
+  select(agree, everything())
+
+## Distribution of features
+round(prop.table(table(evaluated$`personal?`)) * 100, digits = 1)
+round(prop.table(table(evaluated$`emotional?`)) * 100, digits = 1)
+round(prop.table(table(evaluated$`good writing?`)) * 100, digits = 1)
+round(prop.table(table(evaluated$`feasible?`)) * 100, digits = 1)
+round(prop.table(table(evaluated$`concrete?`)) * 100, digits = 1)
+
