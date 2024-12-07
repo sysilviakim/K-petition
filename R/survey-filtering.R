@@ -80,6 +80,8 @@ evaluated <- evaluated %>%
   select(-matches("_agree")) %>%
   select(agree, everything())
 
+round(prop.table(table(evaluated$agree)) * 100, digits = 1)
+
 ## Distribution of features
 round(prop.table(table(evaluated$`personal?`)) * 100, digits = 1)
 round(prop.table(table(evaluated$`emotional?`)) * 100, digits = 1)
@@ -87,3 +89,23 @@ round(prop.table(table(evaluated$`good writing?`)) * 100, digits = 1)
 round(prop.table(table(evaluated$`feasible?`)) * 100, digits = 1)
 round(prop.table(table(evaluated$`concrete?`)) * 100, digits = 1)
 
+round(prop.table(table(evaluated$`personal?`, evaluated$eval)) * 100, digits = 1)
+round(prop.table(table(evaluated$`emotional?`, evaluated$eval)) * 100, digits = 1)
+round(prop.table(table(evaluated$`good writing?`, evaluated$eval)) * 100, digits = 1)
+round(prop.table(table(evaluated$`feasible?`, evaluated$eval)) * 100, digits = 1)
+round(prop.table(table(evaluated$`concrete?`, evaluated$eval)) * 100, digits = 1)
+
+## Binning choices: emotional X concrete
+binned <- evaluated %>%
+  mutate(
+    bin = case_when(
+      `emotional?` == 1 & `concrete?` == 1 ~ "emotional and concrete",
+      `emotional?` == 1 & `concrete?` == 0 ~ "emotional and abstract",
+      `emotional?` == 0 & `concrete?` == 1 ~ "dry and concrete",
+      `emotional?` == 0 & `concrete?` == 0 ~ "dry and abstract"
+    )
+  ) %>%
+  select(bin, agree, everything()) %>%
+  filter(agree >= 4)
+
+binned
