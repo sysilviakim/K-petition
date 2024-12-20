@@ -694,7 +694,7 @@ p <- q8_stats %>%
     axis.text.y = element_text(hjust = 1),  # Y축 텍스트 정렬
     legend.position = "none"  # 범례 제거
   )
-ggsave(here("output", "petition_reason.png"), plot = p, width = 8, height = 6)
+ggsave(here("output", "pilot_petition_reason.png"), plot = p, width = 8, height = 6)
 
 # Q9: usage_experience
 q9_stats <- data %>%
@@ -749,6 +749,21 @@ data %>%
   ) +
   scale_x_continuous(breaks = seq(1, 5, 1)) +
   theme_minimal(base_family = "AppleGothic")
+
+## for overleaf figure
+p <- data %>%
+  ggplot(aes(x = Q9_3)) +
+  geom_histogram(binwidth = 1, fill = "lightgreen", color = "black", alpha = 0.7) +
+  labs(
+    x = "Q9_3 응답 점수",
+    y = "응답자 수",
+    title = "Q9_3: 국가가 국민과 소통하고 있다는 생각을 가지게 되었다."
+  ) +
+  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  theme_minimal(base_family = "AppleGothic") +
+  theme(
+    legend.position = "none"  # 범례 제거
+  )
 
 data %>%
   ggplot(aes(x = Q9_4)) +
