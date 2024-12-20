@@ -678,6 +678,24 @@ q8_stats %>%
     legend.position = "none"  
   )
 
+# better arrangement
+p <- q8_stats %>%
+  ggplot(aes(x = reorder(response_label, n), y = n, fill = response_label)) +
+  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  labs(
+    x = "이유",
+    y = "응답자 수",
+    title = "공개 청원/민원 제도를 활용한 주요 이유"
+  ) +
+  coord_flip() +  # 가로 바 그래프
+  scale_fill_viridis(discrete = TRUE, option = "D") +  # Viridis 색상 적용
+  theme_minimal(base_family = "AppleGothic") +
+  theme(
+    axis.text.y = element_text(hjust = 1),  # Y축 텍스트 정렬
+    legend.position = "none"  # 범례 제거
+  )
+ggsave(here("output", "petition_reason.png"), plot = p, width = 8, height = 6)
+
 # Q9: usage_experience
 q9_stats <- data %>%
   summarise(
@@ -786,3 +804,4 @@ q10_stats %>%
     axis.text.x = element_text(angle = 45, hjust = 0.95), 
     legend.position = "none" 
   )
+
