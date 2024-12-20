@@ -2,7 +2,7 @@
 library(MCMCpack)
 library(tidyverse)
 
-df <- readxl::read_excel("data/pilot/raw_data.xlsx",sheet="Raw Data")
+df <- read_csv("data/pilot/raw_data.csv")
 
 pwc_df1 <- df %>%
     select(No,Info1_A,Info1_B,Q11_1) %>%
