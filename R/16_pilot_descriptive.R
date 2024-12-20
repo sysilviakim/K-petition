@@ -590,21 +590,32 @@ q6_stats <- q6_long %>%
     n = n()
   ) %>%
   arrange(desc(n)) %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n)) %>%
   { print(.); . }
 
 p <- q6_stats %>%
-  ggplot(aes(x = reorder(response_label, -n), y = n, fill = response_label)) +
+  ggplot(aes(x = reorder(response_label, -n), y = prop, fill = response_label)) +
   geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  scale_y_continuous(labels = scales::percent) +
   labs(
-    x = "공개 청원/민원 제도",
-    y = "응답자 수",
+    x = "",
+    y = "응답자 비율",
     title = "공개 청원/민원 제도 사용 빈도"
   ) +
+  ## Change title of legend
+  scale_fill_discrete(name = "사용한 청원/민원 제도") +
   ## viridis color theme
   scale_fill_viridis(discrete = TRUE) +
   theme_minimal(base_family = "AppleGothic") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-ggsave(here("output", "petition_usage.png"), plot = p, width = 8, height = 6)
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.title = element_blank())
+ggsave(
+  here("fig", "pilot_petition_usage.png"), 
+  plot = p, width = 5.5, height = 3.5
+)
+
+## Q6 by demo
 
 # Q7: attention_check
 q7_long <- data %>%
