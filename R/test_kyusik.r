@@ -6,8 +6,8 @@ library(xml2)
 
 # Define the API endpoint and key
 api_url <- "http://apis.data.go.kr/1140100/OpenProposalService2/OpenProposalList"
-api_key <- "Gn4r43PDuekpvZV8ULhDM7Xw63ZAz6ASLvPHKYK4FCN0d2lV+UFtCqNd2bG+HVi9O9gXeJj1R+mCiDwpEutc/g=="
-
+api_key <- # get your own key
+  
 # Function to fetch and save data by month for a given year
 fetch_data_by_month <- function(year) {
     # Initialize an empty dataframe to store the combined data
