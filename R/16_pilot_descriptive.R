@@ -764,6 +764,7 @@ p <- data %>%
   theme(
     legend.position = "none"  # 범례 제거
   )
+ggsave(here("output", "pilot_q9_3.png"), plot = p, width = 8, height = 6)
 
 data %>%
   ggplot(aes(x = Q9_4)) +
@@ -776,6 +777,19 @@ data %>%
   scale_x_continuous(breaks = seq(1, 5, 1)) +
   theme_minimal(base_family = "AppleGothic")
 
+## for overleaf figure
+p <- data %>%
+  ggplot(aes(x = Q9_4)) +
+  geom_histogram(binwidth = 1, fill = "purple", color = "black", alpha = 0.7) +
+  labs(
+    x = "Q9_4 응답 점수",
+    y = "응답자 수",
+    title = "Q9_4: 특정 세력 및 정파에 의한 여론몰이가 걱정스러웠다."
+  ) +
+  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  theme_minimal(base_family = "AppleGothic")
+ggsave(here("output", "pilot_q9_4.png"), plot = p, width = 8, height = 6)
+
 data %>%
   ggplot(aes(x = Q9_5)) +
   geom_histogram(binwidth = 1, fill = "orange", color = "black", alpha = 0.7) +
@@ -786,6 +800,19 @@ data %>%
   ) +
   scale_x_continuous(breaks = seq(1, 5, 1)) +
   theme_minimal(base_family = "AppleGothic")
+
+## for overleaf figure
+p <- data %>%
+  ggplot(aes(x = Q9_5)) +
+  geom_histogram(binwidth = 1, fill = "orange", color = "black", alpha = 0.7) +
+  labs(
+    x = "Q9_5 응답 점수",
+    y = "응답자 수",
+    title = "Q9_5: 청원이 지나치게 무분별하게 올라오는 듯한 느낌이 들었다."
+  ) +
+  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  theme_minimal(base_family = "AppleGothic")
+ggsave(here("output", "pilot_q9_5.png"), plot = p, width = 8, height = 6)
 
 # Q10: improvement
 q10_stats <- data %>%
@@ -820,3 +847,20 @@ q10_stats %>%
     legend.position = "none" 
   )
 
+# better arrangement
+p <- q10_stats %>%
+  ggplot(aes(x = reorder(response_label, n), y = n, fill = response_label)) +
+  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  labs(
+    x = "개선 사항",
+    y = "응답자 수",
+    title = "공개 청원/민원 제도의 개선이 필요한 주요 사항"
+  ) +
+  coord_flip() +  # 가로 바 그래프
+  scale_fill_viridis(discrete = TRUE) +  # Viridis 색상 적용
+  theme_minimal(base_family = "AppleGothic") +
+  theme(
+    axis.text.y = element_text(hjust = 1),  # Y축 텍스트 정렬
+    legend.position = "none"  # 범례 제거
+  )
+ggsave(here("output", "pilot_petition_improvement.png"), plot = p, width = 8, height = 6)
