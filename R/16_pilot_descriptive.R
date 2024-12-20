@@ -1,13 +1,10 @@
 # 241219 pilot descriptive statistics
-# 50
-
-# Load libraries
-library(tidyverse)
+source(here::here("R", "utilities.R"))
 
 # Load data
-data <- read_csv("data/pilot/raw_data.csv")
+data <- read_csv(here("data/pilot/raw_data.csv"))
 
-# Descriptive statistics
+# Descriptive statistics =======================================================
 # SQ1: gender
 data %>%
   group_by(SQ1) %>%
@@ -338,7 +335,7 @@ occupation_data %>%
   theme_minimal(base_family = "AppleGothic") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-#############################
+# Attitudes and politics =======================================================
 # Q1: satisfaction
 q1_stats <- data %>%
   summarise(
@@ -550,8 +547,9 @@ data %>%
   scale_x_continuous(breaks = seq(1, 5, 1)) +
   theme_minimal(base_family = "AppleGothic")
 
+# Petition-related questions ===================================================
 # Q6: petition_usage
-# collaps columns into one column
+# collapse columns into one column
 q6_long <- data %>%
   select(starts_with("Q6_")) %>%  
   pivot_longer(
@@ -573,6 +571,20 @@ q6_stats <- q6_long %>%
       response == 7 ~ "이용한 적 없음"
     )
   ) %>%
+  mutate(
+    response_label = factor(
+      response_label, 
+      levels = c(
+        "이용한 적 없음",
+        "국민신문고",
+        "청와대 국민청원 게시판",
+        "국민제안 게시판",
+        "청원24",
+        "국회 전자청원",
+        "기타"
+      )
+    )
+  ) %>%
   group_by(response_label) %>%
   summarise(
     n = n()
@@ -580,7 +592,7 @@ q6_stats <- q6_long %>%
   arrange(desc(n)) %>%
   { print(.); . }
 
-q6_stats %>%
+p <- q6_stats %>%
   ggplot(aes(x = reorder(response_label, -n), y = n, fill = response_label)) +
   geom_bar(stat = "identity", color = "black", alpha = 0.7) +
   labs(
@@ -588,8 +600,11 @@ q6_stats %>%
     y = "응답자 수",
     title = "공개 청원/민원 제도 사용 빈도"
   ) +
+  ## viridis color theme
+  scale_fill_viridis(discrete = TRUE) +
   theme_minimal(base_family = "AppleGothic") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+ggsave(here("output", "petition_usage.png"), plot = p, width = 8, height = 6)
 
 # Q7: attention_check
 q7_long <- data %>%
