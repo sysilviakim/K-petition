@@ -137,7 +137,7 @@ region_data <- data %>%
 
 region_data %>%
   ggplot(aes(x = reorder(region, -n), y = n, fill = region)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   labs(
     x = "지역",
     y = "응답자 수",
@@ -325,7 +325,7 @@ occupation_data <- data %>%
 
 occupation_data %>%
   ggplot(aes(x = reorder(occupation, -n), y = n, fill = occupation)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   labs(
     x = "직업",
     y = "응답자 수",
@@ -352,7 +352,7 @@ q1_stats <- data %>%
 
 data %>%
   ggplot(aes(x = Q1)) +
-  geom_histogram(binwidth = 1, fill = "skyblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "skyblue", alpha = 0.7) +
   labs(
     x = "삶의 만족도 점수",
     y = "응답자 수",
@@ -377,7 +377,7 @@ q2_stats <- data %>%
 
 data %>%
   ggplot(aes(x = Q2)) +
-  geom_histogram(binwidth = 1, fill = "dodgerblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "dodgerblue", alpha = 0.7) +
   labs(
     x = "이념 성향 점수",
     y = "응답자 수",
@@ -412,7 +412,7 @@ q3_stats <- data %>%
 
 q3_stats %>%
   ggplot(aes(x = reorder(party, -n), y = n, fill = party)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   labs(
     x = "정당",
     y = "응답자 수",
@@ -445,7 +445,7 @@ q4_stats <- data %>%
 
 q4_stats %>%
   ggplot(aes(x = reorder(candidate, -n), y = n, fill = candidate)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   labs(
     x = "후보자",
     y = "응답자 수",
@@ -483,69 +483,99 @@ q5_stats <- data %>%
 
 data %>%
   ggplot(aes(x = Q5_1)) +
-  geom_histogram(binwidth = 1, fill = "dodgerblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "dodgerblue", alpha = 0.7) +
   labs(
     x = "Q5_1 응답 점수",
     y = "응답자 수",
     title = "Q5_1: 한국 사회는 신뢰가 높은 사회이다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q5_2)) +
-  geom_histogram(binwidth = 1, fill = "coral", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "coral", alpha = 0.7) +
   labs(
     x = "Q5_2 응답 점수",
     y = "응답자 수",
     title = "Q5_2: 한국 사회는 공정과 원칙이 지켜지는 사회이다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q5_3)) +
-  geom_histogram(binwidth = 1, fill = "lightgreen", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "lightgreen", alpha = 0.7) +
   labs(
     x = "Q5_3 응답 점수",
     y = "응답자 수",
     title = "Q5_3: 한국 사회는 사회적 연대가 잘 이루어지는 사회이다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q5_4)) +
-  geom_histogram(binwidth = 1, fill = "purple", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "purple", alpha = 0.7) +
   labs(
     x = "Q5_4 응답 점수",
     y = "응답자 수",
     title = "Q5_4: 한국 사회는 국민이 주인인 사회이다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q5_5)) +
-  geom_histogram(binwidth = 1, fill = "orange", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "orange", alpha = 0.7) +
   labs(
     x = "Q5_5 응답 점수",
     y = "응답자 수",
     title = "Q5_5: 정책 결정은 국민들에 의해 이루어져야 한다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q5_6)) +
-  geom_histogram(binwidth = 1, fill = "steelblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "steelblue", alpha = 0.7) +
   labs(
     x = "Q5_6 응답 점수",
     y = "응답자 수",
     title = "Q5_6: 엘리트 집단이 국민을 무시하고 있다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
+
+# Q7: attention_check ==========================================================
+q7_long <- data %>%
+  select(starts_with("Q7_")) %>% 
+  pivot_longer(
+    cols = starts_with("Q7_"),
+    names_to = "question",
+    values_to = "response"
+  ) 
+
+q7_grouped <- q7_long %>%
+  mutate(
+    respondent_id = ceiling(row_number() / length(unique(q7_long$question))) 
+  ) %>%
+  group_by(respondent_id) %>%
+  summarise(
+    contains_1 = any(response == 1),  
+    contains_2 = any(response == 2)  
+  ) %>%
+  mutate(
+    attention_pass = ifelse(contains_1 & contains_2, 1, 0)  
+  )
+
+q7_check <- q7_grouped %>%
+  summarise(
+    total_respondents = n(), 
+    passed_attention_check = sum(attention_pass, na.rm = TRUE),  
+    pass_rate = passed_attention_check / total_respondents * 100  
+  ) %>%
+  { print(.); . }
 
 # Petition-related questions ===================================================
 # Q6: petition_usage
@@ -596,12 +626,18 @@ q6_stats <- q6_long %>%
 
 p <- q6_stats %>%
   ggplot(aes(x = reorder(response_label, -n), y = prop, fill = response_label)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   scale_y_continuous(labels = scales::percent) +
+  geom_text(
+    aes(
+      label = scales::percent(prop, accuracy = 0.1),
+      vjust = 1
+    ),
+    size = 3.5
+  ) +
   labs(
     x = "",
-    y = "응답자 비율",
-    title = "공개 청원/민원 제도 사용 빈도"
+    y = "응답자 비율"
   ) +
   ## Change title of legend
   scale_fill_discrete(name = "사용한 청원/민원 제도") +
@@ -616,36 +652,6 @@ ggsave(
 )
 
 ## Q6 by demo
-
-# Q7: attention_check
-q7_long <- data %>%
-  select(starts_with("Q7_")) %>% 
-  pivot_longer(
-    cols = starts_with("Q7_"),
-    names_to = "question",
-    values_to = "response"
-  ) 
-
-q7_grouped <- q7_long %>%
-  mutate(
-    respondent_id = ceiling(row_number() / length(unique(q7_long$question))) 
-  ) %>%
-  group_by(respondent_id) %>%
-  summarise(
-    contains_1 = any(response == 1),  
-    contains_2 = any(response == 2)  
-  ) %>%
-  mutate(
-    attention_pass = ifelse(contains_1 & contains_2, 1, 0)  
-  )
-
-q7_check <- q7_grouped %>%
-  summarise(
-    total_respondents = n(), 
-    passed_attention_check = sum(attention_pass, na.rm = TRUE),  
-    pass_rate = passed_attention_check / total_respondents * 100  
-  ) %>%
-  { print(.); . }
 
 # Q8: usage_reason
 q8_long <- data %>%
@@ -673,30 +679,24 @@ q8_stats <- q8_long %>%
     n = n()
   ) %>%
   arrange(desc(n)) %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n)) %>%
   { print(.); . }
 
-q8_stats %>%
-  ggplot(aes(x = reorder(response_label, -n), y = n, fill = response_label)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
-  labs(
-    x = "이유",
-    y = "응답자 수",
-    title = "공개 청원/민원 제도를 활용한 주요 이유"
-  ) +
-  theme_minimal(base_family = "AppleGothic") +
-  theme(
-    axis.text.x = element_text(angle = 10, hjust = 0.6),
-    legend.position = "none"  
-  )
-
-# better arrangement
 p <- q8_stats %>%
-  ggplot(aes(x = reorder(response_label, n), y = n, fill = response_label)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  ggplot(aes(x = reorder(response_label, n), y = prop, fill = response_label)) +
+  geom_bar(stat = "identity", alpha = 0.7) +
   labs(
-    x = "이유",
-    y = "응답자 수",
-    title = "공개 청원/민원 제도를 활용한 주요 이유"
+    x = "",
+    y = "응답자 비율"
+  ) +
+  scale_y_continuous(label = scales::percent) + 
+  geom_text(
+    aes(
+      label = scales::percent(prop, accuracy = 0.1),
+      hjust = ifelse(prop == min(prop), -0.1, 1)  # Conditional hjust
+    ),
+    size = 3.5
   ) +
   coord_flip() +  # 가로 바 그래프
   scale_fill_viridis(discrete = TRUE, option = "D") +  # Viridis 색상 적용
@@ -705,7 +705,10 @@ p <- q8_stats %>%
     axis.text.y = element_text(hjust = 1),  # Y축 텍스트 정렬
     legend.position = "none"  # 범례 제거
   )
-ggsave(here("output", "pilot_petition_reason.png"), plot = p, width = 8, height = 6)
+ggsave(
+  here("fig", "pilot_petition_reason.png"),
+  plot = p, width = 6, height = 3
+)
 
 # Q9: usage_experience
 q9_stats <- data %>%
@@ -730,100 +733,90 @@ q9_stats <- data %>%
 
 data %>%
   ggplot(aes(x = Q9_1)) +
-  geom_histogram(binwidth = 1, fill = "dodgerblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "dodgerblue", alpha = 0.7) +
   labs(
     x = "Q9_1 응답 점수",
     y = "응답자 수",
     title = "Q9_1: 많은 사람들과 함께 공감하고 소통한다는 것이 보기 좋았다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 data %>%
   ggplot(aes(x = Q9_2)) +
-  geom_histogram(binwidth = 1, fill = "coral", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "coral", alpha = 0.7) +
   labs(
     x = "Q9_2 응답 점수",
     y = "응답자 수",
     title = "Q9_2: 사회적 연대가 이루어지고 있다는 것을 느꼈다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
-  theme_minimal(base_family = "AppleGothic")
-
-data %>%
-  ggplot(aes(x = Q9_3)) +
-  geom_histogram(binwidth = 1, fill = "lightgreen", color = "black", alpha = 0.7) +
-  labs(
-    x = "Q9_3 응답 점수",
-    y = "응답자 수",
-    title = "Q9_3: 국가가 국민과 소통하고 있다는 생각을 가지게 되었다."
-  ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
 
 ## for overleaf figure
-p <- data %>%
-  ggplot(aes(x = Q9_3)) +
-  geom_histogram(binwidth = 1, fill = "lightgreen", color = "black", alpha = 0.7) +
+p1 <- data %>%
+  ggplot(aes(x = Q9_3, y = after_stat(count / sum(count)))) +
+  scale_y_continuous(label = scales::percent, limits = c(0, 0.4)) + 
+  geom_histogram(binwidth = 1, fill = "#440154FF", alpha = 0.7) +
   labs(
-    x = "Q9_3 응답 점수",
-    y = "응답자 수",
-    title = "Q9_3: 국가가 국민과 소통하고 있다는 생각을 가지게 되었다."
+    x = "",
+    y = "응답자 비율",
+    title = "Q9_3: 국가가 국민과 소통하고 있다는 \n생각을 가지게 되었다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
+  geom_text(
+    stat = "count",
+    aes(label = scales::percent(after_stat(count / sum(count)), accuracy = 0.1)),
+    vjust = -0.5, size = 3.5
+  ) +
   theme_minimal(base_family = "AppleGothic") +
-  theme(
-    legend.position = "none"  # 범례 제거
-  )
-ggsave(here("output", "pilot_q9_3.png"), plot = p, width = 8, height = 6)
+  theme(legend.position = "none")
+ggsave(
+  here("fig", "pilot_q9_3.png"),
+  plot = p1, width = 5, height = 3
+)
 
-data %>%
-  ggplot(aes(x = Q9_4)) +
-  geom_histogram(binwidth = 1, fill = "purple", color = "black", alpha = 0.7) +
+p2 <- data %>%
+  ggplot(aes(x = Q9_4, y = after_stat(count / sum(count)))) +
+  scale_y_continuous(label = scales::percent, limits = c(0, 0.4)) + 
+  geom_histogram(binwidth = 1, fill = "#440154FF", alpha = 0.7) +
   labs(
-    x = "Q9_4 응답 점수",
-    y = "응답자 수",
-    title = "Q9_4: 특정 세력 및 정파에 의한 여론몰이가 걱정스러웠다."
+    x = "",
+    y = "응답자 비율",
+    title = "Q9_4: 특정 세력 및 정파에 의한 \n여론몰이가 걱정스러웠다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  geom_text(
+    stat = "count",
+    aes(label = scales::percent(after_stat(count / sum(count)), accuracy = 0.1)),
+    vjust = -0.5, size = 3.5
+  ) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
+ggsave(
+  here("fig", "pilot_q9_4.png"),
+  plot = p2, width = 5, height = 3
+)
 
-## for overleaf figure
-p <- data %>%
-  ggplot(aes(x = Q9_4)) +
-  geom_histogram(binwidth = 1, fill = "purple", color = "black", alpha = 0.7) +
+p3 <- data %>%
+  ggplot(aes(x = Q9_5, y = after_stat(count / sum(count)))) +
+  scale_y_continuous(label = scales::percent, limits = c(0, 0.4)) + 
+  geom_histogram(binwidth = 1, fill = "#440154FF", alpha = 0.7) +
   labs(
-    x = "Q9_4 응답 점수",
-    y = "응답자 수",
-    title = "Q9_4: 특정 세력 및 정파에 의한 여론몰이가 걱정스러웠다."
+    x = "",
+    y = "응답자 비율",
+    title = "Q9_5: 청원이 지나치게 무분별하게 \n올라오는 듯한 느낌이 들었다."
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
-  theme_minimal(base_family = "AppleGothic")
-ggsave(here("output", "pilot_q9_4.png"), plot = p, width = 8, height = 6)
-
-data %>%
-  ggplot(aes(x = Q9_5)) +
-  geom_histogram(binwidth = 1, fill = "orange", color = "black", alpha = 0.7) +
-  labs(
-    x = "Q9_5 응답 점수",
-    y = "응답자 수",
-    title = "Q9_5: 청원이 지나치게 무분별하게 올라오는 듯한 느낌이 들었다."
+  geom_text(
+    stat = "count",
+    aes(label = scales::percent(after_stat(count / sum(count)), accuracy = 0.1)),
+    vjust = -0.5, size = 3.5
   ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
+  scale_x_continuous(breaks = seq(5), limits = c(0.5, 5.5)) +
   theme_minimal(base_family = "AppleGothic")
-
-## for overleaf figure
-p <- data %>%
-  ggplot(aes(x = Q9_5)) +
-  geom_histogram(binwidth = 1, fill = "orange", color = "black", alpha = 0.7) +
-  labs(
-    x = "Q9_5 응답 점수",
-    y = "응답자 수",
-    title = "Q9_5: 청원이 지나치게 무분별하게 올라오는 듯한 느낌이 들었다."
-  ) +
-  scale_x_continuous(breaks = seq(1, 5, 1)) +
-  theme_minimal(base_family = "AppleGothic")
-ggsave(here("output", "pilot_q9_5.png"), plot = p, width = 8, height = 6)
+ggsave(
+  here("fig", "pilot_q9_5.png"),
+  plot = p3, width = 5, height = 3
+)
 
 # Q10: improvement
 q10_stats <- data %>%
@@ -842,30 +835,24 @@ q10_stats <- data %>%
     )
   ) %>%
   arrange(desc(n)) %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n)) %>%
   { print(.); . }
 
-q10_stats %>%
-  ggplot(aes(x = reorder(response_label, -n), y = n, fill = response_label)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
-  labs(
-    x = "개선 사항",
-    y = "응답자 수",
-    title = "공개 청원/민원 제도의 개선이 필요한 주요 사항"
-  ) +
-  theme_minimal(base_family = "AppleGothic") +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 0.95), 
-    legend.position = "none" 
-  )
-
-# better arrangement
 p <- q10_stats %>%
-  ggplot(aes(x = reorder(response_label, n), y = n, fill = response_label)) +
-  geom_bar(stat = "identity", color = "black", alpha = 0.7) +
+  ggplot(aes(x = reorder(response_label, n), y = prop, fill = response_label)) +
+  geom_bar(stat = "identity", alpha = 0.7) +
+  scale_y_continuous(labels = scales::percent) + 
+  geom_text(
+    aes(
+      label = scales::percent(prop, accuracy = 0.1),
+      hjust = ifelse(prop == min(prop), -0.1, 1)  # Conditional hjust
+    ),
+    size = 3.5
+  ) +
   labs(
-    x = "개선 사항",
-    y = "응답자 수",
-    title = "공개 청원/민원 제도의 개선이 필요한 주요 사항"
+    x = "",
+    y = "응답자 비율"
   ) +
   coord_flip() +  # 가로 바 그래프
   scale_fill_viridis(discrete = TRUE) +  # Viridis 색상 적용
@@ -874,4 +861,7 @@ p <- q10_stats %>%
     axis.text.y = element_text(hjust = 1),  # Y축 텍스트 정렬
     legend.position = "none"  # 범례 제거
   )
-ggsave(here("output", "pilot_petition_improvement.png"), plot = p, width = 8, height = 6)
+ggsave(
+  here("fig", "pilot_petition_improvement.png"),
+  plot = p, width = 7, height = 3
+)
