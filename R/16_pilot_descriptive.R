@@ -865,3 +865,8 @@ ggsave(
   here("fig", "pilot_petition_improvement.png"),
   plot = p, width = 7, height = 3
 )
+
+# Open ended questions =========================================================
+# Import the 4th sheet of here("data/pilot/raw_data.csv")
+open <- readxl::read_excel(here("data/pilot/raw_data.xlsx"), sheet = 3)
+
