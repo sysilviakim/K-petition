@@ -1,4 +1,6 @@
 # Libraries ====================================================================
+library(MCMCpack)
+
 ## tidyverse
 library(plyr)
 library(tidyverse)
@@ -26,7 +28,7 @@ library(here)
 library(KoNLP)
 
 ## devtools::install_github("ben-aaron188/rgpt3")
-library(rgpt3)
+## library(rgpt3)
 
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
