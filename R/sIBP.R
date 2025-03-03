@@ -11,8 +11,8 @@ library(texteffect)
 petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
 petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
-## limit scope to post 2013
-idx <- petition_df$year >= 2013
+## limit scope to post 2017 (memory issue)
+idx <- petition_df$year >= 2017
 petition_df <- petition_df[idx,]
 petition_lm <- petition_lm[idx,]
 
@@ -120,6 +120,7 @@ petition_dfm <- petition_dfm %>%
 ## use response time
 Y <- petition %>%
     dplyr::select(title,date_to_answer) %>%
+    mutate(date_to_answer = as.numeric(date_to_answer)) %>%
     filter(!is.na(date_to_answer))
 
 ## create X
@@ -137,18 +138,19 @@ dfm <- cast_dfm(petition_dfm,
 idx <- match(rownames(dfm),Y$title)
 Y <- Y[idx,]
 
+## address missing caused by matching
+na <- which(is.na(Y$date_to_answer))
+dfm <- dfm[-na,];Y <- Y[-na,]
+
 ## further pruning
-## remove words that appear only once in the data
-## remove documents that only have one word
+## keep words that appear at least once in the document
+## keep documents that have at least one word
 word_count <- Matrix::colSums(dfm)
 one_time_words <- word_count[word_count == 1]
 dfm <- dfm[,word_count > 1]
 doc_count <- Matrix::rowSums(dfm)
 dfm <- dfm[doc_count > 1,]
 Y <- Y[doc_count > 1,]
-
-Y <- Y %>%
-    mutate(date_to_answer = as.numeric(date_to_answer))
 
 ## fit sIBP
 ## split sample (use 50% as training set)
@@ -157,11 +159,16 @@ train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
 ## try range of parameters
 ## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
 ## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
-sibp_out <- sibp(X=dfm,Y=Y$date_to_answer,K=2,
+## X needs to be data frame...
+sibp_out <- sibp(X=as_tibble(dfm)[,-1],Y=Y$date_to_answer,K=2,
                  alpha=2,sigmasq.n=0.8,train.ind=train_ind)
 
-## failed..! memory limit reached
-## further pruning required..?! try with more recent years?
+## failed
+## Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+##  0 (non-NA) cases
+## do not understand why...!
+## possibly errors due to standardizing?
+## columns with one non-zero value?
 
 ## grid search to find optimal model specification
 sibp_out <- sibp_param_search(X=dfm,Y=Y$date_to_answer,K=2,
