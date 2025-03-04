@@ -4,6 +4,7 @@
 ## split into training and test
 library(tidyverse)
 library(texteffect)
+library(tidytext)
 
 ## source(here::here("R", "utilities.R"))
 
@@ -151,6 +152,11 @@ dfm <- dfm[,word_count > 1]
 doc_count <- Matrix::rowSums(dfm)
 dfm <- dfm[doc_count > 1,]
 Y <- Y[doc_count > 1,]
+
+## for python IBP
+Matrix::writeMM(as(dfm[,-1], "dgCMatrix"), "data/dfm_matrix.mtx")
+write_csv(data.frame("feature"=colnames(dfm)[-1]), "data/dfm_features.csv")
+write_csv(data.frame("doc"=rownames(dfm)), "data/dfm_docs.csv")
 
 ## fit sIBP
 ## split sample (use 50% as training set)
