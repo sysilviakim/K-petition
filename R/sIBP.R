@@ -13,7 +13,7 @@ petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text
 petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
 ## limit scope to post 2017 (memory issue)
-idx <- petition_df$year >= 2017
+idx <- petition_df$year >= 2020
 petition_df <- petition_df[idx,]
 petition_lm <- petition_lm[idx,]
 
@@ -166,7 +166,11 @@ train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
 ## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
 ## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
 ## X needs to be data frame...
-sibp_out <- sibp(X=as_tibble(dfm)[,-1],Y=Y$date_to_answer,K=2,
+X <- quanteda::convert(dfm,to="data.frame")[,-1]
+y <- Y$date_to_answer
+
+sibp_out <- sibp(X=X,
+                 Y=y,K=2,
                  alpha=2,sigmasq.n=0.8,train.ind=train_ind)
 
 ## failed
@@ -177,8 +181,9 @@ sibp_out <- sibp(X=as_tibble(dfm)[,-1],Y=Y$date_to_answer,K=2,
 ## columns with one non-zero value?
 
 ## grid search to find optimal model specification
-sibp_out <- sibp_param_search(X=dfm,Y=Y$date_to_answer,K=2,
-                              alphas=c(2,4),sigmasq.ns=c(0.8,1),train.ind=train_ind)
+
+sibp_out <- sibp_param_search(X=as_tibble(dfm)[,-1],Y=Y$date_to_answer,K=2,
+                              alphas=c(2,4),sigmasq.ns=c(0.8,1),train.ind=train_ind,iters=1)
 
 ## Qualitatively look at the top candidates
 sibp_top_words(sibp_out[["4"]][["0.8"]][[1]], colnames(dfm), 10, verbose = TRUE)
