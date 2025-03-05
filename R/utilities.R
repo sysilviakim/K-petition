@@ -36,11 +36,11 @@ extract_pt_content <- function(x, date = NULL) {
   if (length(x) != 3 | !is.list(x)) {
     stop("Input is not the right list.")
   }
-  
+
   ## Initialize as NULL for those which the script will fail
-  sec_content <- sec_titles <- title_text <- area <- attachment <- status <- 
+  sec_content <- sec_titles <- title_text <- area <- attachment <- status <-
     date_implemented <- date_answered <- date_petitioned <- branch <- NULL
-  
+
   out <- x$source %>%
     read_html()
 
@@ -81,23 +81,23 @@ extract_pt_content <- function(x, date = NULL) {
     html_text() %>%
     ## Strip multiple whitespaces into one
     trimws()
-  
+
   if (length(sec_content) != length(sec_titles)) {
     sec_content <- out %>%
       html_nodes(xpath = "//*[@class='b_conItem']") %>%
       html_text() %>%
       trimws()
   }
-  
+
   if (length(sec_content) != length(sec_titles)) {
     stop("Section title and content lengths do not match.")
   }
-  
+
   ## Missed metadata
   ## The first approach creates too much of a bottleneck
-  ## Matching with page_meta is a better approach, 
+  ## Matching with page_meta is a better approach,
   ## and let's do it outside the function ---> which has other problems!
-  
+
   misc <- out %>%
     html_nodes("div") %>%
     ## This is to avoid grabbing the entire page
@@ -111,12 +111,12 @@ extract_pt_content <- function(x, date = NULL) {
   date_petitioned <- str_extract(misc, "\\d{4}-\\d{2}-\\d{2}")
   ## Unique date
   date_petitioned <- setdiff(unique(date_petitioned), NA)
-  
+
   ## Extremely dirty loop, but the patterns are all over the place
   if (
-    ("검토내용" %in% sec_titles) & 
-    !("실시 결과" %in% sec_titles) & 
-    length(date_petitioned) > 1
+    ("검토내용" %in% sec_titles) &
+      !("실시 결과" %in% sec_titles) &
+      length(date_petitioned) > 1
   ) {
     ## If there are multiple dates, likely it is the case that the first one is
     ## the date petitioned, and the second one is the date notified of an answer
@@ -129,7 +129,7 @@ extract_pt_content <- function(x, date = NULL) {
       ## Date recognized from attachment file name
       date_answered <- max(date_petitioned)
       ## Redo pattern recognition
-      date_petitioned <- 
+      date_petitioned <-
         setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
       if (length(date_petitioned) == 2) {
         date_petitioned <- setdiff(date_petitioned, date_answered)
@@ -141,9 +141,9 @@ extract_pt_content <- function(x, date = NULL) {
     }
   } else if (
     ## This part needs to be thoroughly checked...
-    ("검토내용" %in% sec_titles) & 
-    ("실시 결과" %in% sec_titles) & 
-    length(date_petitioned) > 1
+    ("검토내용" %in% sec_titles) &
+      ("실시 결과" %in% sec_titles) &
+      length(date_petitioned) > 1
   ) {
     if (length(date_petitioned) == 3) {
       cat("실시 결과 in", i, "\n")
@@ -155,10 +155,10 @@ extract_pt_content <- function(x, date = NULL) {
       date_implemented <- max(date_petitioned)
       date_answered <- max(setdiff(date_petitioned, date_implemented))
       ## Redo pattern recognition
-      date_petitioned <- 
+      date_petitioned <-
         setdiff(unique(str_extract(misc, "^\\d{4}-\\d{2}-\\d{2}$")), NA)
       if (length(date_petitioned) == 3) {
-        date_petitioned <- 
+        date_petitioned <-
           setdiff(date_petitioned, c(date_answered, date_implemented))
       }
       ## If the length is still larger, stop the loop
@@ -172,9 +172,9 @@ extract_pt_content <- function(x, date = NULL) {
       date_petitioned <- min(date_petitioned)
     }
   } else if (
-    !("검토내용" %in% sec_titles) & 
-    !("실시 결과" %in% sec_titles) & 
-    length(date_petitioned) > 1
+    !("검토내용" %in% sec_titles) &
+      !("실시 결과" %in% sec_titles) &
+      length(date_petitioned) > 1
   ) {
     ## Still need the max
     date_petitioned <- max(date_petitioned)
@@ -183,14 +183,14 @@ extract_pt_content <- function(x, date = NULL) {
   ## Branch of government petitioned to
   ## Messy approach, but find the "area" and take the next string
   branch <- misc[which(area == misc) + 1]
-  
+
   ## Combine into a tibble
   pub_content_df <- tibble(
     title = title_text,
     area = area,
     attachment = attachment,
     status = status,
-    date_petitioned = date_petitioned, 
+    date_petitioned = date_petitioned,
     date_answered = date_answered,
     date_implemented = date_implemented,
     branch = branch,
@@ -202,7 +202,7 @@ extract_pt_content <- function(x, date = NULL) {
       values_from = sec_content
     ) %>%
     mutate(date_scraped = date)
-  
+
   return(pub_content_df)
 }
 
@@ -238,4 +238,12 @@ pub_title_wrangle <- function(x) {
       date_petitioned2 = `신청일`
     )
   return(out)
+}
+
+get_mode <- function(x) {
+  x %>%
+    table() %>%
+    which.max() %>%
+    names() %>%
+    as.numeric()
 }
