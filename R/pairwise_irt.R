@@ -209,14 +209,6 @@ table(postDP_out[, 131]) ## how many distinct respondent parameter values?
 ## 1165 1507  892  323   82   24    6    1
 ## respondents mostly fall under 3 distinct clusters
 
-get_mode <- function(x) {
-  x %>%
-    table() %>%
-    which.max() %>%
-    names() %>%
-    as.numeric()
-}
-
 ## two clusters in pilot study data
 ## summarize demographics of clusters
 c1 <- str_extract(names(gamma.postDP.med[gamma.postDP.med < 1]), "\\d+")
