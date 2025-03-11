@@ -247,3 +247,12 @@ get_mode <- function(x) {
     names() %>%
     as.numeric()
 }
+
+irt_summ <- function(param_name, posterior) {
+  draws <- posterior[, grep(param_name, colnames(posterior))]
+  list(
+    median = apply(draws, 2, median),
+    q025 = apply(draws, 2, quantile, prob = 0.025),
+    q975 = apply(draws, 2, quantile, prob = 0.975)
+  )
+}
