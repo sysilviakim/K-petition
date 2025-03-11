@@ -256,3 +256,63 @@ irt_summ <- function(param_name, posterior) {
     q975 = apply(draws, 2, quantile, prob = 0.975)
   )
 }
+
+theta_post_viz <- function(stats_summ,
+                           shape = NULL, color = NULL, label = FALSE) {
+  if (!is.null(shape) & is.null(color)) {
+    p <- ggplot(
+      stats_summ$theta,
+      aes(x = theta1_median, y = theta2_median, shape = !!sym(shape))
+    )
+  } else if (is.null(shape) & !is.null(color)) {
+    p <- ggplot(
+      stats_summ$theta,
+      aes(x = theta1_median, y = theta2_median, color = !!sym(color))
+    )
+  } else if (!is.null(shape) & !is.null(color)) {
+    p <- ggplot(
+      stats_summ$theta,
+      aes(
+        x = theta1_median, y = theta2_median,
+        shape = !!sym(shape), color = !!sym(color)
+      )
+    )
+  } else {
+    p <- ggplot(
+      stats_summ$theta,
+      aes(x = theta1_median, y = theta2_median)
+    )
+  }
+  
+  if (isTRUE(label)) {
+    p <- p + 
+      geom_text(aes(label = item), hjust = 0, vjust = 0, color = "black")
+  }
+
+  p <- p +
+    geom_point() +
+    xlim(-3, 3) +
+    ylim(-3, 3) +
+    xlab("Theta 1D") +
+    ylab("Theta 2D") +
+    theme_minimal() +
+    ## Apply arrows to show item parameters overlayed with respondent vectors
+    geom_segment(
+      data = stats_summ$gamma %>%
+        ## Keep only rows with maximum median, minimum median, 
+        ## and median of median
+        filter(
+          median == max(median) | median == min(median) | median == median(median)
+        ),
+      aes(
+        x = 0, y = 0,
+        xend = cos(median),
+        yend = sin(median)
+      ),
+      arrow = arrow(length = unit(0.1, "inches")),
+      color = "red"
+    ) +
+    scale_color_viridis_d(end = .85) +
+    theme(legend.position = "bottom", legend.box = "vertical")
+  return(p)
+}

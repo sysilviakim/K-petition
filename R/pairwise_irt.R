@@ -3,7 +3,48 @@
 source(here::here("R", "utilities.R"))
 df <- read_csv("data/pilot/raw_data.csv")
 
-# Wrangle ======================================================================
+## Petition post characteristics -----------------------------------------------
+post_types <- tibble(
+  item = c(
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+    13, 14, 15, 16
+  ),
+  type = c(
+    "emotional-concrete-goodgrammar",
+    "dry-abstract-badgrammar", "dry-abstract-badgrammar", 
+    "dry-abstract-goodgrammar",
+    "dry-abstract-goodgrammar", "dry-concrete-badgrammar",
+    "dry-concrete-badgrammar", "dry-concrete-goodgrammar",
+    "dry-concrete-goodgrammar", "emotional-abstract-badgrammar",
+    "emotional-abstract-badgrammar", "emotional-abstract-goodgrammar",
+    "emotional-abstract-goodgrammar", "emotional-concrete-badgrammar",
+    "emotional-concrete-badgrammar", "emotional-concrete-goodgrammar"
+  )
+) %>%
+  separate(type, into = c("emotion", "concrete", "grammar"), sep = "-") %>%
+  mutate(
+    grammar = gsub("grammar", "", grammar),
+    item = paste0("item.", item),
+    concrete_grammar = paste(concrete, grammar, sep = "-")
+  )
+
+## Theta constraints -----------------------------------------------------------
+## item 1: emotional, concrete, good grammar
+## item 2: dry, abstract, bad grammar
+## item 8: dry, concrete, good grammar
+
+## set 1st dimension to be about concrete + grammar
+## set 2nd dimension to be about emotions vs dry
+theta_constraints <- list(
+  item.1 = list(1, 2),
+  item.1 = list(2, 2),
+  item.2 = list(1, -2),
+  item.2 = list(2, -2),
+  item.8 = list(1, "+"),
+  item.8 = list(2, "-")
+)
+
+# Wrangle data =================================================================
 pwc_df <- seq(10) %>%
   ## Wide to long data
   map_dfr(
@@ -37,7 +78,7 @@ pwc_df <- seq(10) %>%
     by = "No"
   )
 
-# Attention/sanity check =======================================================
+## Attention/sanity check ------------------------------------------------------
 ## Respondent 41 chose 1 for all 10 pairs
 ## No respondents chose 2 for all pairs
 inattention <- pwc_df %>%
@@ -69,29 +110,46 @@ pwc_list <- list(
 pwc_main <- pwc_list$attentive
 rm(pwc_df)
 
-# IRT ==========================================================================
-## item 1: emotional, concrete, good grammar
-## item 2: dry, abstract, bad grammar
-## item 8: dry, concrete, good grammar
+## Indicators for subsets ------------------------------------------------------
+subset_list <- list(
+  ppp = df %>%
+    filter(Q3 == 1) %>%
+    .$No,
+  opp = df %>%
+    filter(Q3 %in% c(2, 3, 5)) %>%
+    .$No,
+  pop = df %>%
+    mutate(
+      score = 0,
+      score = score + ifelse(Q5_3 >= 4, 1, 0),
+      score = score + ifelse(Q5_4 >= 4, 1, 0),
+      score = score + ifelse(Q5_5 >= 4, 1, 0)
+    ) %>%
+    filter(score >= 2 & Q5_3 >= 3 & Q5_4 >= 3 & Q5_5 >= 3) %>%
+    .$No
+) %>%
+  map(~ paste0("gamma.", .x))
 
-## theta constraints
-## set 1st dimension to be about concrete + grammar
-## set 2nd dimension to be about emotions vs dry
+# IRT ==========================================================================
+## MCMC ------------------------------------------------------------------------
 set.seed(1234)
 post_out <- MCMCpaircompare2d(
   pwc.data = pwc_main,
-  theta.constraints = list(
-    item.1 = list(1, 2),
-    item.1 = list(2, 2),
-    item.2 = list(1, -2),
-    item.2 = list(2, -2),
-    item.8 = list(1, "+"),
-    item.8 = list(2, "-")
-  ),
+  theta.constraints = theta_constraints,
   burnin = 500, mcmc = 20000, thin = 5, verbose = 1000,
   store.theta = TRUE, store.gamma = TRUE, tune = 0.5
 )
 
+## Dirichlet process
+set.seed(1234)
+postDP_out <- MCMCpaircompare2dDP(
+  pwc.data = pwc_main,
+  theta.constraints = theta_constraints,
+  burnin = 500, mcmc = 20000, thin = 5, verbose = 1000,
+  store.theta = TRUE, store.gamma = TRUE, tune = 0.5
+)
+
+## Summary statistics ----------------------------------------------------------
 stats_summ <- list(
   theta = left_join(
     irt_summ("theta1", post_out) %>%
@@ -104,101 +162,101 @@ stats_summ <- list(
       rownames_to_column(var = "item") %>%
       rename_with(~ paste0("theta2_", .), -item) %>%
       mutate(item = gsub("theta2.", "", item))
-  ),
+  ) %>%
+    left_join(., post_types),
   gamma = irt_summ("gamma", post_out) %>%
     as.data.frame() %>%
-    rename_all(~ paste0("gamma_", .))
+    rownames_to_column(var = "respondent") %>%
+    mutate(emotion = "", concrete = "", grammar = "", concrete_grammar = "")
 )
 
+stats_summ_dp <- list(
+  theta = left_join(
+    irt_summ("theta1", postDP_out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta1_", .), -item) %>%
+      mutate(item = gsub("theta1.", "", item)),
+    irt_summ("theta2", postDP_out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta2_", .), -item) %>%
+      mutate(item = gsub("theta2.", "", item))
+  ) %>%
+    left_join(., post_types),
+  gamma = irt_summ("gamma", postDP_out) %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "respondent") %>%
+    mutate(emotion = "", concrete = "", grammar = "", concrete_grammar = "")
+)
+
+## Visualization ---------------------------------------------------------------
 ## visualize theta posteriors (item parameters)
-labs <- gsub("theta1.", "", names(theta1_stats$median))
-pdf("output/theta_post_median.pdf", width = 10, height = 10)
-# plot(
-#   theta1_stats$median, theta2_stats$median,
-#   type = "n",
-#   xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5),
-#   xlab = "Theta 1D", ylab = "Theta 2D"
-# )
-# text(x = theta1.post.med, y = theta2.post.med, label = labs)
-## ggplot version
-ggplot(stats_summ$theta, aes(x = theta1_median, y = theta2_median)) +
-  geom_point() +
-  geom_text(aes(label = item), hjust = 0, vjust = 0) +
-  xlim(-2.5, 2.5) +
-  ylim(-2.5, 2.5) +
-  xlab("Theta 1D") +
-  ylab("Theta 2D")
+pdf("output/theta_post_median.pdf", width = 6, height = 6)
+theta_post_viz(stats_summ, label = TRUE)
 dev.off()
 
-## visualize theta with gamma (item parameters overlayed with respondent vectors)
-plot(theta1.post.med, theta2.post.med,
-  type = "n",
-  xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5),
-  xlab = "Theta 1D", ylab = "Theta 2D"
-)
-text(x = theta1.post.med, y = theta2.post.med, label = labs)
-
-for (i in 1:length(gamma.post.med)) {
-  arrows(
-    x0 = 0, y0 = 0,
-    x1 = cos(gamma.post.med[i]),
-    y1 = sin(gamma.post.med[i]),
-    col = rgb(1, 0, 0, 0.2), len = 0.05, lwd = 0.5
-  )
-}
-
-## visualize with gamma posteriors (individual parameters)
-
-
-
-
-## Dirichlet process
-postDP_out <- MCMCpaircompare2dDP(
-  pwc.data = pwc_main,
-  theta.constraints = list(
-    item.1 = list(1, 2),
-    item.1 = list(2, 2),
-    item.2 = list(1, -2),
-    item.2 = list(2, -2),
-    item.8 = list(1, "+"),
-    item.8 = list(2, "-")
-  ),
-  burnin = 500, mcmc = 20000, thin = 5, verbose = 1000,
-  store.theta = TRUE, store.gamma = TRUE, tune = 0.5
-)
-
-theta1.draws <- postDP_out[, grep("theta1", colnames(postDP_out))]
-theta2.draws <- postDP_out[, grep("theta2", colnames(postDP_out))]
-gamma.draws <- postDP_out[, grep("gamma", colnames(postDP_out))]
-theta1.postDP.med <- apply(theta1.draws, 2, median)
-theta2.postDP.med <- apply(theta2.draws, 2, median)
-gamma.postDP.med <- apply(gamma.draws, 2, median)
-theta1.postDP.025 <- apply(theta1.draws, 2, quantile, prob = 0.025)
-theta1.postDP.975 <- apply(theta1.draws, 2, quantile, prob = 0.975)
-theta2.postDP.025 <- apply(theta2.draws, 2, quantile, prob = 0.025)
-theta2.postDP.975 <- apply(theta2.draws, 2, quantile, prob = 0.975)
-gamma.postDP.025 <- apply(gamma.draws, 2, quantile, prob = 0.025)
-gamma.postDP.975 <- apply(gamma.draws, 2, quantile, prob = 0.975)
-
-pdf("output/theta_gamma_postDP_median.pdf", width = 10, height = 10)
-plot(theta1.postDP.med, theta2.postDP.med,
-  type = "n",
-  xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5),
-  xlab = "Theta 1D", ylab = "Theta 2D"
-)
-text(x = theta1.postDP.med, y = theta2.postDP.med, label = labs)
-
-for (i in 1:length(gamma.postDP.med)) {
-  arrows(
-    x0 = 0, y0 = 0,
-    x1 = cos(gamma.postDP.med[i]),
-    y1 = sin(gamma.postDP.med[i]),
-    col = rgb(1, 0, 0, 0.2), len = 0.05, lwd = 0.5
-  )
-}
+## DP
+pdf("output/theta_post_median_dp.pdf", width = 6, height = 6)
+## Why so different?
+theta_post_viz(stats_summ_dp, label = TRUE)
 dev.off()
 
-## check clusters
+## Yu and Quinn 2021 Fig 3 apply
+pdf("output/theta_post_median_emotion.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ, color = "emotion") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Emotion"))
+dev.off()
+
+pdf("output/theta_post_median_concrete.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ, color = "concrete") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Concreteness"))
+dev.off()
+
+pdf("output/theta_post_median_grammar.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ, color = "grammar") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Grammar"))
+dev.off()
+
+pdf("output/theta_post_median_dp_emotion.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ_dp, color = "emotion") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Emotion"))
+dev.off()
+
+pdf("output/theta_post_median_dp_concrete.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ_dp, color = "concrete") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Concreteness"))
+dev.off()
+
+pdf("output/theta_post_median_dp_grammar.pdf", width = 4, height = 4)
+theta_post_viz(stats_summ_dp, color = "grammar") +
+  ## combine guide for color and shape
+  guides(color = guide_legend(title = "Grammar"))
+dev.off()
+
+## Combined viz
+pdf("output/theta_post_median_combined.pdf", width = 4, height = 4.5)
+theta_post_viz(stats_summ, color = "concrete_grammar", shape = "emotion") +
+  guides(
+    color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
+    shape = guide_legend(title = "Emotion")
+  )
+dev.off()
+
+pdf("output/theta_post_median_dp_combined.pdf", width = 4, height = 4.5)
+theta_post_viz(stats_summ_dp, color = "concrete_grammar", shape = "emotion") +
+  guides(
+    color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
+    shape = guide_legend(title = "Emotion")
+  )
+dev.off()
+
+## Check clusters --------------------------------------------------------------
 table(postDP_out[, 131]) ## how many distinct respondent parameter values?
 ##    2    3    4    5    6    7    8    9
 ## 1165 1507  892  323   82   24    6    1
@@ -206,16 +264,13 @@ table(postDP_out[, 131]) ## how many distinct respondent parameter values?
 
 ## two clusters in pilot study data
 ## summarize demographics of clusters
-c1 <- str_extract(names(gamma.postDP.med[gamma.postDP.med < 1]), "\\d+")
-c1 <- as.numeric(c1)
-c2 <- str_extract(names(gamma.postDP.med[gamma.postDP.med > 1]), "\\d+")
-c2 <- as.numeric(c2)
-
-df <- df %>%
-  mutate(cluster = 1)
-df$cluster[df$No %in% c2] <- 2
-
-df %>%
+dp_cluster <- stats_summ_dp$gamma %>%
+  mutate(cluster = (median < 1)) %>%
+  group_split(cluster) %>%
+  set_names(c("1", "2")) %>%
+  map(~ .x$respondent %>% str_extract(., "\\d+") %>% as.numeric()) %>%
+  map(~ df %>% filter(No %in% .x)) %>%
+  bind_rows(.id = "cluster") %>%
   group_by(cluster) %>%
   summarise(
     sex = mean(SQ1),
@@ -228,14 +283,12 @@ df %>%
     ideal = mean(Q2),
     party = get_mode(Q3)
   )
+dp_cluster
 
-##  cluster   sex   age   edu married   kid income  life ideal party
-##    <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
-## 1       1  1.47  43.8   3.8    1.97  1.97   5.17  5.13   4.2     1
-## 2       2  1.55  44.2   4.1    1.8   1.85   6.7   6.15   3.8     1
-## clusters are very similar in demographics
-## both clusters identify with liberal party
-## cluster 2 has higher income level, life satisfaction
+#   cluster   sex   age   edu married   kid income  life ideal party
+#   <chr>   <dbl> <dbl> <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+# 1 1        1.46  42.9  3.79    2.04  1.96   5.11  5.11  4.21     1
+# 2 2        1.57  45.0  4.10    1.76  1.86   6.67  6     3.86     1
 
 ## cluster 1 more towards 2nd dimension of theta
 ## cluster 2 more towards 1st dimension of theta
