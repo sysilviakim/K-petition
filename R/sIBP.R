@@ -146,43 +146,60 @@ dfm <- dfm[-na,];Y <- Y[-na,]
 ## further pruning
 ## keep words that appear at least once in the document
 ## keep documents that have at least one word
+word_threshold <- 15 ## go bigger?
 word_count <- Matrix::colSums(dfm)
-one_time_words <- word_count[word_count == 1]
-dfm <- dfm[,word_count > 1]
-doc_count <- Matrix::rowSums(dfm)
-dfm <- dfm[doc_count > 1,]
-Y <- Y[doc_count > 1,]
-
-## for python IBP
-Matrix::writeMM(as(dfm[,-1], "dgCMatrix"), "data/dfm_matrix.mtx")
-write_csv(data.frame("feature"=colnames(dfm)[-1]), "data/dfm_features.csv")
-write_csv(data.frame("doc"=rownames(dfm)), "data/dfm_docs.csv")
+##one_time_words <- word_count[word_count == 1]
+dfm <- dfm[,word_count > word_threshold]
+## doc_count <- Matrix::rowSums(dfm)
+## dfm <- dfm[doc_count > 1,]
+## Y <- Y[doc_count > 1,]
 
 ## fit sIBP
 ## split sample (use 50% as training set)
 train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
 
-## try range of parameters
-## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
-## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
-## X needs to be data frame...
+tb_train <- as_tibble(Matrix::colSums(dfm[train_ind,]))
+tb_test <- as_tibble(Matrix::colSums(dfm[-train_ind,]))
+
+g1 <- ggplot(data=tb_train) +
+    geom_histogram(aes(x=value),bins=50) + xlab("Count") +
+    ggtitle("Word Count Distribution in Train Data") +
+    theme_bw()
+g2 <- ggplot(data=tb_test) +
+    geom_histogram(aes(x=value),bins=50) + xlab("Count") +
+    ggtitle("Word Count Distribution in Test Data") +
+    theme_bw()
+gridExtra::grid.arrange(g1,g2,ncol=2)
+
+
+## sibp takes data frrame objects
 X <- quanteda::convert(dfm,to="data.frame")[,-1]
 y <- Y$date_to_answer
 
+## try range of parameters
+## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
+## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
+
 sibp_out <- sibp(X=X,
-                 Y=y,K=2,
+                 Y=y,K=5,
                  alpha=2,sigmasq.n=0.8,train.ind=train_ind)
 
-## failed
-## Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-##  0 (non-NA) cases
-## do not understand why...!
-## possibly errors due to standardizing?
-## columns with one non-zero value?
+## document-treatment probability matrix
+nu <- sibp_out$nu
+t1_docs <- Y$title[nu[,1]>0.9]
+t2_docs <- Y$title[nu[,2]>0.9]
+t3_docs <- Y$title[nu[,3]>0.9]
+t4_docs <- Y$title[nu[,4]>0.9]
+t5_docs <- Y$title[nu[,5]>0.9]
+
+## K-length vector: the effect of having each treatment on the outcome
+m <- sibp_out$m
+
+## treatment-feature matrix: the effect of the row treatment on the column word
+phi <- sibp_out$phi
 
 ## grid search to find optimal model specification
-
-sibp_out <- sibp_param_search(X=as_tibble(dfm)[,-1],Y=Y$date_to_answer,K=2,
+sibp_out <- sibp_param_search(X=X,Y=y,K=2,
                               alphas=c(2,4),sigmasq.ns=c(0.8,1),train.ind=train_ind,iters=1)
 
 ## Qualitatively look at the top candidates
