@@ -58,26 +58,7 @@ pwc_list <- list(
   all = pwc_df,
   attentive = pwc_df %>%
     filter(inattention == 0)
-)
-
-## Create subgroups
-## Q3: party
-pwc_list$ppp <- pwc_df %>%
-  filter(Q3 == 1)
-pwc_list$opp <- pwc_df %>%
-  filter(Q3 %in% c(2, 3, 5))
-
-## Populist attitude (discuss construct validity)
-pwc_list$populist <- pwc_df %>%
-  mutate(
-    score = 0,
-    score = score + ifelse(Q5_3 >= 4, 1, 0),
-    score = score + ifelse(Q5_4 >= 4, 1, 0),
-    score = score + ifelse(Q5_5 >= 4, 1, 0)
-  ) %>%
-  filter(score >= 2 & Q5_3 >= 3 & Q5_4 >= 3 & Q5_5 >= 3)
-
-pwc_list <- pwc_list %>%
+) %>%
   map(
     ~ .x %>%
       select(No, Item1, Item2, Choice) %>%
@@ -86,6 +67,7 @@ pwc_list <- pwc_list %>%
 
 ## main data
 pwc_main <- pwc_list$attentive
+rm(pwc_df)
 
 # IRT ==========================================================================
 ## item 1: emotional, concrete, good grammar
@@ -110,30 +92,43 @@ post_out <- MCMCpaircompare2d(
   store.theta = TRUE, store.gamma = TRUE, tune = 0.5
 )
 
-theta1.draws <- post_out[, grep("theta1", colnames(post_out))]
-theta2.draws <- post_out[, grep("theta2", colnames(post_out))]
-gamma.draws <- post_out[, grep("gamma", colnames(post_out))]
-theta1.post.med <- apply(theta1.draws, 2, median)
-theta2.post.med <- apply(theta2.draws, 2, median)
-gamma.post.med <- apply(gamma.draws, 2, median)
-theta1.post.025 <- apply(theta1.draws, 2, quantile, prob = 0.025)
-theta1.post.975 <- apply(theta1.draws, 2, quantile, prob = 0.975)
-theta2.post.025 <- apply(theta2.draws, 2, quantile, prob = 0.025)
-theta2.post.975 <- apply(theta2.draws, 2, quantile, prob = 0.975)
-gamma.post.025 <- apply(gamma.draws, 2, quantile, prob = 0.025)
-gamma.post.975 <- apply(gamma.draws, 2, quantile, prob = 0.975)
+stats_summ <- list(
+  theta = left_join(
+    irt_summ("theta1", post_out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta1_", .), -item) %>%
+      mutate(item = gsub("theta1.", "", item)),
+    irt_summ("theta2", post_out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta2_", .), -item) %>%
+      mutate(item = gsub("theta2.", "", item))
+  ),
+  gamma = irt_summ("gamma", post_out) %>%
+    as.data.frame() %>%
+    rename_all(~ paste0("gamma_", .))
+)
 
 ## visualize theta posteriors (item parameters)
-labs <- gsub("theta1.", "", names(theta1.post.med))
+labs <- gsub("theta1.", "", names(theta1_stats$median))
 pdf("output/theta_post_median.pdf", width = 10, height = 10)
-plot(theta1.post.med, theta2.post.med,
-  type = "n",
-  xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5),
-  xlab = "Theta 1D", ylab = "Theta 2D"
-)
-text(x = theta1.post.med, y = theta2.post.med, label = labs)
+# plot(
+#   theta1_stats$median, theta2_stats$median,
+#   type = "n",
+#   xlim = c(-2.5, 2.5), ylim = c(-2.5, 2.5),
+#   xlab = "Theta 1D", ylab = "Theta 2D"
+# )
+# text(x = theta1.post.med, y = theta2.post.med, label = labs)
+## ggplot version
+ggplot(stats_summ$theta, aes(x = theta1_median, y = theta2_median)) +
+  geom_point() +
+  geom_text(aes(label = item), hjust = 0, vjust = 0) +
+  xlim(-2.5, 2.5) +
+  ylim(-2.5, 2.5) +
+  xlab("Theta 1D") +
+  ylab("Theta 2D")
 dev.off()
-
 
 ## visualize theta with gamma (item parameters overlayed with respondent vectors)
 plot(theta1.post.med, theta2.post.med,
