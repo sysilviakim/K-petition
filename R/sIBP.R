@@ -174,6 +174,7 @@ gridExtra::grid.arrange(g1,g2,ncol=2)
 
 ## sibp takes data frrame objects
 X <- quanteda::convert(dfm,to="data.frame")[,-1]
+features <- colnames(X)
 y <- Y$date_to_answer
 
 ## try range of parameters
@@ -185,18 +186,56 @@ sibp_out <- sibp(X=X,
                  alpha=2,sigmasq.n=0.8,train.ind=train_ind)
 
 ## document-treatment probability matrix
+## probability that the given document has treatment k
+Ytrain <- Y[train_ind,]
 nu <- sibp_out$nu
-t1_docs <- Y$title[nu[,1]>0.9]
-t2_docs <- Y$title[nu[,2]>0.9]
-t3_docs <- Y$title[nu[,3]>0.9]
-t4_docs <- Y$title[nu[,4]>0.9]
-t5_docs <- Y$title[nu[,5]>0.9]
+colSums(nu)
 
-## K-length vector: the effect of having each treatment on the outcome
-m <- sibp_out$m
+t0_docs <- Ytrain$title[rowSums(nu < 0.1)]
+t1_docs <- Ytrain$title[nu[,1]>0.9]
+t2_docs <- Ytrain$title[nu[,2]>0.9]
+t3_docs <- Ytrain$title[nu[,3]>0.9]
+t4_docs <- Ytrain$title[nu[,4]>0.9]
+t5_docs <- Ytrain$title[nu[,5]>0.9]
+
+## 5 treatment model, take 5 samples each and examine
+t0_text <- petition %>% filter(title %in% t0_docs)
+t1_text <- petition %>% filter(title %in% t1_docs)
+t2_text <- petition %>% filter(title %in% t2_docs)
+t3_text <- petition %>% filter(title %in% t3_docs)
+t4_text <- petition %>% filter(title %in% t4_docs)
+t5_text <- petition %>% filter(title %in% t5_docs)
+
+write_csv(t0_text,"output/t0_sample_texts.csv")
+write_csv(t1_text,"output/t1_sample_texts.csv")
+write_csv(t2_text,"output/t2_sample_texts.csv")
+write_csv(t3_text,"output/t3_sample_texts.csv")
+write_csv(t4_text,"output/t4_sample_texts.csv")
+write_csv(t5_text,"output/t5_sample_texts.csv")
 
 ## treatment-feature matrix: the effect of the row treatment on the column word
 phi <- sibp_out$phi
+features[phi[1,]>0]
+features[phi[2,]>0]
+features[phi[3,]>0]
+features[phi[4,]>0]
+features[phi[5,]>0]
+## effect of treatment k on having given words for document i
+## treat_coef <- nu[i,] %*% phi
+## features[treat_coef > 0]
+
+## K-length vector: the effect of having each treatment on the outcome
+## negative value: having treatment k decreases the response delay
+## positive value: having treatment k increases the response delay
+m <- sibp_out$m
+
+## Estimate the AMCE using the test set
+amce <- sibp_amce(sibp_out, X, y)
+## Plot 95% confidence intervals for the AMCE of each treatment
+sibp_amce_plot(amce) + theme_classic()
+
+
+
 
 ## grid search to find optimal model specification
 sibp_out <- sibp_param_search(X=X,Y=y,K=2,
