@@ -12,8 +12,8 @@ library(tidytext)
 petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
 petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
 
-## limit scope to post 2017 (memory issue)
-idx <- petition_df$year >= 2020
+## limit scope to post 2013 for consistency in DGP
+idx <- petition_df$year >= 2013
 petition_df <- petition_df[idx,]
 petition_lm <- petition_lm[idx,]
 
@@ -146,8 +146,15 @@ dfm <- dfm[-na,];Y <- Y[-na,]
 ## further pruning
 ## keep words that appear at least once in the document
 ## keep documents that have at least one word
-word_threshold <- 15 ## go bigger?
 word_count <- Matrix::colSums(dfm)
+word_threshold <- 30
+
+sample_words <- colnames(dfm)[word_count < word_threshold]
+sample_words[ sample(1:length(sample_words),20) ]
+
+sample_words <- colnames(dfm)[word_count > word_threshold]
+sample_words[ sample(1:length(sample_words),20) ]
+
 ##one_time_words <- word_count[word_count == 1]
 dfm <- dfm[,word_count > word_threshold]
 ## doc_count <- Matrix::rowSums(dfm)
@@ -155,35 +162,42 @@ dfm <- dfm[,word_count > word_threshold]
 ## Y <- Y[doc_count > 1,]
 
 ## fit sIBP
+## sibp takes data frame objects
+X <- quanteda::convert(dfm,to="data.frame")
+y <- Y$date_to_answer
+
+## add covariates
+## 1. branch
+## 2. year
+## branch and year as binary variables
+petition <- petition %>%
+    mutate(area = str_replace_all(area,"/","_"))
+petition_cov <- petition %>%
+    mutate(year = substr(date,1,4), value=1) %>%
+    dplyr::select(title,year,area,value) %>%
+    pivot_wider(names_from = area, values_from = value, values_fill = list(value = 0)) %>%
+    mutate(value=1) %>%
+    pivot_wider(names_from = year, values_from = value, values_fill = list(value = 0))
+
+rm(list="petition") ## memory saving
+
+X <- X %>%
+    left_join(petition_cov,by=c("doc_id"="title"))
+X <- X %>%
+    dplyr::select(-doc_id)
+features <- colnames(X)
+
 ## split sample (use 50% as training set)
 train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
-
-tb_train <- as_tibble(Matrix::colSums(dfm[train_ind,]))
-tb_test <- as_tibble(Matrix::colSums(dfm[-train_ind,]))
-
-g1 <- ggplot(data=tb_train) +
-    geom_histogram(aes(x=value),bins=50) + xlab("Count") +
-    ggtitle("Word Count Distribution in Train Data") +
-    theme_bw()
-g2 <- ggplot(data=tb_test) +
-    geom_histogram(aes(x=value),bins=50) + xlab("Count") +
-    ggtitle("Word Count Distribution in Test Data") +
-    theme_bw()
-gridExtra::grid.arrange(g1,g2,ncol=2)
-
-
-## sibp takes data frrame objects
-X <- quanteda::convert(dfm,to="data.frame")[,-1]
-features <- colnames(X)
-y <- Y$date_to_answer
 
 ## try range of parameters
 ## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
 ## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
-
 sibp_out <- sibp(X=X,
-                 Y=y,K=5,
+                 Y=y,K=3,
                  alpha=2,sigmasq.n=0.8,train.ind=train_ind)
+
+## model evaluation?
 
 ## document-treatment probability matrix
 ## probability that the given document has treatment k
@@ -233,7 +247,7 @@ m <- sibp_out$m
 amce <- sibp_amce(sibp_out, X, y)
 ## Plot 95% confidence intervals for the AMCE of each treatment
 sibp_amce_plot(amce) + theme_classic()
-
+ggsave("output/sibp_amce.pdf")
 
 
 
