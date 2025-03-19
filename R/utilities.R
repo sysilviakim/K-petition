@@ -289,6 +289,24 @@ theta_post_viz <- function(stats_summ,
       geom_text(aes(label = item), hjust = 0, vjust = 0, color = "black")
   }
 
+  temp <- stats_summ$gamma %>%
+    ## Keep only rows with maximum median, minimum median, 
+    ## and median of median
+    filter(
+      median == max(median) | median == min(median) | median == median(median)
+    )
+  
+  if (nrow(temp) == 2) {
+    ## Generate the median, as the number of rows was probably even
+    temp <- temp %>%
+      bind_rows(
+        tibble(
+          respondent = "",
+          median = median(stats_summ$gamma$median)
+        )
+      )
+  }
+  
   p <- p +
     geom_point() +
     xlim(-3, 3) +
@@ -298,12 +316,7 @@ theta_post_viz <- function(stats_summ,
     theme_minimal() +
     ## Apply arrows to show item parameters overlayed with respondent vectors
     geom_segment(
-      data = stats_summ$gamma %>%
-        ## Keep only rows with maximum median, minimum median, 
-        ## and median of median
-        filter(
-          median == max(median) | median == min(median) | median == median(median)
-        ),
+      data = temp,
       aes(
         x = 0, y = 0,
         xend = cos(median),
@@ -315,4 +328,16 @@ theta_post_viz <- function(stats_summ,
     scale_color_viridis_d(end = .85) +
     theme(legend.position = "bottom", legend.box = "vertical")
   return(p)
+}
+
+gamma_filter <- function(x, subset) {
+  x %>%
+    imap(
+      ~ if ("respondent" %in% names(.x)) {
+        .x %>%
+          filter(respondent %in% subset_list[[subset]])
+      } else {
+        .x
+      }
+    )
 }

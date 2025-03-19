@@ -241,11 +241,13 @@ dev.off()
 
 ## Combined viz
 pdf("output/theta_post_median_combined.pdf", width = 4, height = 4.5)
-theta_post_viz(stats_summ, color = "concrete_grammar", shape = "emotion") +
+p1 <-
+  theta_post_viz(stats_summ, color = "concrete_grammar", shape = "emotion") +
   guides(
     color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
     shape = guide_legend(title = "Emotion")
   )
+p1
 dev.off()
 
 pdf("output/theta_post_median_dp_combined.pdf", width = 4, height = 4.5)
@@ -292,3 +294,42 @@ dp_cluster
 
 ## cluster 1 more towards 2nd dimension of theta
 ## cluster 2 more towards 1st dimension of theta
+
+## Subgroups -------------------------------------------------------------------
+pdf("output/theta_post_median_combined_ppp.pdf", width = 4, height = 4.5)
+p2 <- theta_post_viz(
+  gamma_filter(stats_summ, "ppp"),
+  color = "concrete_grammar", shape = "emotion"
+) +
+  guides(
+    color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
+    shape = guide_legend(title = "Emotion")
+  ) +
+  xlim(-3, 3) +
+  ylim(-3, 3)
+p2
+dev.off()
+
+pdf("output/theta_post_median_combined_opp.pdf", width = 4, height = 4.5)
+p3 <- theta_post_viz(
+  gamma_filter(stats_summ, "opp"),
+  color = "concrete_grammar", shape = "emotion"
+) +
+  guides(
+    color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
+    shape = guide_legend(title = "Emotion")
+  )
+p3
+dev.off()
+
+pdf("output/theta_post_median_combined_pop.pdf", width = 4, height = 4.5)
+p4 <- theta_post_viz(
+  gamma_filter(stats_summ, "pop"),
+  color = "concrete_grammar", shape = "emotion"
+) +
+  guides(
+    color = guide_legend(title = "Concreteness/\nGrammar", byrow = T, nrow = 2),
+    shape = guide_legend(title = "Emotion")
+  )
+p4
+dev.off()
