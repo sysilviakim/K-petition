@@ -159,7 +159,7 @@ for(i in 1:length(areas)){
 
     ## address missing caused by matching
     na <- which(is.na(Y$date_to_answer))
-    dfm <- dfm[-na,];Y <- Y[-na,]
+    if(length(na) > 0) dfm <- dfm[-na,];Y <- Y[-na,]
 
     ## further pruning
     ## keep words that appear at least once in the document
@@ -205,6 +205,9 @@ for(i in 1:length(areas)){
         dplyr::select(-doc_id)
     features <- colnames(X)
 
+    ## some added covariates (i.e. years) are missing from X (0 columns)
+    X <- X[,colSums(X) > 5]
+
     ## split sample (use 50% as training set)
     train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
 
@@ -233,7 +236,7 @@ for(i in 1:length(areas)){
     ## extract strongest 30 features for each treatment
     feature_id <- sapply(1:K,function(j){features[ detect_max(phi[j,],30) ]})
     colnames(feature_id) <- paste0("T",1:K)
-    write_csv(feature_id,paste0("output/",areas_eng[i],"_treat_id.csv"))
+    write_csv(as_tibble(feature_id),paste0("output/",areas_eng[i],"_treat_id.csv"))
 
     ## Estimate the AMCE using the test set
     amce <- sibp_amce(sibp_out, X, y)
