@@ -117,123 +117,154 @@ petition_dfm <- petition_dfm %>%
 ## create Y: response delay?
 ## split sample
 
-## create Y
-## use response time
-Y <- petition %>%
-    dplyr::select(title,date_to_answer) %>%
-    mutate(date_to_answer = as.numeric(date_to_answer)) %>%
-    filter(!is.na(date_to_answer))
+## subset down to one or a few areas
+K <- 5
+areas <- unique(petition$area)
+areas_eng <- c("Land_Infra_Agric_Marine",
+               "Admin_Security",
+               "Industry_Communication_Sci",
+               "Food_Drug",
+               "Labor_Environ",
+               "Food_Health_Family",
+               "Education_Culture",
+               "Finance_Consumer",
+               "Misc",
+               "Military_Foreign_NK",
+               "Law_Judiciary")
+for(i in 1:length(areas)){
+    petition_sub <- petition %>%
+        filter(area == areas[i])
 
-## create X
-petition_dfm <- petition_dfm %>%
-    filter(title %in% Y$title)
+    ## create Y
+    ## use response time
+    Y <- petition_sub %>%
+        dplyr::select(title,date_to_answer) %>%
+        mutate(date_to_answer = as.numeric(date_to_answer)) %>%
+        filter(!is.na(date_to_answer))
 
-Y <- Y %>%
-    filter(title %in% unique(petition_dfm$title))
+    ## create X
+    petition_dfm_X <- petition_dfm %>%
+        filter(title %in% Y$title)
 
-dfm <- cast_dfm(petition_dfm,
-                document="title",
-                term="words",
-                value="n")
+    Y <- Y %>%
+        filter(title %in% unique(petition_dfm_X$title))
 
-idx <- match(rownames(dfm),Y$title)
-Y <- Y[idx,]
+    dfm <- cast_dfm(petition_dfm_X,
+                    document="title",
+                    term="words",
+                    value="n")
 
-## address missing caused by matching
-na <- which(is.na(Y$date_to_answer))
-dfm <- dfm[-na,];Y <- Y[-na,]
+    idx <- match(rownames(dfm),Y$title)
+    Y <- Y[idx,]
 
-## further pruning
-## keep words that appear at least once in the document
-## keep documents that have at least one word
-word_count <- Matrix::colSums(dfm)
-word_threshold <- 30
+    ## address missing caused by matching
+    na <- which(is.na(Y$date_to_answer))
+    if(length(na) > 0) dfm <- dfm[-na,];Y <- Y[-na,]
 
-sample_words <- colnames(dfm)[word_count < word_threshold]
-sample_words[ sample(1:length(sample_words),20) ]
+    ## further pruning
+    ## keep words that appear at least once in the document
+    ## keep documents that have at least one word
+    word_count <- Matrix::colSums(dfm)
+    word_threshold <- 30
 
-sample_words <- colnames(dfm)[word_count > word_threshold]
-sample_words[ sample(1:length(sample_words),20) ]
+    ##sample_words <- colnames(dfm)[word_count < word_threshold]
+    ##sample_words[ sample(1:length(sample_words),20) ]
 
-##one_time_words <- word_count[word_count == 1]
-dfm <- dfm[,word_count > word_threshold]
-## doc_count <- Matrix::rowSums(dfm)
-## dfm <- dfm[doc_count > 1,]
-## Y <- Y[doc_count > 1,]
+    ##sample_words <- colnames(dfm)[word_count > word_threshold]
+    ##sample_words[ sample(1:length(sample_words),20) ]
 
-## fit sIBP
-## sibp takes data frame objects
-X <- quanteda::convert(dfm,to="data.frame")
-y <- Y$date_to_answer
+    ##one_time_words <- word_count[word_count == 1]
+    dfm <- dfm[,word_count > word_threshold]
+    ## doc_count <- Matrix::rowSums(dfm)
+    ## dfm <- dfm[doc_count > 1,]
+    ## Y <- Y[doc_count > 1,]
 
-## add covariates
-## 1. branch
-## 2. year
-## branch and year as binary variables
-petition <- petition %>%
-    mutate(area = str_replace_all(area,"/","_"))
-petition_cov <- petition %>%
-    mutate(year = substr(date,1,4), value=1) %>%
-    dplyr::select(title,year,area,value) %>%
-    pivot_wider(names_from = area, values_from = value, values_fill = list(value = 0)) %>%
-    mutate(value=1) %>%
-    pivot_wider(names_from = year, values_from = value, values_fill = list(value = 0))
+    ## fit sIBP
+    ## sibp takes data frame objects
+    X <- quanteda::convert(dfm,to="data.frame")
+    y <- Y$date_to_answer
 
-rm(list="petition") ## memory saving
+    ## add covariates
+    ## 1. branch
+    ## 2. year
+    ## branch and year as binary variables
+    petition_sub <- petition_sub %>%
+        mutate(area = str_replace_all(areas[i],"/","_"))
+    petition_cov <- petition_sub %>%
+        mutate(year = substr(date,1,4)) %>%
+        mutate(value = 1) %>%
+        dplyr::select(title,year,value) %>%
+        ## dplyr::select(title,area,year,value) %>%
+        ## pivot_wider(names_from = area, values_from = value, values_fill = list(value = 0)) %>%
+        mutate(value = 1) %>%
+        pivot_wider(names_from = year, values_from = value, values_fill = list(value = 0))
 
-X <- X %>%
-    left_join(petition_cov,by=c("doc_id"="title"))
-X <- X %>%
-    dplyr::select(-doc_id)
-features <- colnames(X)
+    X <- X %>%
+        left_join(petition_cov,by=c("doc_id"="title"))
+    X <- X %>%
+        dplyr::select(-doc_id)
+    features <- colnames(X)
 
-## split sample (use 50% as training set)
-train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
+    ## some added covariates (i.e. years) are missing from X (0 columns)
+    X <- X[,colSums(X) > 5]
 
-## try range of parameters
-## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
-## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
-sibp_out <- sibp(X=X,
-                 Y=y,K=3,
-                 alpha=2,sigmasq.n=0.8,train.ind=train_ind)
+    ## split sample (use 50% as training set)
+    train_ind <- sample(1:nrow(dfm), size = 0.5*nrow(dfm), replace = FALSE)
 
-## model evaluation?
+    ## try range of parameters
+    ## alpha: A parameter that influences how common the treatments are. When alpha is large, the treatments are common.
+    ## sigmasq.n: A parameter determining the variance of the word counts conditional on the treatments. When sigmasq.n is large, the treatments must explain most of the variation in X.
+    sibp_out <- sibp(X=X,
+                     Y=y,K=K,
+                     alpha=2,sigmasq.n=0.8,train.ind=train_ind)
 
-## document-treatment probability matrix
-## probability that the given document has treatment k
-Ytrain <- Y[train_ind,]
-nu <- sibp_out$nu
-colSums(nu)
+    ## document-treatment probability matrix
+    ## probability that the given document has treatment k
+    Ytrain <- Y[train_ind,]
+    nu_cum <- colMeans(sibp_out$nu)
+    names(nu_cum) <- paste0("T",1:K)
+    pdf(paste0("output/",areas_eng[i],"_doc_treat_freq.pdf"),width=2*K,height=K)
+    barplot(nu_cum,main="Average Frequency of Treatment Features across Documents")
+    dev.off()
 
-t0_docs <- Ytrain$title[rowSums(nu < 0.1)]
-t1_docs <- Ytrain$title[nu[,1]>0.9]
-t2_docs <- Ytrain$title[nu[,2]>0.9]
-t3_docs <- Ytrain$title[nu[,3]>0.9]
-t4_docs <- Ytrain$title[nu[,4]>0.9]
-t5_docs <- Ytrain$title[nu[,5]>0.9]
+    ## treatment-feature matrix: the effect of the row treatment on the column word
+    detect_max <- function(x,n){
+        sorted_x <- sort(x,decreasing=TRUE)
+        return(unlist(sapply(1:n,function(j){which(sorted_x[j] == x)})))
+    }
+    phi <- sibp_out$phi
+    ## extract strongest 30 features for each treatment
+    feature_id <- sapply(1:K,function(j){features[ detect_max(phi[j,],30) ]})
+    colnames(feature_id) <- paste0("T",1:K)
+    write_csv(as_tibble(feature_id),paste0("output/",areas_eng[i],"_treat_id.csv"))
 
-## 5 treatment model, take 5 samples each and examine
-t0_text <- petition %>% filter(title %in% t0_docs)
-t1_text <- petition %>% filter(title %in% t1_docs)
-t2_text <- petition %>% filter(title %in% t2_docs)
-t3_text <- petition %>% filter(title %in% t3_docs)
-t4_text <- petition %>% filter(title %in% t4_docs)
-t5_text <- petition %>% filter(title %in% t5_docs)
+    ## Estimate the AMCE using the test set
+    amce <- sibp_amce(sibp_out, X, y)
+    ## Plot 95% confidence intervals for the AMCE of each treatment
+    sibp_amce_plot(amce) + theme_classic()
+    ggsave(paste0("output/",areas_eng[i],"_sibp_amce.pdf"))
+}
 
-write_csv(t0_text,"output/t0_sample_texts.csv")
-write_csv(t1_text,"output/t1_sample_texts.csv")
-write_csv(t2_text,"output/t2_sample_texts.csv")
-write_csv(t3_text,"output/t3_sample_texts.csv")
-write_csv(t4_text,"output/t4_sample_texts.csv")
-write_csv(t5_text,"output/t5_sample_texts.csv")
 
-## treatment-feature matrix: the effect of the row treatment on the column word
-phi <- sibp_out$phi
-features[phi[1,]>0]
-features[phi[2,]>0]
-features[phi[3,]>0]
-features[phi[4,]>0]
-features[phi[5,]>0]
+## next task:
+## add model evaluation to decide optimal K
+## interpretation?
+
+## t0_docs <- Ytrain$title[rowSums(nu < 0.1)]
+## t1_docs <- Ytrain$title[nu[,1]>0.9]
+## t2_docs <- Ytrain$title[nu[,2]>0.9]
+## t3_docs <- Ytrain$title[nu[,3]>0.9]
+
+## t0_text <- petition %>% filter(title %in% t0_docs)
+## t1_text <- petition %>% filter(title %in% t1_docs)
+## t2_text <- petition %>% filter(title %in% t2_docs)
+## t3_text <- petition %>% filter(title %in% t3_docs)
+
+## write_csv(t0_text,"output/t0_sample_texts.csv")
+## write_csv(t1_text,"output/t1_sample_texts.csv")
+## write_csv(t2_text,"output/t2_sample_texts.csv")
+## write_csv(t3_text,"output/t3_sample_texts.csv")
+
 ## effect of treatment k on having given words for document i
 ## treat_coef <- nu[i,] %*% phi
 ## features[treat_coef > 0]
@@ -241,15 +272,7 @@ features[phi[5,]>0]
 ## K-length vector: the effect of having each treatment on the outcome
 ## negative value: having treatment k decreases the response delay
 ## positive value: having treatment k increases the response delay
-m <- sibp_out$m
-
-## Estimate the AMCE using the test set
-amce <- sibp_amce(sibp_out, X, y)
-## Plot 95% confidence intervals for the AMCE of each treatment
-sibp_amce_plot(amce) + theme_classic()
-ggsave("output/sibp_amce.pdf")
-
-
+## m <- sibp_out$m
 
 ## grid search to find optimal model specification
 sibp_out <- sibp_param_search(X=X,Y=y,K=2,
