@@ -2,7 +2,8 @@
 
 library(tidyverse)
 
-# load data
+# load data (828.4MB)
+# /Users/*username*/Library/CloudStorage/DropboxDropbox/K-petition/data/tidy/pub_petition_corrected.csv
 data <- read_csv("pub_petition_corrected.csv")
 
 glimpse(data)
@@ -53,7 +54,8 @@ evaluate_bodytext <- function(text) {
                 list(role = "system", content = "당신은 공공 정책 제안(민원)을 평가하는 AI입니다."),
                 list(role = "user", content = prompt)
             ),
-            max_tokens = 300
+            max_tokens = 300,
+            temperature = 0 # for consistency
         ), auto_unbox = TRUE),
         encode = "json"
     )
