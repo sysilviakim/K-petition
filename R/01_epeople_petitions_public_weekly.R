@@ -5,11 +5,12 @@ source(here::here("R", "utilities.R"))
 rd <- rsDriver(browser = "firefox", chromever = NULL, port = 5555L)
 remDr <- rd$client
 url <- "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
+remDr$open()
 remDr$navigate(url)
 
-## Generate weeks within year, from 2013--2023
+## Generate weeks within year, from 2013--2025
 ## Otherwise, too many iterations for Selenium to handle in one go
-week_list <- week_list_fxn(2013, 2024)
+week_list <- week_list_fxn(2013, 2025)
 
 # 공개 제안(public petitions) content, weekly ==================================
 ## Loop ------------------------------------------------------------------------

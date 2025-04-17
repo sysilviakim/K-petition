@@ -117,7 +117,7 @@ week_list %>%
 # Does the total in annual tidy data match the total in the raw data? ==========
 ## First, for weeklies, create a full CSV --------------------------------------
 load(here("data", "raw", "pub_petition_num_total.Rda"))
-for (yr in seq(2013, 2023)) {
+for (yr in seq(2013, 2024)) {
   pub_df <- week_list_fxn(yr, yr) %>%
     map_dfr(
       function(x) {
@@ -153,4 +153,55 @@ for (yr in seq(2013, 2023)) {
     pub_df,
     here("data", "tidy", paste0("pub_petition_content_", yr, ".csv"))
   )
+}
+
+# Realized petitions ===========================================================
+for (yr in seq(2013, 2024)) {
+  ## Load latest data ==========================================================
+  fname <- list.files(
+    here("data", "raw"),
+    pattern = paste0("rel_petition_content_list_", yr, ".Rda"),
+    full.names = TRUE
+  )
+  
+  load(fname)
+  date_scraped <- format(as.Date(file.info(fname)[["mtime"]]), "%Y%m%d")
+  
+  ## HTML node extraction ======================================================
+  ## Nested list
+  temp_title <- temp <- vector("list", length(rel_petition_content))
+  for (i in seq(length(rel_petition_content))) {
+    temp[[i]] <- rel_petition_content[[i]] %>%
+      map_dfr(~ extract_pt_content(.x, date = date_scraped))
+    temp_title[[i]] <- rel_petition_content[[i]] %>%
+      imap_dfr(~ .x$page_meta[.y, ])
+    cat("Iteration", i, "finished.\n")
+  }
+  
+  ## Deduplicate
+  rel_df <- temp %>%
+    bind_rows() %>%
+    Kmisc::dedup()
+  title_df <- pub_title_wrangle(temp_title)
+  
+  ## Some pages have not scraped properly and I'm not entirely sure why
+  nrow(rel_df)
+  nrow(title_df)
+  
+  ## Append title metadata by title... but many to many relationship
+  ## because some petitioners have petitioned the same content to multiple
+  ## branches of the government, which counts as separate posts
+  ## It might really be better to deal with it within extract_pt_content
+  ## left_join(pub_df, title_df)
+  
+  ## Missing info from pub_df that's only in title_df: views, numbers
+  ## But numbers, because they don't provide permanent URLs, are not very
+  ## meaningful...
+  
+  ## Save to CSV ===============================================================
+  write_csv(
+    pub_df, here("data", "tidy", paste0("pub_petition_content_", yr, ".csv"))
+  )
+  
+  cat("Year", yr, "finished.\n")
 }
