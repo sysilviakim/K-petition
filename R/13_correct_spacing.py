@@ -19,7 +19,14 @@ petition_df['year'] = petition_df['date_petitioned'].str[:4]
 petition_df['month'] = petition_df['date_petitioned'].str[5:7]
 
 ## use english column name
-petition_df.columns.values[6] = "bodytext"
+petition_df.columns.values[6] = "problem"
+petition_df.columns.values[7] = "proposal"
+petition_df.columns.values[8] = "expectation"
+
+## merge three columns to construct full petition text
+petition_df["bodytext"] = petition_df.apply(
+    lambda row: ' '.join(str(val) for val in [row['problem'], row['proposal'], row['expectation']] if pd.notna(val)),axis=1
+)
 
 ## function for space correction
 def correct_spacing(text):
@@ -32,7 +39,7 @@ def correct_spacing(text):
 petition_df['corrected_bodytext'] = petition_df['bodytext'].apply(correct_spacing)
 
 
-petition_df.to_csv("data/tidy/pub_petition_corrected.csv",index=False)
+## petition_df.to_csv("data/tidy/pub_petition_corrected.csv",index=False)
 
 
 ## 1. preprocess corrected_bodytext by removing line change, special characters, repeated words
@@ -61,6 +68,8 @@ def cleanup(text):
     return text
 
 petition_df['corrected_bodytext'] = petition_df['corrected_bodytext'].apply(cleanup)
+
+petition_df.to_csv("data/tidy/pub_petition_corrected.csv",index=False)
 
 ## tokenize (remove stopwords)
 from kiwipiepy.utils import Stopwords
