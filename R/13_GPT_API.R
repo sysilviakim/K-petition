@@ -104,3 +104,48 @@ for(i in 1:nrow(no_space_petition)){
 
     if(i %% 500 == 0) cat("i = ",i,"\n")
 }
+
+
+## GPT-generated eval criteria
+## "Wed Mar 26 08:23:38 2025"
+## load data
+petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
+
+## sample
+petition2020 <- petition_df %>% filter(year == 2020)
+idx <- sample(1:nrow(petition2020),100)
+sub <- petition2020[idx,]
+sub <- sub %>%
+    filter(nchar(corrected_bodytext) > 300)
+
+## run GPT API
+mykey <- readLines("BK_api_key.txt")
+Sys.setenv(
+  OPENAI_API_KEY = mykey
+)
+
+response_df <- petition2020 %>%
+    select(title,corrected_bodytext) %>%
+    mutate(GPTeval = NA)
+
+for(i in 1:nrow(sub)){
+    prompt0 <- paste("대한민국 정부는 국민의 다양한 행정적 불만을 해소하기 위해 국민이 직접 정부와 소통할 수 있도록 국민청원제도를 운영하고 있다. 다음은 2020년에 작성된 국민청원이다. \n",sub$corrected_bodytext[i],"\n")
+    prompt1 <- paste(prompt0,
+                    "이 국민청원은 효과적인 국민청원인가? 위의 국민청원이 효과적인 청원인지를 평가하고 그 평가 기준을 항목별로 정리하여 답하라.")
+
+    response <- create_chat_completion(
+        model = "gpt-4o-mini",
+        temperature = 0,
+        messages = list(
+            list(
+                "role" = "user",
+                "content" = prompt1
+            )
+        )
+    )
+    
+    response_df[i,"GPTeval"] <- response$choices$message.content
+}
+
+response_df[10,"corrected_bodytext"]
+response_df[10,"GPTeval"]

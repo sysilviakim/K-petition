@@ -61,11 +61,15 @@ extract_pt_content <- function(x, date = NULL) {
     gsub("\n|\t", "", .)
 
   ## I hate hardcoding, but here goes
-  if (length(meta) > 0) {
+  if (length(meta) > 1) {
     title_text <- meta[[1]] ## 제목
     area <- meta[[2]] ## 분야
     attachment <- meta[[3]] ## 평점 또는 첨부파일
     status <- meta[[4]] ## 추진상황
+  } else if (length(meta) == 1) {
+    ## 실시제안
+    title_text <- x$title[[1]]
+    branch <- meta
   }
 
   ## Section titles
@@ -182,7 +186,9 @@ extract_pt_content <- function(x, date = NULL) {
 
   ## Branch of government petitioned to
   ## Messy approach, but find the "area" and take the next string
-  branch <- misc[which(area == misc) + 1]
+  if (is.null(branch)) {
+    branch <- misc[which(area == misc) + 1]
+  }
 
   ## Combine into a tibble
   pub_content_df <- tibble(

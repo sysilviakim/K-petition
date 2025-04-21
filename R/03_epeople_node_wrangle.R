@@ -117,7 +117,7 @@ week_list %>%
 # Does the total in annual tidy data match the total in the raw data? ==========
 ## First, for weeklies, create a full CSV --------------------------------------
 load(here("data", "raw", "pub_petition_num_total.Rda"))
-for (yr in seq(2013, 2023)) {
+for (yr in seq(2013, 2024)) {
   pub_df <- week_list_fxn(yr, yr) %>%
     map_dfr(
       function(x) {
