@@ -7,122 +7,201 @@ library(tidyverse)
 data <- read_csv("pub_petition_corrected.csv")
 
 glimpse(data)
-
 # select first 100 rows of the data and save it as a new data frame
-data_10 <- data %>% slice(154001:154010)
+data_100 <- data %>% slice(154001:154100)
 
-glimpse(data_10)
+# save the new data frame as a CSV file
+write_excel_csv(data_100, "data_100.csv")
+
 
 # 필요한 라이브러리 로드
 library(httr)
 library(jsonlite)
 
-# bodytext 컬럼 추출
-bodytext_vector <- data_10$bodytext
+# bodytext, 개선방안, 기대효과 세 열을 합쳐서 bodytext_vector 생성
+bodytext_vector <- data_100 %>%
+  mutate(combined_text = paste(bodytext, 개선방안, 기대효과, sep = "\n\n")) %>%
+  pull(combined_text)
 
 # OpenAI API 키 및 엔드포인트 설정
-api_key <- "API_KEY" # 실제 API 키로 변경
+api_key <- "----" # 실제 API 키로 변경
 api_url <- "https://api.openai.com/v1/chat/completions"
 
-# 단일 텍스트를 GPT API에 보내 평가하는 함수
+# 평가 함수 정의
 evaluate_bodytext <- function(text) {
-    # 평가 기준을 포함한 프롬프트 (한국어 버전)
-    prompt <- paste(
-        "당신은 공공 제안을 평가하는 전문가입니다.",
-        "다음 기준을 바탕으로 해당 제안을 평가하고, 각 기준에 대해 1점(매우 낮음)부터 5점(매우 높음)까지 점수를 부여해 주세요.",
-        "JSON 형식으로 결과를 제공해 주세요. 추가 평가 사유 등을 결과물로 제공하지 말고, 평가 기준에 따른 점수만 부탁드립니다.",
-        "\n\n**평가 기준:**",
-        "- 효과성: 이 제안이 실제로 실행 가능하고, 긍정적인 영향을 미칠 가능성이 얼마나 높은가? (실시 가능성을 포함)",
-        "- 구체성: 제안의 내용이 구체적으로 서술되었으며, 실행 방안이 명확한가?",
-        "- 감정: 제안이 감정적으로 격앙되거나 공격적인 표현을 포함하고 있는가? (낮을수록 공격적이지 않음)",
-        "- 감성적 표현: 제안이 논리적 근거보다 연민이나 감정에 호소하는 경향이 있는가?",
-        "- 문법/맞춤법: 제안의 문법과 맞춤법이 올바르고 문장이 명확한가?",
-        "\n\n**공개 제안 내용:**",
-        text
-    )
-
-    # API 요청 전송
-    response <- POST(
-        url = api_url,
-        add_headers(
-            Authorization = paste("Bearer", api_key),
-            `Content-Type` = "application/json"
-        ),
-        body = toJSON(list(
-            model = "gpt-4",
-            messages = list(
-                list(role = "system", content = "당신은 공공 정책 제안(민원)을 평가하는 AI입니다."),
-                list(role = "user", content = prompt)
-            ),
-            max_tokens = 300,
-            temperature = 0 # for consistency
-        ), auto_unbox = TRUE),
-        encode = "json"
-    )
-
-    # API 응답 에러 처리
-    if (http_error(response)) {
-        warning("API request failed. Status code: ", status_code(response))
-        return(NA) # 에러 발생 시 NA 반환
-    }
-
-    # 응답 내용 파싱
-    content <- content(response, as = "parsed", simplifyVector = TRUE)
-
-    # 응답 내용 확인
-    if (!is.list(content) || is.null(content$choices) || length(content$choices) == 0) {
-        warning("Unexpected API response format: ", content)
+  # 평가 기준을 포함한 프롬프트 (한국어 버전)
+  prompt <- paste(
+    "당신은 공공 제안을 평가하는 전문가입니다.",
+    "다음 기준에 따라 민원 내용을 평가해 주세요. 각 기준에 대해 1점(매우 낮음)부터 5점(매우 높음)까지 점수를 부여하고, 그 이유도 간단히 덧붙여 주세요.",
+    "응답은 다음 형식의 JSON으로 제공해 주세요:",
+    "\n\n{\n  \"clarity\": { \"score\": 4, \"reason\": \"핵심 주장은 분명하나 일부 문장은 다소 모호함.\" },\n  ...\n}",
+    "항목별 설명은 간략하게 요약해 주세요. 모든 항목을 JSON 구조에 맞춰 빠짐없이 포함해 주세요.",
+    "\n\n[평가 기준]",
+    "\n1. 명확성 (clarity):",
+    "- 핵심 주장이 분명하게 전달되는가?",
+    "- 문장이 이해하기 쉬운가?",
+    "- 전문 용어나 어려운 표현이 필요한 경우, 충분히 설명되었는가?",
+    "\n2. 구체성 (specificity):",
+    "- 주장이나 사실 관계가 구체적이고 명확한가?",
+    "- 사례, 수치, 문서 등의 객관적 자료가 제시되었는가?",
+    "- 자료의 출처가 신뢰 가능하며 진위 여부가 분명한가?",
+    "- 요청 또는 해결책이 구체적으로 제시되었는가?",
+    "- 해당 주장이 왜 중요한지를 충분히 설명하고 있는가?",
+    "\n3. 논리성 및 일관성 (logic_and_consistency):",
+    "- 주장과 근거 사이에 논리적 연결이 있는가?",
+    "- 문장이 자연스럽게 연결되며 흐름이 일관적인가?",
+    "- 불필요한 정보나 반복이 없는가?",
+    "\n4. 형식적 완성도 (formal_completeness):",
+    "- 맞춤법과 문법이 적절하게 사용되었는가?",
+    "- 문단 구성과 글의 구조가 논리적으로 정리되어 있는가?",
+    "- 글의 가독성이 좋고, 읽기 편한 형식으로 구성되었는가?",
+    "\n5. 감정적 요소 (emotionality):",
+    "- 감정적 표현이 과도하지 않고 민원의 목적을 해치지 않는가?",
+    "- 욕설, 비방, 인신공격 등의 표현 없이 정중하고 건설적으로 작성되었는가?",
+    "- 협조를 유도할 수 있는 설득력 있는 표현을 사용하였는가?",
+    "\n6. 타당성 및 실시가능성 (validity_and_feasibility):",
+    "- 제안 내용이 현실적이고 타당한가?",
+    "- 예산, 인력, 법·제도, 기술 등 제약을 고려했을 때 실시 가능성이 있는가?",
+    "- 제안이 효과적이고 지속 가능한 해결책을 포함하고 있는가?",
+    "- 제안이 형평성과 사회적 합의에 부합하는가?",
+    "- 문제의 시급성과 긴급성을 고려하였는가?",
+    "- 해당 기관의 권한과 업무 범위 내에서 해결 가능한 사안인가?",
+    "\n\n[민원 내용]",
+    text
+  )
+  
+  # API 요청
+  response <- POST(
+    url = api_url,
+    add_headers(
+      Authorization = paste("Bearer", api_key),
+      `Content-Type` = "application/json"
+    ),
+    body = toJSON(list(
+      model = "gpt-4o-mini-2024-07-18", # for consistency
+      messages = list(
+        list(role = "system", content = "당신은 공공 정책 제안(민원)을 평가하는 AI입니다."),
+        list(role = "user", content = prompt)
+      ),
+      max_tokens = 1000,
+      temperature = 0
+    ), auto_unbox = TRUE),
+    encode = "json"
+  )
+  
+  # 실패 처리
+  if (http_error(response)) {
+    warning("API request failed. Status code: ", status_code(response))
+    return(NA)
+  }
+  
+  # 응답 파싱
+  content_json <- content(response, as = "parsed", simplifyVector = FALSE)
+  
+  # GPT 응답 문자열 추출
+  gpt_output <- tryCatch(
+    {
+      if (!is.null(content_json$choices) && length(content_json$choices) > 0) {
+        content_json$choices[[1]]$message$content
+      } else {
+        warning("Unexpected API response format.")
         return(NA)
+      }
+    },
+    error = function(e) {
+      warning("Failed to extract GPT output.")
+      return(NA)
     }
-
-    # GPT 응답을 JSON으로 변환
-    gpt_output <- tryCatch(
-        {
-            content_json <- content(response, as = "parsed", simplifyVector = FALSE) # Ensure it's a list
-            print(content_json) # Debugging: Print raw parsed JSON response
-
-            # Check if the "choices" field exists and has expected structure
-            if (!is.null(content_json$choices) && length(content_json$choices) > 0) {
-                content_json$choices[[1]]$message$content
-            } else {
-                warning("Unexpected API response format: ", content_json)
-                return(NA)
-            }
-        },
-        error = function(e) {
-            warning("Failed to extract GPT output: ", e$message)
-            return(NA)
-        }
-    )
-
-    # Parse the GPT output into JSON
-    parsed_result <- tryCatch(
-        fromJSON(gpt_output, simplifyDataFrame = TRUE),
-        error = function(e) {
-            warning("Failed to parse GPT output: ", gpt_output)
-            return(NA)
-        }
-    )
-
-    # 평가 결과 반환
-    return(parsed_result)
+  )
+  
+  if (is.na(gpt_output) || gpt_output == "") {
+    warning("GPT output is empty or NA.")
+    return(NA)
+  }
+  
+  # ```json 코드 블록 제거
+  gpt_output_clean <- gsub("^```json\\s*|\\s*```$", "", gpt_output)
+  
+  
+  # JSON 파싱
+  parsed_result <- tryCatch(
+    {
+      fromJSON(gpt_output_clean, simplifyDataFrame = TRUE)
+    },
+    # 첨부파일만 있고 내용이 없는 경우
+    error = function(e) {
+      warning("Failed to parse GPT JSON. Using fallback response.")
+      list(
+        clarity = list(score = 0, reason = "attachment only"),
+        specificity = list(score = 0, reason = "attachment only"),
+        logic_and_consistency = list(score = 0, reason = "attachment only"),
+        formal_completeness = list(score = 0, reason = "attachment only"),
+        emotionality = list(score = 0, reason = "attachment only"),
+        validity_and_feasibility = list(score = 0, reason = "attachment only")
+      )
+    }
+  )
+  
+  return(parsed_result)
 }
 
-# 모든 bodytext에 대해 평가 실행
-evaluations <- map(data_10$bodytext, function(single_text) {
-    if (is.na(single_text) || single_text == "") {
-        warning("Skipping empty or NA bodytext.")
-        return(NA)
-    }
-    Sys.sleep(1) # 1초 지연
-    evaluate_bodytext(single_text) # 한 항목씩 전달
+# 평가 실행
+evaluations <- map(bodytext_vector, function(single_text) {
+  if (is.na(single_text) || single_text == "") {
+    warning("Skipping empty or NA bodytext.")
+    return(NA)
+  }
+  Sys.sleep(1)
+  evaluate_bodytext(single_text)
 })
 
-# 평가 결과를 데이터프레임으로 변환
-evaluation_df <- bind_rows(evaluations)
+# 평가 결과 정리 (score 먼저, reason 그 다음)
+evaluation_df <- map_dfr(evaluations, function(res) {
+  if (is.null(res) || isTRUE(is.na(res))) {
+    return(tibble(
+      clarity_score = NA, clarity_reason = NA,
+      specificity_score = NA, specificity_reason = NA,
+      logic_and_consistency_score = NA, logic_and_consistency_reason = NA,
+      formal_completeness_score = NA, formal_completeness_reason = NA,
+      emotionality_score = NA, emotionality_reason = NA,
+      validity_and_feasibility_score = NA, validity_and_feasibility_reason = NA
+    ))
+  }
+  
+  tibble(
+    clarity_score = res$clarity$score,
+    specificity_score = res$specificity$score,
+    logic_and_consistency_score = res$logic_and_consistency$score,
+    formal_completeness_score = res$formal_completeness$score,
+    emotionality_score = res$emotionality$score,
+    validity_and_feasibility_score = res$validity_and_feasibility$score,
+    clarity_reason = res$clarity$reason,
+    specificity_reason = res$specificity$reason,
+    logic_and_consistency_reason = res$logic_and_consistency$reason,
+    formal_completeness_reason = res$formal_completeness$reason,
+    emotionality_reason = res$emotionality$reason,
+    validity_and_feasibility_reason = res$validity_and_feasibility$reason
+  )
+})
 
-# 기존 데이터에 평가 점수 결합
-data_10 <- bind_cols(data_10, evaluation_df)
 
-# 결과 저장
-write_excel_csv(data_10, "evaluated_data_10.csv")
+# 데이터 결합 및 저장
+result <- bind_cols(data_100, evaluation_df)
+write_excel_csv(result, "evaluated_data_100.csv")
+
+# make a distribution plot
+result %>%
+  select(
+    clarity_score, specificity_score, logic_and_consistency_score,
+    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "criteria", values_to = "score") %>%
+  ggplot(aes(x = score)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  facet_wrap(~criteria) +
+  labs(
+    title = "Distribution of Evaluation Scores",
+    x = "Score",
+    y = "Count"
+  ) +
+  theme_minimal()
