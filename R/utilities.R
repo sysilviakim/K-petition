@@ -347,3 +347,39 @@ gamma_filter <- function(x, subset) {
       }
     )
 }
+
+prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
+                 useNA = "ifany") {
+  if (length(vars) > 2) {
+    stop("Too many variables.")
+  }
+  if (length(vars) < 1) {
+    stop("Invalid vars argument.")
+  }
+  if (!(useNA %in% c("no", "ifany", "always"))) {
+    stop("Invalid useNA argument.")
+  }
+  
+  if (length(vars) == 1) {
+    temp <- prop.table(table(df[[vars]], dnn = vars, useNA = useNA)) * 100
+  }
+  if (length(vars) == 2) {
+    temp <- prop.table(
+      table(df[[vars[1]]], df[[vars[2]]], dnn = vars, useNA = useNA)
+    ) * 100
+  }
+  
+  if (!is.null(sort)) {
+    temp <- sort(temp, decreasing = sort)
+  }
+  if (!is.null(head)) {
+    temp <- head(temp, head)
+  }
+  
+  temp <- formatC(temp, format = "f", digits = digit)
+  if (print) {
+    print(temp, quote = FALSE)
+  } else {
+    return(temp)
+  }
+}
