@@ -4,6 +4,7 @@ source(here::here("R", "utilities.R"))
 ## Output from script #17 GPT scoring
 gpt <- read_csv(here("data", "tidy", "evaluated_data_2024.csv")) %>%
   filter(!is.na(clarity_score))
+  ## 43 rows with reasons as "attachment only"?
 
 ## Six areas of scoring
 ## clarity
@@ -14,12 +15,12 @@ gpt <- read_csv(here("data", "tidy", "evaluated_data_2024.csv")) %>%
 ## validity and feasibility
 
 ## Distribution
-prop(gpt, "clarity_score", useNA = "no")
-prop(gpt, "specificity_score", useNA = "no")
-prop(gpt, "logic_and_consistency_score", useNA = "no")
-prop(gpt, "formal_completeness_score", useNA = "no")
-prop(gpt, "emotionality_score", useNA = "no")
-prop(gpt, "validity_and_feasibility_score", useNA = "no")
+prop(gpt, "clarity_score")
+prop(gpt, "specificity_score")
+prop(gpt, "logic_and_consistency_score")
+prop(gpt, "formal_completeness_score")
+prop(gpt, "emotionality_score")
+prop(gpt, "validity_and_feasibility_score")
 
 # Wrangle data =================================================================
 ## Create binary variable for each area of assessment --------------------------
@@ -66,6 +67,13 @@ gpt <- gpt %>%
       )
     )
   )
+
+prop(gpt, "clarity")
+prop(gpt, "specificity")
+prop(gpt, "logic") ## Only 18.9% illogical
+prop(gpt, "completeness") ## Only 8.6% formally complete
+prop(gpt, "emotion") ## Only 2.2% emotional
+prop(gpt, "validity")
 
 ## Create binary 6-digit patterns with 0-1 -------------------------------------
 pattern01 <- c(
@@ -143,4 +151,22 @@ gpt %>%
 ## If we keep low frequency patterns,
 ## selection of petitions will be
 1 * 5 + 2 * (36 - 5) ## 67
+
+gpt %>%
+  filter(emotionality_score == 4) %>%
+  .$emotionality_reason %>%
+  table() %>%
+  as.data.frame() %>%
+  arrange(desc(Freq)) %>%
+  View()
+
+# Random selection =============================================================
+set.seed(123)
+gpt_sample <- gpt %>%
+  group_by(combination) %>%
+  ## randomly select 10 rows
+  slice_sample(n = 10) %>%
+  select(combination, everything()) %>%
+  arrange(combination)
+
 
