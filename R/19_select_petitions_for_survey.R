@@ -166,7 +166,7 @@ gpt_sample <- gpt %>%
   group_by(combination) %>%
   ## randomly select 10 rows
   slice_sample(n = 10) %>%
-  select(combination, everything()) %>%
+  select(combination, title, contains("reason"), everything()) %>%
   arrange(combination)
 
-
+View(gpt_sample)
