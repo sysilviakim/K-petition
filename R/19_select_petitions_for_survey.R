@@ -2,7 +2,7 @@ source(here::here("R", "utilities.R"))
 
 # Load data ====================================================================
 ## Output from script #17 GPT scoring
-gpt <- read_csv(here("data", "tidy", "evaluated_data_2024.csv")) %>%
+gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_v2.csv")) %>%
   filter(!is.na(clarity_score))
   ## 43 rows with reasons as "attachment only"?
 
@@ -68,12 +68,12 @@ gpt <- gpt %>%
     )
   )
 
-prop(gpt, "clarity")
-prop(gpt, "specificity")
-prop(gpt, "logic") ## Only 18.9% illogical
-prop(gpt, "completeness") ## Only 8.6% formally complete
-prop(gpt, "emotion") ## Only 2.2% emotional
-prop(gpt, "validity")
+prop(gpt, "clarity")      ## 58.9% ---> 47.1% (w/ prompt change)
+prop(gpt, "specificity")  ## 38.2% ---> 19.3%
+prop(gpt, "logic")        ## 81.1% ---> 60.8%
+prop(gpt, "completeness") ##  8.6% ---> 18.1%
+prop(gpt, "emotion")      ##  2.2% --->  3.1%
+prop(gpt, "validity")     ## 76.8% ---> 43.1%
 
 ## Create binary 6-digit patterns with 0-1 -------------------------------------
 pattern01 <- c(
@@ -91,43 +91,18 @@ pattern01 <- c(
 )
 
 # Check observations for unique patterns/frequencies ===========================
-## 36 patterns overall (even with bins of 1 observation)
+## 41 patterns overall (even with bins of 1 observation)
 table(gpt$combination)
 length(table(gpt$combination))
 
 ## Missing patterns ------------------------------------------------------------
 pattern01[!pattern01 %in% gpt$combination]
-## "000101" 
-## "000111" 
-## "001100" 
-## "001101" 
-## "010100" 
-## "011000" 
-## "011001" 
-## "011100" 
-## "011101" 
-## "011110"
-## "011111" 
-## "100000" 
-## "100001" 
-## "100100" 
-## "100101" 
-## "100110" 
-## "100111" 
-## "101100" 
-## "101101" 
-## "110000"
-## "110001" 
-## "110100" 
-## "110101" 
-## "110110" 
-## "110111" 
-## "111000" 
-## "111100" 
-## "111101"
+#  [1] "001000" "001100" "001101" "010000" "010100" "011000" "011100" "011101"
+#  [9] "011110" "011111" "100000" "100001" "100100" "100101" "101000" "101100"
+# [17] "101101" "110000" "110001" "110100" "110101" "111000" "111100"
 
 ## Frequencies>5 ---------------------------------------------------------------
-## 24 patterns
+## 31 patterns
 gpt %>%
   group_by(combination) %>%
   summarise(n = n()) %>%
@@ -136,10 +111,10 @@ gpt %>%
 
 ## Top 5
 ## "101011" clear, unspecific, logical, not formal, unemotional, valid
-## "111011" clear, specific, logical, not formal, unemotional, valid
-## "011011" unclear, specific, logical, not formal, unemotional, valid
 ## "000010" unclear, unspecific, illogical, not formal, unemotional, invalid
-## "111111" clear, specific, logical, formal, unemotional, valid
+## "000110" unclear, unspecific, illogical, formal, unemotional, invalid
+## "101010" clear, unspecific, logical, not formal, unemotional, invalid
+## "001010" unclear, unspecific, logical, not formal, unemotional, invalid
 
 ## Low frequency patterns (sanity check) ---------------------------------------
 gpt %>%
@@ -150,15 +125,18 @@ gpt %>%
 
 ## If we keep low frequency patterns,
 ## selection of petitions will be
-1 * 5 + 2 * (36 - 5) ## 67
+1 * 5 + 2 * (41 - 5) ## 77
 
-gpt %>%
-  filter(emotionality_score == 4) %>%
-  .$emotionality_reason %>%
-  table() %>%
-  as.data.frame() %>%
-  arrange(desc(Freq)) %>%
-  View()
+## If limit to at least 10 in the category,
+28 * 2
+
+# gpt %>%
+#   filter(emotionality_score == 4) %>%
+#   .$emotionality_reason %>%
+#   table() %>%
+#   as.data.frame() %>%
+#   arrange(desc(Freq)) %>%
+#   View()
 
 # Random selection =============================================================
 set.seed(123)
