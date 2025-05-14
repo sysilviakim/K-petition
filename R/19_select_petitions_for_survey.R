@@ -3,8 +3,27 @@ source(here::here("R", "utilities.R"))
 # Load data ====================================================================
 ## Output from script #17 GPT scoring
 gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_v2.csv")) %>%
-  filter(!is.na(clarity_score))
-  ## 43 rows with reasons as "attachment only"?
+  filter(!is.na(clarity_score)) %>%
+  ## 43 rows with reasons as "attachment only"? 
+  filter(
+    branch %in% c(
+      "국토교통부", "보건복지부", "교육부", "행정안전부", "환경부",
+      "경찰청", "고용노동부", "문화체육관광부", "농림축산식품부", "기획재정부",
+      "법무부", "국방부", "산업통상자원부", "산림청", "식품의약품안전처", 
+      "국가보훈부", "여성가족부", "국세청", "소방청", "중소벤처기업부", 
+      "금융위원회", "인사혁신처", "과학기술정보통신부", "저출산고령사회위원회",
+      "외교부", "해양수산부", "병무청", "공정거래위원회", "질병관리청", 
+      "방송통신위원회", "농촌진흥청", "국가유산청", "통일부", "방위사업청",
+      "조달청", "국가교육위원회", "국민권익위원회", "개인정보보호위원회",
+      "관세청", "해양경찰청", "우주항공청", "기상청", "대검찰청", "특허청",
+      "행정중심복합도시건설청", "재외동포청", "국가인권위원회",
+      "원자력안전위원회", "국무조정실", "국무총리비서실", "대통령비서실",
+      "문화재청", "새만금개발청"
+      ## 공단 제외
+      ## 지방자치단체 제외
+      ## 교육청 제외
+    )
+  )
 
 ## Six areas of scoring
 ## clarity
@@ -30,6 +49,10 @@ gpt <- gpt %>%
     clarity = case_when(
       clarity_score >= 4 ~ 1,
       clarity_score < 4 ~ 0
+    ),
+    clarity_label = case_when(
+      clarity_score == 0 ~ "unclear",
+      clarity_score == 1 ~ "clear"
     ),
     specificity = case_when(
       specificity_score >= 4 ~ 1,
@@ -68,12 +91,12 @@ gpt <- gpt %>%
     )
   )
 
-prop(gpt, "clarity")      ## 58.9% ---> 47.1% (w/ prompt change)
-prop(gpt, "specificity")  ## 38.2% ---> 19.3%
-prop(gpt, "logic")        ## 81.1% ---> 60.8%
-prop(gpt, "completeness") ##  8.6% ---> 18.1%
+prop(gpt, "clarity")      ## 58.9% ---> 47.7% (w/ prompt change + filtering)
+prop(gpt, "specificity")  ## 38.2% ---> 19.0%
+prop(gpt, "logic")        ## 81.1% ---> 61.4%
+prop(gpt, "completeness") ##  8.6% ---> 18.4%
 prop(gpt, "emotion")      ##  2.2% --->  3.1%
-prop(gpt, "validity")     ## 76.8% ---> 43.1%
+prop(gpt, "validity")     ## 76.8% ---> 44.1%
 
 ## Create binary 6-digit patterns with 0-1 -------------------------------------
 pattern01 <- c(
@@ -101,20 +124,13 @@ pattern01[!pattern01 %in% gpt$combination]
 #  [9] "011110" "011111" "100000" "100001" "100100" "100101" "101000" "101100"
 # [17] "101101" "110000" "110001" "110100" "110101" "111000" "111100"
 
-## Frequencies>5 ---------------------------------------------------------------
-## 31 patterns
+## Frequencies>10 --------------------------------------------------------------
+## 24 patterns
 gpt %>%
   group_by(combination) %>%
   summarise(n = n()) %>%
-  filter(n > 5) %>%
+  filter(n > 10) %>%
   arrange(desc(n))
-
-## Top 5
-## "101011" clear, unspecific, logical, not formal, unemotional, valid
-## "000010" unclear, unspecific, illogical, not formal, unemotional, invalid
-## "000110" unclear, unspecific, illogical, formal, unemotional, invalid
-## "101010" clear, unspecific, logical, not formal, unemotional, invalid
-## "001010" unclear, unspecific, logical, not formal, unemotional, invalid
 
 ## Low frequency patterns (sanity check) ---------------------------------------
 gpt %>%
