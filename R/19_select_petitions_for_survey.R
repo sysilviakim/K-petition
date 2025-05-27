@@ -89,7 +89,8 @@ gpt <- gpt %>%
         as.character(validity)
       )
     )
-  )
+  ) %>%
+  select(combination, everything())
 
 prop(gpt, "clarity")      ## 58.9% ---> 47.7% (w/ prompt change + filtering)
 prop(gpt, "specificity")  ## 38.2% ---> 19.0%
@@ -114,15 +115,12 @@ pattern01 <- c(
 )
 
 # Check observations for unique patterns/frequencies ===========================
-## 41 patterns overall (even with bins of 1 observation)
-table(gpt$combination)
+## 39 patterns overall (even with bins of 1 observation)
+sort(table(gpt$combination), decreasing = TRUE)
 length(table(gpt$combination))
 
 ## Missing patterns ------------------------------------------------------------
 pattern01[!pattern01 %in% gpt$combination]
-#  [1] "001000" "001100" "001101" "010000" "010100" "011000" "011100" "011101"
-#  [9] "011110" "011111" "100000" "100001" "100100" "100101" "101000" "101100"
-# [17] "101101" "110000" "110001" "110100" "110101" "111000" "111100"
 
 ## Frequencies>10 --------------------------------------------------------------
 ## 24 patterns
@@ -136,15 +134,14 @@ gpt %>%
 gpt %>%
   group_by(combination) %>%
   filter(n() <= 5) %>%
-  select(combination, everything()) %>%
-  View()
+  select(combination, everything())
 
 ## If we keep low frequency patterns,
 ## selection of petitions will be
-1 * 5 + 2 * (41 - 5) ## 77
+1 * 7 + 2 * (39 - 7) ## 71
 
 ## If limit to at least 10 in the category,
-28 * 2
+24 * 2
 
 # gpt %>%
 #   filter(emotionality_score == 4) %>%
@@ -163,4 +160,5 @@ gpt_sample <- gpt %>%
   select(combination, title, contains("reason"), everything()) %>%
   arrange(combination)
 
+View(gpt)
 View(gpt_sample)
