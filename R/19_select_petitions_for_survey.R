@@ -51,28 +51,48 @@ gpt <- gpt %>%
       clarity_score < 4 ~ 0
     ),
     clarity_label = case_when(
-      clarity_score == 0 ~ "unclear",
-      clarity_score == 1 ~ "clear"
+      clarity == 0 ~ "unclear",
+      clarity == 1 ~ "clear"
     ),
     specificity = case_when(
       specificity_score >= 4 ~ 1,
       specificity_score < 4 ~ 0
     ),
+    specificity_label = case_when(
+      specificity == 0 ~ "unspecific",
+      specificity == 1 ~ "specific"
+    ),
     logic = case_when(
       logic_and_consistency_score >= 4 ~ 1,
       logic_and_consistency_score < 4 ~ 0
+    ),
+    logic_label = case_when(
+      logic == 0 ~ "illogical",
+      logic == 1 ~ "logical"
     ),
     completeness = case_when(
       formal_completeness_score >= 4 ~ 1,
       formal_completeness_score < 4 ~ 0
     ),
+    completeness_label = case_when(
+      completeness == 0 ~ "incomplete",
+      completeness == 1 ~ "complete"
+    ),
     emotion = case_when(
       emotionality_score >= 4 ~ 1,
       emotionality_score < 4 ~ 0
     ),
+    emotion_label = case_when(
+      emotion == 0 ~ "emotional",
+      emotion == 1 ~ "unemotional"
+    ),
     validity = case_when(
       validity_and_feasibility_score >= 4 ~ 1,
       validity_and_feasibility_score < 4 ~ 0
+    ),
+    validity_label = case_when(
+      validity == 0 ~ "invalid",
+      validity == 1 ~ "valid"
     )
   ) %>%
   ## Now split into 2^6 combinations, depending on whether each area has
@@ -88,9 +108,16 @@ gpt <- gpt %>%
         as.character(emotion),
         as.character(validity)
       )
+    ),
+    label = as.factor(
+      paste0(
+        clarity_label, "-", specificity_label, "-",
+        logic_label, "-", completeness_label, "-",
+        emotion_label, "-", validity_label
+      )
     )
   ) %>%
-  select(combination, everything())
+  select(combination, label, title, area, contains("reason"), everything())
 
 prop(gpt, "clarity")      ## 58.9% ---> 47.7% (w/ prompt change + filtering)
 prop(gpt, "specificity")  ## 38.2% ---> 19.0%
