@@ -2,8 +2,8 @@ source(here::here("R", "utilities.R"))
 
 # Load data ====================================================================
 ## Output from script #17 GPT scoring
-gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_v2.csv")) %>%
-  filter(!is.na(clarity_score)) %>%
+gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_final.csv")) %>%
+  filter(!is.na(clarity_specificity_score)) %>%
   ## 43 rows with reasons as "attachment only"? 
   filter(
     branch %in% c(
@@ -25,21 +25,17 @@ gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_v2.csv")) %>%
     )
   )
 
-## Six areas of scoring
-## clarity
-## specificity
-## logic/consistency
-## formal completeness
-## emotionality
+## Four areas of scoring
+## clarity and specificity
+## logic and consistency
+## tone and manner
 ## validity and feasibility
 
 ## Distribution
-prop(gpt, "clarity_score")
-prop(gpt, "specificity_score")
-prop(gpt, "logic_and_consistency_score")
-prop(gpt, "formal_completeness_score")
-prop(gpt, "emotionality_score")
-prop(gpt, "validity_and_feasibility_score")
+prop(gpt, "clarity_specificity_score")
+prop(gpt, "logic_consistency_score")
+prop(gpt, "tone_manner_score")
+prop(gpt, "validity_feasibility_score")
 
 # Wrangle data =================================================================
 ## Create binary variable for each area of assessment --------------------------
@@ -47,48 +43,32 @@ prop(gpt, "validity_and_feasibility_score")
 gpt <- gpt %>%
   mutate(
     clarity = case_when(
-      clarity_score >= 4 ~ 1,
-      clarity_score < 4 ~ 0
+      clarity_specificity_score >= 4 ~ 1,
+      clarity_specificity_score < 4 ~ 0
     ),
     clarity_label = case_when(
       clarity == 0 ~ "unclear",
       clarity == 1 ~ "clear"
     ),
-    specificity = case_when(
-      specificity_score >= 4 ~ 1,
-      specificity_score < 4 ~ 0
-    ),
-    specificity_label = case_when(
-      specificity == 0 ~ "unspecific",
-      specificity == 1 ~ "specific"
-    ),
     logic = case_when(
-      logic_and_consistency_score >= 4 ~ 1,
-      logic_and_consistency_score < 4 ~ 0
+      logic_consistency_score >= 4 ~ 1,
+      logic_consistency_score < 4 ~ 0
     ),
     logic_label = case_when(
       logic == 0 ~ "illogical",
       logic == 1 ~ "logical"
     ),
-    completeness = case_when(
-      formal_completeness_score >= 4 ~ 1,
-      formal_completeness_score < 4 ~ 0
+    tone = case_when(
+      tone_manner_score >= 4 ~ 1,
+      tone_manner_score < 4 ~ 0
     ),
-    completeness_label = case_when(
-      completeness == 0 ~ "incomplete",
-      completeness == 1 ~ "complete"
-    ),
-    emotion = case_when(
-      emotionality_score >= 4 ~ 1,
-      emotionality_score < 4 ~ 0
-    ),
-    emotion_label = case_when(
-      emotion == 0 ~ "emotional",
-      emotion == 1 ~ "unemotional"
+    tone_label = case_when(
+      tone == 0 ~ "untoned",
+      tone == 1 ~ "toned"
     ),
     validity = case_when(
-      validity_and_feasibility_score >= 4 ~ 1,
-      validity_and_feasibility_score < 4 ~ 0
+      validity_feasibility_score >= 4 ~ 1,
+      validity_feasibility_score < 4 ~ 0
     ),
     validity_label = case_when(
       validity == 0 ~ "invalid",
@@ -102,81 +82,43 @@ gpt <- gpt %>%
     combination = as.factor(
       paste0(
         as.character(clarity),
-        as.character(specificity),
         as.character(logic),
-        as.character(completeness),
-        as.character(emotion),
+        as.character(tone),
         as.character(validity)
       )
     ),
     label = as.factor(
-      paste0(
-        clarity_label, "-", specificity_label, "-",
-        logic_label, "-", completeness_label, "-",
-        emotion_label, "-", validity_label
-      )
+      paste(clarity_label, logic_label, tone_label, validity_label, sep = "-")
     )
   ) %>%
-  select(combination, label, title, area, contains("reason"), everything())
+  select(combination, label, title, area, contains("reason"), everything()) %>%
+  mutate(
+    text = paste(
+      title, current_issues, improvement_plan, expected_effect,
+      sep = "\n\n"
+    )
+  )
 
-prop(gpt, "clarity")      ## 58.9% ---> 47.7% (w/ prompt change + filtering)
-prop(gpt, "specificity")  ## 38.2% ---> 19.0%
-prop(gpt, "logic")        ## 81.1% ---> 61.4%
-prop(gpt, "completeness") ##  8.6% ---> 18.4%
-prop(gpt, "emotion")      ##  2.2% --->  3.1%
-prop(gpt, "validity")     ## 76.8% ---> 44.1%
+prop(gpt, "clarity")      ## 56.9% (w/ prompt change + filtering)
+prop(gpt, "logic")        ## 20.1%
+prop(gpt, "tone")         ## 86.8%
+prop(gpt, "validity")     ## 49.1%
 
-## Create binary 6-digit patterns with 0-1 -------------------------------------
+## Create binary 4-digit patterns with 0-1 -------------------------------------
 pattern01 <- c(
-  "000000", "000001", "000010", "000011", "000100", "000101",
-  "000110", "000111", "001000", "001001", "001010", "001011",
-  "001100", "001101", "001110", "001111", "010000", "010001",
-  "010010", "010011", "010100", "010101", "010110", "010111",
-  "011000", "011001", "011010", "011011", "011100", "011101",
-  "011110", "011111", "100000", "100001", "100010", "100011", 
-  "100100", "100101", "100110", "100111", "101000", "101001",
-  "101010", "101011", "101100", "101101", "101110", "101111",
-  "110000", "110001", "110010", "110011", "110100", "110101",
-  "110110", "110111", "111000", "111001", "111010", "111011",
-  "111100", "111101", "111110", "111111"
+  "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
+  "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
 )
 
 # Check observations for unique patterns/frequencies ===========================
-## 39 patterns overall (even with bins of 1 observation)
+## 14 patterns (2 missing)
+## 13 if limited to 10 or more observations
 sort(table(gpt$combination), decreasing = TRUE)
 length(table(gpt$combination))
 
 ## Missing patterns ------------------------------------------------------------
 pattern01[!pattern01 %in% gpt$combination]
-
-## Frequencies>10 --------------------------------------------------------------
-## 24 patterns
-gpt %>%
-  group_by(combination) %>%
-  summarise(n = n()) %>%
-  filter(n > 10) %>%
-  arrange(desc(n))
-
-## Low frequency patterns (sanity check) ---------------------------------------
-gpt %>%
-  group_by(combination) %>%
-  filter(n() <= 5) %>%
-  select(combination, everything())
-
-## If we keep low frequency patterns,
-## selection of petitions will be
-1 * 7 + 2 * (39 - 7) ## 71
-
-## If limit to at least 10 in the category,
-24 * 2
-
-# gpt %>%
-#   filter(emotionality_score == 4) %>%
-#   .$emotionality_reason %>%
-#   table() %>%
-#   as.data.frame() %>%
-#   arrange(desc(Freq)) %>%
-#   View()
+## 1100, 1101
 
 # Random selection =============================================================
 set.seed(123)
@@ -189,3 +131,18 @@ gpt_sample <- gpt %>%
 
 View(gpt)
 View(gpt_sample)
+
+# Topic selection ==============================================================
+gpt_sample <- gpt %>%
+  select(combination, title, contains("reason"), everything()) %>%
+  arrange(combination) %>%
+  ## Total 400 after filtering
+  filter(grepl("부동산|연금", text)) %>%
+  group_by(text) %>%
+  ## Deleting duplicates, 363 observations
+  slice_head(n = 1) %>%
+  group_by(combination) %>%
+  ## randomly select 10 rows
+  slice_sample(n = 10) %>%
+  select(combination, title, contains("reason"), everything()) %>%
+  arrange(combination)
