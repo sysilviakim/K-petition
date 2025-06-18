@@ -214,7 +214,7 @@ gpt_pension <- gpt %>%
 nrow(gpt_pension)
 
 write_xlsx(
-  gpt_housing,
+  gpt_pension,
   path = here("data", "공개제안_연금.xlsx")
 )
 
@@ -223,19 +223,20 @@ full_df <- c("배달", "킥보드", "연금", "부동산", "사교육", "저출�
   set_names(., .) %>%
   map(
     ~ here("data", paste0("공개제안_", .x, ".xlsx")) %>%
-      read_xlsx()
+      read_xlsx() %>%
+      mutate(no = row_number()) %>%
+      select(no, everything())
   ) %>%
   bind_rows(.id = "category") %>%
-  arrange(category, combination) %>%
+  arrange(category, no) %>%
   mutate(
     topic = NA,
     SK = NA,
     BK = NA,
-    KY = NA,
-    combo_new = NA
+    KY = NA
   ) %>%
   select(
-    category, topic, combo = combination, label, combo_new, 
+    category, no, topic, combo = combination, label, 
     SK, BK, KY, title, everything()
   )
   
