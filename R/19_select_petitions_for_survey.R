@@ -235,7 +235,7 @@ full_df <- c("배달", "킥보드", "연금", "부동산", "사교육", "저출�
     combo_new = NA
   ) %>%
   select(
-    category, topic, combo = combination, combo_new, 
+    category, topic, combo = combination, label, combo_new, 
     SK, BK, KY, title, everything()
   )
   
