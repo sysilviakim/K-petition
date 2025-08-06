@@ -328,6 +328,7 @@ theta_post_viz <- function(stats_summ,
         xend = cos(median),
         yend = sin(median)
       ),
+      inherit.aes = FALSE,
       arrow = arrow(length = unit(0.1, "inches")),
       color = "red"
     ) +
