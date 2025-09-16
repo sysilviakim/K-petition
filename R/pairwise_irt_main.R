@@ -2,7 +2,8 @@
 
 # Setup ========================================================================
 source(here::here("R", "utilities.R"))
-df <- readxl::read_xlsx("data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx", sheet = "Raw")
+fname <- "data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx"
+df <- readxl::read_xlsx(stringi::stri_trans_nfc(fname), sheet = "Raw")
 ## pet_list <- readxl::read_xlsx("data/screenshots/공개제안_pairs.xlsx")
 
 ## pair question id: Q13_1 ~ Q13_8
