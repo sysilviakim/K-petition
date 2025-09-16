@@ -10,8 +10,7 @@ df <- readxl::read_xlsx(stringi::stri_trans_nfc(fname), sheet = "Raw")
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
 # Petition post characteristics ================================================
-post_types <-
-  stringi::stri_trans_nfc("data/screenshots/main/공개제안_tidy.xlsx") %>%
+post_types <- stringi::stri_trans_nfc("공개제안_tidy.xlsx") %>%
   readxl::read_xlsx() %>%
   dplyr::select(id, category, comb_fin, text)
 
@@ -95,6 +94,21 @@ theta_constraints <- list(
   item.49 = list(2, "+")
 )
 
+## Experimenting
+## Researcher's labels don't match the respondents, maybe?
+sort(table(pwc_df$Choice), decreasing = TRUE)
+
+## set 1st dimension to be about clarity and manner
+## set 2nd dimension to be about logic and validity
+theta_constraints <- list(
+  item.57 = list(1, 2),
+  item.57 = list(2, 2),
+  item.15 = list(1, -2),
+  item.15 = list(2, -2),
+  item.54 = list(1, "+"),
+  item.54 = list(2, "-")
+)
+
 # MCMC run  ====================================================================
 ## 2 dim pairwise IRT
 set.seed(1234)
@@ -136,6 +150,7 @@ gamma_summ <- irt_summ("gamma", post_out) %>%
       mutate(respondent = as.character(NO)),
     by = "respondent"
   )
+
 gamma_summ <- gamma_summ %>%
   rename(
     gender = SQ1,
