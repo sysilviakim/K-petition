@@ -9,9 +9,10 @@ df <- readxl::read_xlsx(stringi::stri_trans_nfc(fname), sheet = "Raw")
 ## pair question id: Q13_1 ~ Q13_8
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
-# Petition post characteristics  ===============================================
+# Petition post characteristics ================================================
 post_types <-
-  readxl::read_xlsx("data/screenshots/main/공개제안_tidy.xlsx") %>%
+  stringi::stri_trans_nfc("data/screenshots/main/공개제안_tidy.xlsx") %>%
+  readxl::read_xlsx() %>%
   dplyr::select(id, category, comb_fin, text)
 
 ## comb_fin:
