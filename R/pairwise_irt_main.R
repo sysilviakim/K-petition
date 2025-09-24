@@ -10,7 +10,7 @@ df <- readxl::read_xlsx(stringi::stri_trans_nfc(fname), sheet = "Raw")
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
 # Petition post characteristics ================================================
-post_types <- stringi::stri_trans_nfc("공개제안_tidy.xlsx") %>%
+post_types <- stringi::stri_trans_nfc("data/공개제안_tidy.xlsx") %>%
   readxl::read_xlsx() %>%
   dplyr::select(id, category, comb_fin, text)
 
