@@ -13,7 +13,33 @@ df_list <- list(
 df <- df_list$raw
 
 ## 성x연령 균등할당
-## 30대 남 123, 40대 여 123, 나머지 전부 122
+## 30대 남 123, 40대 여 123, 나머지 전부 122'
+
+# Renaming function ============================================================
+survey_rename <- function(x) {
+  x %>%
+    rename(
+      gender = SQ1,
+      age = SQ2_1,
+      age_range = SQ2_2,
+      edu = SQ3,
+      residence = SQ4,
+      married = SQ5,
+      kids = SQ6,
+      income = SQ7,
+      occupation = SQ8,
+      occupation_etc = SQ8_etc,
+      livelihood = SQ9,
+      life = Q1,
+      ideology = Q2,
+      party = Q3,
+      party_etc = Q3_etc,
+      pres22 = Q4,
+      pres22_etc = Q4_etc,
+      pres25 = Q5,
+      pres25_etc = Q5_etc
+    )
+}
 
 # Create survey weight =========================================================
 

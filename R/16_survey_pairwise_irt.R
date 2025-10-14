@@ -1,18 +1,8 @@
 # Fits the Bayesian pairwise IRT for the survey data
 
 # Setup ========================================================================
-source(here::here("R", "utilities.R"))
-fname <- here("data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx")
+source(here::here("R", "15_survey_descriptives.R"))
 
-# Load data ====================================================================
-df_list <- list(
-  raw = read_xlsx(stri_trans_nfc(fname), sheet = "Raw"),
-  label = read_xlsx(stri_trans_nfc(fname), sheet = "Label"),
-  open = read_xlsx(stri_trans_nfc(fname), sheet = "Open"),
-  questions = read_xlsx(stri_trans_nfc(fname), sheet = "변수 가이드") %>%
-    rename(varname = `변수명`, question = `변수 내용`)
-)
-df <- df_list$raw
 ## pet_list <- read_xlsx("data/screenshots/공개제안_pairs.xlsx")
 ## pair question id: Q13_1 ~ Q13_8
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
@@ -20,7 +10,7 @@ df <- df_list$raw
 # Petition post characteristics ================================================
 post_types <- stri_trans_nfc("data/공개제안_tidy.xlsx") %>%
   read_xlsx() %>%
-  dplyr::select(id, category, comb_fin, text)
+  select(id, category, comb_fin, text)
 
 ## comb_fin:
 ## 1. clarity, specificity
@@ -40,13 +30,13 @@ post_types <- post_types %>%
 ## create df for mcmc
 pwc_df <- map_dfr(1:8, function(i) {
   df %>%
-    dplyr::select(
+    select(
       NO,
       !!sym(paste0("Q13_gCode", i, "_1")),
       !!sym(paste0("Q13_gCode", i, "_2")),
       !!sym(paste0("Q13_", i))
     ) %>%
-    dplyr::rename(
+    rename(
       Item1 = !!sym(paste0("Q13_gCode", i, "_1")),
       Item2 = !!sym(paste0("Q13_gCode", i, "_2")),
       Choice = !!sym(paste0("Q13_", i))
@@ -56,7 +46,7 @@ pwc_df <- map_dfr(1:8, function(i) {
 ## transform df to fit mcmc function
 pwc_df <- pwc_df %>%
   rowwise() %>%
-  dplyr::mutate(
+  mutate(
     Item1 = paste0("item.", Item1),
     Item2 = paste0("item.", Item2),
     Choice = c(Item1, Item2)[Choice]
@@ -139,30 +129,8 @@ gamma_summ <- irt_summ("gamma", post_out) %>%
       ) %>%
       mutate(respondent = as.character(NO)),
     by = "respondent"
-  )
-
-gamma_summ <- gamma_summ %>%
-  rename(
-    gender = SQ1,
-    age = SQ2_1,
-    age_range = SQ2_2,
-    edu = SQ3,
-    residence = SQ4,
-    married = SQ5,
-    kids = SQ6,
-    income = SQ7,
-    occupation = SQ8,
-    occupation_etc = SQ8_etc,
-    livelihood = SQ9,
-    life = Q1,
-    ideology = Q2,
-    party = Q3,
-    party_etc = Q3_etc,
-    pres22 = Q4,
-    pres22_etc = Q4_etc,
-    pres25 = Q5,
-    pres25_etc = Q5_etc
-  )
+  ) %>%
+  survey_rename()
 
 stats_summ <- list(theta = theta_summ, gamma = gamma_summ)
 
@@ -179,19 +147,16 @@ dev.off()
 
 pdf("output/main/theta_post_median_logic.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ, color = "logic_consistency") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Logic and Consistency"))
 dev.off()
 
 pdf("output/main/theta_post_median_manner.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ, color = "tone_manner") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Tone and Manner"))
 dev.off()
 
 pdf("output/main/theta_post_median_validity.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ, color = "validity_feasibility") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Validity and Feasibility"))
 dev.off()
 
@@ -237,30 +202,8 @@ gamma_summ <- irt_summ("gamma", postDP_out) %>%
       ) %>% 
       mutate(respondent = as.character(NO)), 
     by = "respondent"
-  )
-
-gamma_summ <- gamma_summ %>%
-  rename(
-    gender = SQ1,
-    age = SQ2_1,
-    age_range = SQ2_2,
-    edu = SQ3,
-    residence = SQ4,
-    married = SQ5,
-    kids = SQ6,
-    income = SQ7,
-    occupation = SQ8,
-    occupation_etc = SQ8_etc,
-    livelihood = SQ9,
-    life = Q1,
-    ideology = Q2,
-    party = Q3,
-    party_etc = Q3_etc,
-    pres22 = Q4,
-    pres22_etc = Q4_etc,
-    pres25 = Q5,
-    pres25_etc = Q5_etc
-  )
+  ) %>%
+  survey_rename()
 
 stats_summ_dp <- list(theta = theta_summ, gamma = gamma_summ)
 
