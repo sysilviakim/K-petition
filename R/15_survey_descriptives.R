@@ -2,6 +2,22 @@
 source(here::here("R", "utilities.R"))
 fname <- here("data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx")
 
+## theta constraints -----------------------------------------------------------
+## item 1: 1011. clear, somewhat weak logic, well mannered, valid(?)
+## item 15: 0000. poor manner, no logic, low validity, not very clear
+## item 49: 0101. poor manner, but clear and valid, but sounds personal
+
+## set 1st dimension to be about clarity and manner
+## set 2nd dimension to be about logic and validity
+theta_constraints <- list(
+  item.1 = list(1, 2),
+  item.1 = list(2, 2),
+  item.15 = list(1, -2),
+  item.15 = list(2, -2),
+  item.49 = list(1, "-"),
+  item.49 = list(2, "+")
+)
+
 # Load data ====================================================================
 df_list <- list(
   raw = read_xlsx(stri_trans_nfc(fname), sheet = "Raw"),
@@ -62,7 +78,7 @@ pwc_df <- pwc_df %>%
   ungroup()
 pwc_df <- as.data.frame(pwc_df)
 
-# Renaming function ============================================================
+# Various functions ============================================================
 survey_rename <- function(x, wrangle = TRUE) {
   out <- x %>%
     rename(
@@ -104,6 +120,42 @@ survey_rename <- function(x, wrangle = TRUE) {
   }
   
   return(out)
+}
+
+stats_summ_create <- function(out) {
+  theta_summ <- left_join(
+    irt_summ("theta1", out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta1_", .), -item) %>%
+      mutate(item = gsub("theta1.", "", item)),
+    irt_summ("theta2", out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(~ paste0("theta2_", .), -item) %>%
+      mutate(item = gsub("theta2.", "", item))
+  ) %>%
+    mutate(item = gsub("item.", "", item)) %>%
+    left_join(post_types %>% select(-text), by = "item")
+  
+  gamma_summ <- irt_summ("gamma", out) %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "respondent") %>%
+    mutate(respondent = gsub("gamma.", "", respondent)) %>%
+    ## merge with demographic questions in the survey data
+    left_join(
+      df %>% 
+        select(
+          NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc, SQ9,
+          Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc
+        ) %>% 
+        mutate(respondent = as.character(NO)), 
+      by = "respondent"
+    ) %>%
+    survey_rename()
+  
+  stats_summ_dp <- list(theta = theta_summ, gamma = gamma_summ)
+  return(stats_summ_dp)
 }
 
 # Create survey weight =========================================================

@@ -7,22 +7,6 @@ source(here::here("R", "15_survey_descriptives.R"))
 ## pair question id: Q13_1 ~ Q13_8
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
-# Theta constraints  ===========================================================
-## item 1: 1011. clear, somewhat weak logic, well mannered, valid(?)
-## item 15: 0000. poor manner, no logic, low validity, not very clear
-## item 49: 0101. poor manner, but clear and valid, but sounds personal
-
-## set 1st dimension to be about clarity and manner
-## set 2nd dimension to be about logic and validity
-theta_constraints <- list(
-  item.1 = list(1, 2),
-  item.1 = list(2, 2),
-  item.15 = list(1, -2),
-  item.15 = list(2, -2),
-  item.49 = list(1, "-"),
-  item.49 = list(2, "+")
-)
-
 ## Experimenting
 ## Researcher's labels don't match the respondents, maybe?
 sort(table(pwc_df$Choice), decreasing = TRUE)
@@ -54,38 +38,7 @@ if (!file.exists(fname)) {
   post_out <- readRDS(fname)
 }
 
-theta_summ <- left_join(
-  irt_summ("theta1", post_out) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "item") %>%
-    rename_with(~ paste0("theta1_", .), -item) %>%
-    mutate(item = gsub("theta1.", "", item)),
-  irt_summ("theta2", post_out) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "item") %>%
-    rename_with(~ paste0("theta2_", .), -item) %>%
-    mutate(item = gsub("theta2.", "", item))
-) %>%
-  mutate(item = gsub("item.", "", item)) %>%
-  left_join(post_types %>% select(-text), by = "item")
-
-gamma_summ <- irt_summ("gamma", post_out) %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "respondent") %>%
-  mutate(respondent = gsub("gamma.", "", respondent)) %>%
-  ## merge with demographic questions in the survey data
-  left_join(
-    df %>%
-      select(
-        NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc,
-        SQ9, Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc
-      ) %>%
-      mutate(respondent = as.character(NO)),
-    by = "respondent"
-  ) %>%
-  survey_rename()
-
-stats_summ <- list(theta = theta_summ, gamma = gamma_summ)
+stats_summ <- stats_summ_create(post_out)
 
 ## Visualize -------------------------------------------------------------------
 pdf("output/main/theta_post_median.pdf", width = 6, height = 6)
@@ -127,38 +80,7 @@ if (!file.exists(fname)) {
   postDP_out <- readRDS(fname)
 }
 
-theta_summ <- left_join(
-  irt_summ("theta1", postDP_out) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "item") %>%
-    rename_with(~ paste0("theta1_", .), -item) %>%
-    mutate(item = gsub("theta1.", "", item)),
-  irt_summ("theta2", postDP_out) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "item") %>%
-    rename_with(~ paste0("theta2_", .), -item) %>%
-    mutate(item = gsub("theta2.", "", item))
-) %>%
-  mutate(item = gsub("item.", "", item)) %>%
-  left_join(post_types %>% select(-text), by = "item")
-
-gamma_summ <- irt_summ("gamma", postDP_out) %>%
-  as.data.frame() %>%
-  rownames_to_column(var = "respondent") %>%
-  mutate(respondent = gsub("gamma.", "", respondent)) %>%
-  ## merge with demographic questions in the survey data
-  left_join(
-    df %>% 
-      select(
-        NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc, SQ9,
-        Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc
-      ) %>% 
-      mutate(respondent = as.character(NO)), 
-    by = "respondent"
-  ) %>%
-  survey_rename()
-
-stats_summ_dp <- list(theta = theta_summ, gamma = gamma_summ)
+stats_summ_dp <- stats_summ_create(postDP_out)
 
 ## Visualize -------------------------------------------------------------------
 pdf("output/main/theta_post_DP_median.pdf", width = 6, height = 6)
