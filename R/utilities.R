@@ -21,6 +21,8 @@ library(netstat)
 library(patchwork)
 library(viridis)
 library(here)
+library(readxl)
+library(stringi)
 
 ## https://mrchypark.github.io/post/KoNLP-설치-방법/
 ## devtools::install_github('haven-jeon/KoNLP')
