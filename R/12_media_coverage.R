@@ -1,6 +1,5 @@
 # "media_coverage" =============================================================
 # https://www.bigkinds.or.kr/
-# ==============================================================================
 source(here::here("R", "utilities.R"))
 
 # Load necessary libraries
