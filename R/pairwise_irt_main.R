@@ -111,7 +111,7 @@ sort(table(pwc_df$Choice), decreasing = TRUE)
 
 # MCMC run  ====================================================================
 ## 2 dim pairwise IRT
-fname <- here("data/mcmc_out.rds")
+fname <- here("output/mcmc_out.rds")
 set.seed(1234)
 if (!file.exists(fname)) {
   post_out <- MCMCpaircompare2d(
@@ -210,7 +210,7 @@ dev.off()
 
 
 ## 2 dim pairwise IRT DP
-fname <- here("data/mcmcDP_out.rds")
+fname <- here("output/mcmcDP_out.rds")
 if (!file.exists(fname)) {
   postDP_out <- MCMCpaircompare2dDP(
     pwc.data = pwc_df,
