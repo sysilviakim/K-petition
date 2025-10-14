@@ -7,53 +7,6 @@ source(here::here("R", "15_survey_descriptives.R"))
 ## pair question id: Q13_1 ~ Q13_8
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
-# Petition post characteristics ================================================
-post_types <- stri_trans_nfc("data/공개제안_tidy.xlsx") %>%
-  read_xlsx() %>%
-  select(id, category, comb_fin, text)
-
-## comb_fin:
-## 1. clarity, specificity
-## 2. logic, consistency
-## 3. tone, manner
-## 4. validity, feasibility
-post_types <- post_types %>%
-  mutate(
-    clarity_specificity = substr(comb_fin, 1, 1),
-    logic_consistency = substr(comb_fin, 2, 2),
-    tone_manner = substr(comb_fin, 3, 3),
-    validity_feasibility = substr(comb_fin, 4, 4)
-  ) %>%
-  rename(item = id) %>%
-  mutate(item = as.character(item))
-
-## create df for mcmc
-pwc_df <- map_dfr(1:8, function(i) {
-  df %>%
-    select(
-      NO,
-      !!sym(paste0("Q13_gCode", i, "_1")),
-      !!sym(paste0("Q13_gCode", i, "_2")),
-      !!sym(paste0("Q13_", i))
-    ) %>%
-    rename(
-      Item1 = !!sym(paste0("Q13_gCode", i, "_1")),
-      Item2 = !!sym(paste0("Q13_gCode", i, "_2")),
-      Choice = !!sym(paste0("Q13_", i))
-    )
-})
-
-## transform df to fit mcmc function
-pwc_df <- pwc_df %>%
-  rowwise() %>%
-  mutate(
-    Item1 = paste0("item.", Item1),
-    Item2 = paste0("item.", Item2),
-    Choice = c(Item1, Item2)[Choice]
-  ) %>%
-  ungroup()
-pwc_df <- as.data.frame(pwc_df)
-
 # Theta constraints  ===========================================================
 ## item 1: 1011. clear, somewhat weak logic, well mannered, valid(?)
 ## item 15: 0000. poor manner, no logic, low validity, not very clear
