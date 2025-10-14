@@ -100,26 +100,30 @@ sort(table(pwc_df$Choice), decreasing = TRUE)
 
 ## set 1st dimension to be about clarity and manner
 ## set 2nd dimension to be about logic and validity
-theta_constraints <- list(
-  item.57 = list(1, 2),
-  item.57 = list(2, 2),
-  item.15 = list(1, -2),
-  item.15 = list(2, -2),
-  item.54 = list(1, "+"),
-  item.54 = list(2, "-")
-)
+# theta_constraints <- list(
+#   item.57 = list(1, 2),
+#   item.57 = list(2, 2),
+#   item.15 = list(1, -2),
+#   item.15 = list(2, -2),
+#   item.54 = list(1, "+"),
+#   item.54 = list(2, "-")
+# )
 
 # MCMC run  ====================================================================
 ## 2 dim pairwise IRT
+fname <- here("data/mcmc_out.rds")
 set.seed(1234)
-post_out <- MCMCpaircompare2d(
-  pwc.data = pwc_df,
-  theta.constraints = theta_constraints,
-  burnin = 5000, mcmc = 100000, thin = 5, verbose = 3000,
-  store.theta = TRUE, store.gamma = TRUE, tune = 0.5
-)
-
-saveRDS(post_out, "data/mcmc_out.rds")
+if (!file.exists(fname)) {
+  post_out <- MCMCpaircompare2d(
+    pwc.data = pwc_df,
+    theta.constraints = theta_constraints,
+    burnin = 5000, mcmc = 100000, thin = 5, verbose = 3000,
+    store.theta = TRUE, store.gamma = TRUE, tune = 0.5
+  )
+  saveRDS(post_out, fname)
+} else {
+  post_out <- readRDS(fname)
+}
 
 theta_summ <- left_join(
   irt_summ("theta1", post_out) %>%
@@ -206,14 +210,18 @@ dev.off()
 
 
 ## 2 dim pairwise IRT DP
-postDP_out <- MCMCpaircompare2dDP(
-  pwc.data = pwc_df,
-  theta.constraints = theta_constraints,
-  burnin = 5000, mcmc = 100000, thin = 5, verbose = 10000,
-  store.theta = TRUE, store.gamma = TRUE, tune = 0.5
-)
-
-saveRDS(postDP_out, "data/mcmcDP_out.rds")
+fname <- here("data/mcmcDP_out.rds")
+if (!file.exists(fname)) {
+  postDP_out <- MCMCpaircompare2dDP(
+    pwc.data = pwc_df,
+    theta.constraints = theta_constraints,
+    burnin = 5000, mcmc = 100000, thin = 5, verbose = 10000,
+    store.theta = TRUE, store.gamma = TRUE, tune = 0.5
+  )
+  saveRDS(postDP_out, fname)
+} else {
+  postDP_out <- readRDS(fname)
+}
 
 theta_summ <- left_join(
   irt_summ("theta1", postDP_out) %>%
@@ -235,7 +243,16 @@ gamma_summ <- irt_summ("gamma", postDP_out) %>%
   rownames_to_column(var = "respondent") %>%
   mutate(respondent = gsub("gamma.", "", respondent)) %>%
   ## merge with demographic questions in the survey data
-  left_join(df %>% select(NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc, SQ9, Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc) %>% mutate(respondent = as.character(NO)), by = "respondent")
+  left_join(
+    df %>% 
+      select(
+        NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc, SQ9,
+        Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc
+      ) %>% 
+      mutate(respondent = as.character(NO)), 
+    by = "respondent"
+  )
+
 gamma_summ <- gamma_summ %>%
   rename(
     gender = SQ1,
@@ -292,7 +309,8 @@ dev.off()
 
 
 ## Check clusters --------------------------------------------------------------
-table(postDP_out[, "n.clusters"]) ## how many distinct respondent parameter values?
+table(postDP_out[, "n.clusters"]) 
+## how many distinct respondent parameter values?
 ##   2    3    4    5    6    7    8    9   10   11   12   13   14
 ## 962 3070 4663 4408 3350 1955  973  394  153   46   18    7    1
 ## respondents mostly fall under 4 to 5 distinct clusters
