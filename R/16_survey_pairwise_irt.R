@@ -3,9 +3,17 @@
 # Setup ========================================================================
 source(here::here("R", "utilities.R"))
 fname <- here("data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx")
-df <- read_xlsx(stri_trans_nfc(fname), sheet = "Raw")
-## pet_list <- read_xlsx("data/screenshots/공개제안_pairs.xlsx")
 
+# Load data ====================================================================
+df_list <- list(
+  raw = read_xlsx(stri_trans_nfc(fname), sheet = "Raw"),
+  label = read_xlsx(stri_trans_nfc(fname), sheet = "Label"),
+  open = read_xlsx(stri_trans_nfc(fname), sheet = "Open"),
+  questions = read_xlsx(stri_trans_nfc(fname), sheet = "변수 가이드") %>%
+    rename(varname = `변수명`, question = `변수 내용`)
+)
+df <- df_list$raw
+## pet_list <- read_xlsx("data/screenshots/공개제안_pairs.xlsx")
 ## pair question id: Q13_1 ~ Q13_8
 ## petition id for choice: Q13_1 -> (Q13_gCode1_1, Q13_gCode1_2)
 
@@ -28,28 +36,6 @@ post_types <- post_types %>%
   ) %>%
   rename(item = id) %>%
   mutate(item = as.character(item))
-
-## check attention
-pdf("output/main/attention_time.pdf", width = 10, height = 6.5)
-par(mfrow = c(2, 4))
-hist(df$q13_q14_time_1, breaks = 50, xlab = "Time for Pair Comparison 1 (Seconds)", main = "")
-hist(df$q13_q14_time_2, breaks = 50, xlab = "Time for Pair Comparison 2 (Seconds)", main = "")
-hist(df$q13_q14_time_3, breaks = 50, xlab = "Time for Pair Comparison 3 (Seconds)", main = "")
-hist(df$q13_q14_time_4, breaks = 50, xlab = "Time for Pair Comparison 4 (Seconds)", main = "")
-hist(df$q13_q14_time_5, breaks = 50, xlab = "Time for Pair Comparison 5 (Seconds)", main = "")
-hist(df$q13_q14_time_6, breaks = 50, xlab = "Time for Pair Comparison 6 (Seconds)", main = "")
-hist(df$q13_q14_time_7, breaks = 50, xlab = "Time for Pair Comparison 7 (Seconds)", main = "")
-hist(df$q13_q14_time_8, breaks = 50, xlab = "Time for Pair Comparison 8 (Seconds)", main = "")
-dev.off()
-
-median(df$q13_q14_time_1) ## 49
-median(df$q13_q14_time_2) ## 29
-median(df$q13_q14_time_3) ## 26
-median(df$q13_q14_time_4) ## 25.5
-median(df$q13_q14_time_5) ## 24
-median(df$q13_q14_time_6) ## 23
-median(df$q13_q14_time_7) ## 22
-median(df$q13_q14_time_8) ## 22
 
 ## create df for mcmc
 pwc_df <- map_dfr(1:8, function(i) {
@@ -110,7 +96,7 @@ sort(table(pwc_df$Choice), decreasing = TRUE)
 # )
 
 # MCMC run  ====================================================================
-## 2 dim pairwise IRT
+## 2 dim pairwise IRT ----------------------------------------------------------
 fname <- here("output/mcmc_out.rds")
 set.seed(1234)
 if (!file.exists(fname)) {
@@ -180,6 +166,7 @@ gamma_summ <- gamma_summ %>%
 
 stats_summ <- list(theta = theta_summ, gamma = gamma_summ)
 
+## Visualize -------------------------------------------------------------------
 pdf("output/main/theta_post_median.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ, label = TRUE)
 dev.off()
@@ -208,8 +195,7 @@ theta_post_viz(stats_summ, color = "validity_feasibility") +
   guides(color = guide_legend(title = "Validity and Feasibility"))
 dev.off()
 
-
-## 2 dim pairwise IRT DP
+## 2 dim pairwise IRT DP -------------------------------------------------------
 fname <- here("output/mcmcDP_out.rds")
 if (!file.exists(fname)) {
   postDP_out <- MCMCpaircompare2dDP(
@@ -278,35 +264,30 @@ gamma_summ <- gamma_summ %>%
 
 stats_summ_dp <- list(theta = theta_summ, gamma = gamma_summ)
 
+## Visualize -------------------------------------------------------------------
 pdf("output/main/theta_post_DP_median.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ_dp, label = TRUE)
 dev.off()
 
 pdf("output/main/theta_post_DP_median_clarity_DP.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ_dp, color = "clarity_specificity") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Clarity and Specificity"))
 dev.off()
 
 pdf("output/main/theta_post_DP_median_logic_DP.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ_dp, color = "logic_consistency") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Logic and Consistency"))
 dev.off()
 
 pdf("output/main/theta_post_DP_median_manner_DP.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ_dp, color = "tone_manner") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Tone and Manner"))
 dev.off()
 
 pdf("output/main/theta_post_DP_median_validity_DP.pdf", width = 6, height = 6)
 theta_post_viz(stats_summ_dp, color = "validity_feasibility") +
-  ## combine guide for color and shape
   guides(color = guide_legend(title = "Validity and Feasibility"))
 dev.off()
-
-
 
 ## Check clusters --------------------------------------------------------------
 table(postDP_out[, "n.clusters"]) 
