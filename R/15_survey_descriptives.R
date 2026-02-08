@@ -1,14 +1,17 @@
 # Setup ========================================================================
 source(here::here("R", "utilities.R"))
-fname <- here("data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx")
+fname <- here(
+  stri_trans_nfc(
+    "data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx"
+  )
+)
 
-## theta constraints -----------------------------------------------------------
-## item 1: 1011. clear, somewhat weak logic, well mannered, valid(?)
-## item 15: 0000. poor manner, no logic, low validity, not very clear
-## item 49: 0101. poor manner, but clear and valid, but sounds personal
-
-## set 1st dimension to be about clarity and manner
-## set 2nd dimension to be about logic and validity
+## Theta constraints -----------------------------------------------------------
+## item 1: 1011. clear, weak logic, well mannered, valid
+## item 15: 0000. unclear, illogical, untoned, invalid
+## item 49: 0101. unclear, logical, untoned, valid
+## 1st dim: clarity and manner
+## 2nd dim: logic and validity
 theta_constraints <- list(
   item.1 = list(1, 2),
   item.1 = list(2, 2),
@@ -18,21 +21,37 @@ theta_constraints <- list(
   item.49 = list(2, "+")
 )
 
-# Load data ====================================================================
-df_list <- list(
-  raw = read_xlsx(stri_trans_nfc(fname), sheet = "Raw"),
-  label = read_xlsx(stri_trans_nfc(fname), sheet = "Label"),
-  open = read_xlsx(stri_trans_nfc(fname), sheet = "Open"),
-  questions = read_xlsx(stri_trans_nfc(fname), sheet = "변수 가이드") %>%
-    rename(varname = `변수명`, question = `변수 내용`)
-)
-df <- df_list$raw
-
 ## 성x연령 균등할당
 ## 30대 남 123, 40대 여 123, 나머지 전부 122
 
+# Load data ====================================================================
+df_list <- list(
+  raw = read_xlsx(
+    stri_trans_nfc(fname), sheet = "Raw"
+  ),
+  label = read_xlsx(
+    stri_trans_nfc(fname), sheet = "Label"
+  ),
+  open = read_xlsx(
+    stri_trans_nfc(fname), sheet = "Open"
+  ),
+  questions = read_xlsx(
+    stri_trans_nfc(fname),
+    sheet = stri_trans_nfc("변수 가이드")
+  ) %>%
+    rename(
+      varname = stri_trans_nfc("변수명"),
+      question = stri_trans_nfc("변수 내용")
+    )
+)
+df <- df_list$raw
+
 # Petition post characteristics ================================================
-post_types <- stri_trans_nfc("data/공개제안_tidy.xlsx") %>%
+post_types <- here(
+  stri_trans_nfc(
+    "data/screenshots/공개제안_tidy_url_appended.xlsx"
+  )
+) %>%
   read_xlsx() %>%
   select(id, category, comb_fin, text)
 
@@ -51,7 +70,7 @@ post_types <- post_types %>%
   rename(item = id) %>%
   mutate(item = as.character(item))
 
-## create df for mcmc
+# Pairwise comparison data =====================================================
 pwc_df <- map_dfr(1:8, function(i) {
   df %>%
     select(
@@ -61,13 +80,16 @@ pwc_df <- map_dfr(1:8, function(i) {
       !!sym(paste0("Q13_", i))
     ) %>%
     rename(
-      Item1 = !!sym(paste0("Q13_gCode", i, "_1")),
-      Item2 = !!sym(paste0("Q13_gCode", i, "_2")),
+      Item1 = !!sym(
+        paste0("Q13_gCode", i, "_1")
+      ),
+      Item2 = !!sym(
+        paste0("Q13_gCode", i, "_2")
+      ),
       Choice = !!sym(paste0("Q13_", i))
     )
 })
 
-## transform df to fit mcmc function
 pwc_df <- pwc_df %>%
   rowwise() %>%
   mutate(
@@ -78,7 +100,7 @@ pwc_df <- pwc_df %>%
   ungroup()
 pwc_df <- as.data.frame(pwc_df)
 
-# Various functions ============================================================
+# Functions ====================================================================
 survey_rename <- function(x, wrangle = TRUE) {
   out <- x %>%
     rename(
@@ -102,23 +124,38 @@ survey_rename <- function(x, wrangle = TRUE) {
       pres25 = Q5,
       pres25_etc = Q5_etc
     )
-  
+
   if (wrangle) {
     out <- out %>%
       mutate(
         ## Option 5: 400만원 이상-500만원 미만
         ## 2025 기준 3인 가족 중위소득 = 500만원
-        median_income = case_when(
-          income > 5 ~ 1,
-          TRUE ~ 0,
-        ),
         median_income = factor(
-          median_income, levels = c(0, 1),
-          labels = c("Below Median", "Above Median")
-        )
+          ifelse(income > 5, 1, 0),
+          levels = c(0, 1),
+          labels = c(
+            "Below Median", "Above Median"
+          )
+        ),
+        ## Party: Q3 codes
+        ## 1=DPK, 2=PPP, 3=JIP, 4=Jinbo,
+        ## 5=Reform, 6=BI, 7=SD, 8=Other
+        party_group = case_when(
+          party == 2 ~ "PPP",
+          party %in% c(1, 3:7) ~ "Opposition",
+          TRUE ~ "Other"
+        ),
+        party_group = factor(
+          party_group,
+          levels = c(
+            "PPP", "Opposition", "Other"
+          )
+        ),
+        ## Populist: Q6_7 >= 4
+        populist = Q6_7 >= 4
       )
   }
-  
+
   return(out)
 }
 
@@ -127,59 +164,221 @@ stats_summ_create <- function(out) {
     irt_summ("theta1", out) %>%
       as.data.frame() %>%
       rownames_to_column(var = "item") %>%
-      rename_with(~ paste0("theta1_", .), -item) %>%
-      mutate(item = gsub("theta1.", "", item)),
+      rename_with(
+        ~ paste0("theta1_", .), -item
+      ) %>%
+      mutate(
+        item = gsub("theta1.", "", item)
+      ),
     irt_summ("theta2", out) %>%
       as.data.frame() %>%
       rownames_to_column(var = "item") %>%
-      rename_with(~ paste0("theta2_", .), -item) %>%
-      mutate(item = gsub("theta2.", "", item))
+      rename_with(
+        ~ paste0("theta2_", .), -item
+      ) %>%
+      mutate(
+        item = gsub("theta2.", "", item)
+      )
   ) %>%
     mutate(item = gsub("item.", "", item)) %>%
-    left_join(post_types %>% select(-text), by = "item")
-  
+    left_join(
+      post_types %>% select(-text),
+      by = "item"
+    )
+
   gamma_summ <- irt_summ("gamma", out) %>%
     as.data.frame() %>%
     rownames_to_column(var = "respondent") %>%
-    mutate(respondent = gsub("gamma.", "", respondent)) %>%
-    ## merge with demographic questions in the survey data
+    mutate(
+      respondent = gsub("gamma.", "", respondent)
+    ) %>%
     left_join(
-      df %>% 
+      df %>%
         select(
-          NO, SQ1, SQ2_1, SQ2_2, SQ3, SQ4, SQ5, SQ6, SQ7, SQ8, SQ8_etc, SQ9,
-          Q1, Q2, Q3, Q3_etc, Q4, Q4_etc, Q5, Q5_etc
-        ) %>% 
-        mutate(respondent = as.character(NO)), 
+          NO,
+          SQ1, SQ2_1, SQ2_2, SQ3, SQ4,
+          SQ5, SQ6, SQ7, SQ8, SQ8_etc,
+          SQ9, Q1, Q2, Q3, Q3_etc,
+          Q4, Q4_etc, Q5, Q5_etc, Q6_7
+        ) %>%
+        mutate(respondent = as.character(NO)),
       by = "respondent"
     ) %>%
     survey_rename()
-  
-  stats_summ_dp <- list(theta = theta_summ, gamma = gamma_summ)
-  return(stats_summ_dp)
+
+  list(theta = theta_summ, gamma = gamma_summ)
 }
 
-# Create survey weight =========================================================
+# Survey weights ===============================================================
+## Map survey codes to demo_weight groups
+## SQ1: 1=M, 2=F
+## SQ2_2: 1=20s, 2=30s, 3=40s, 4=50s, 5=60+
+age_map <- c(
+  "1" = "20-29", "2" = "30-39",
+  "3" = "40-49", "4" = "50-59",
+  "5" = "60+"
+)
+
+df <- df %>%
+  mutate(
+    wt_gender = ifelse(SQ1 == 1, "M", "F"),
+    wt_age = age_map[as.character(SQ2_2)]
+  ) %>%
+  left_join(
+    demo_weight,
+    by = c(
+      "wt_gender" = "gender",
+      "wt_age" = "age_group"
+    )
+  ) %>%
+  rename(wt = weight)
 
 # Attention ====================================================================
-pdf("output/main/attention_time.pdf", width = 10, height = 6.5)
-par(mfrow = c(2, 4))
-hist(df$q13_q14_time_1, breaks = 50, xlab = "Time for Pair Comparison 1 (Seconds)", main = "")
-hist(df$q13_q14_time_2, breaks = 50, xlab = "Time for Pair Comparison 2 (Seconds)", main = "")
-hist(df$q13_q14_time_3, breaks = 50, xlab = "Time for Pair Comparison 3 (Seconds)", main = "")
-hist(df$q13_q14_time_4, breaks = 50, xlab = "Time for Pair Comparison 4 (Seconds)", main = "")
-hist(df$q13_q14_time_5, breaks = 50, xlab = "Time for Pair Comparison 5 (Seconds)", main = "")
-hist(df$q13_q14_time_6, breaks = 50, xlab = "Time for Pair Comparison 6 (Seconds)", main = "")
-hist(df$q13_q14_time_7, breaks = 50, xlab = "Time for Pair Comparison 7 (Seconds)", main = "")
-hist(df$q13_q14_time_8, breaks = 50, xlab = "Time for Pair Comparison 8 (Seconds)", main = "")
-dev.off()
+time_cols <- paste0("q13_q14_time_", 1:8)
+attention_df <- df %>%
+  select(NO, all_of(time_cols)) %>%
+  pivot_longer(
+    -NO,
+    names_to = "pair",
+    values_to = "seconds"
+  ) %>%
+  mutate(
+    pair = factor(
+      gsub("q13_q14_time_", "Pair ", pair),
+      levels = paste("Pair", 1:8)
+    )
+  )
 
-median(df$q13_q14_time_1) ## 49
-median(df$q13_q14_time_2) ## 29
-median(df$q13_q14_time_3) ## 26
-median(df$q13_q14_time_4) ## 25.5
-median(df$q13_q14_time_5) ## 24
-median(df$q13_q14_time_6) ## 23
-median(df$q13_q14_time_7) ## 22
-median(df$q13_q14_time_8) ## 22
+p_attn <- ggplot(
+  attention_df,
+  aes(x = seconds)
+) +
+  geom_histogram(bins = 50, fill = "gray60") +
+  facet_wrap(~pair, ncol = 4) +
+  xlab("Response Time (Seconds)") +
+  ylab("Count") +
+  theme_minimal() +
+  theme(strip.text = element_text(size = 10))
+
+ggsave(
+  "fig/attention_time.pdf",
+  plot = p_attn, width = 10, height = 5
+)
 
 # Demographics =================================================================
+df_renamed <- survey_rename(df)
+
+## Summary table
+demo_table <- df_renamed %>%
+  transmute(
+    Gender = ifelse(
+      gender == 1, "Male", "Female"
+    ),
+    `Age Range` = case_when(
+      age_range == 1 ~ "20-29",
+      age_range == 2 ~ "30-39",
+      age_range == 3 ~ "40-49",
+      age_range == 4 ~ "50-59",
+      age_range == 5 ~ "60+"
+    ),
+    Education = case_when(
+      edu <= 2 ~ "Middle school or below",
+      edu == 3 ~ "High school",
+      edu == 4 ~ "University",
+      edu >= 5 ~ "Graduate"
+    ),
+    Income = median_income,
+    Party = party_group,
+    Ideology = case_when(
+      ideology <= 2 ~ "Progressive",
+      ideology %in% 3:5 ~ "Moderate",
+      ideology >= 6 ~ "Conservative"
+    )
+  ) %>%
+  pivot_longer(
+    everything(),
+    names_to = "Variable",
+    values_to = "Category"
+  ) %>%
+  count(Variable, Category) %>%
+  group_by(Variable) %>%
+  mutate(
+    Pct = round(n / sum(n) * 100, 1)
+  ) %>%
+  ungroup() %>%
+  arrange(
+    factor(
+      Variable,
+      levels = c(
+        "Gender", "Age Range",
+        "Education", "Income",
+        "Party", "Ideology"
+      )
+    ),
+    Category
+  )
+
+demo_xtable <- xtable(
+  demo_table,
+  caption = "Survey Respondent Demographics",
+  label = "tab:demographics"
+)
+print_xtable <- capture.output(
+  print(
+    demo_xtable,
+    include.rownames = FALSE,
+    booktabs = TRUE,
+    file = here("tab", "demographics.tex")
+  )
+)
+
+# Choice frequency =============================================================
+choice_freq <- pwc_df %>%
+  filter(!is.na(Choice)) %>%
+  count(Choice, name = "n_chosen") %>%
+  mutate(
+    item = gsub("item.", "", Choice)
+  ) %>%
+  left_join(
+    post_types %>% select(-text),
+    by = "item"
+  ) %>%
+  arrange(desc(n_chosen))
+
+## Also count how often each item appeared
+appear_freq <- bind_rows(
+  pwc_df %>%
+    select(item = Item1) %>%
+    mutate(item = gsub("item.", "", item)),
+  pwc_df %>%
+    select(item = Item2) %>%
+    mutate(item = gsub("item.", "", item))
+) %>%
+  count(item, name = "n_shown")
+
+choice_freq <- choice_freq %>%
+  left_join(appear_freq, by = "item") %>%
+  mutate(win_rate = n_chosen / n_shown)
+
+p_choice <- ggplot(
+  choice_freq,
+  aes(
+    x = reorder(item, win_rate),
+    y = win_rate,
+    fill = comb_fin
+  )
+) +
+  geom_col() +
+  coord_flip() +
+  xlab("Petition ID") +
+  ylab("Win Rate") +
+  scale_fill_viridis_d(
+    name = "Quality Code", end = 0.9
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+ggsave(
+  "fig/choice_frequency.pdf",
+  plot = p_choice, width = 7, height = 9
+)
