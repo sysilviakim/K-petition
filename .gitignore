@@ -54,6 +54,9 @@ rsconnect/
 CHANGELOG
 NOTICE
 
+# Paper tex files
+paper/*.tex
+
 # Large datasets
 /data/raw/*.Rda
 /data/raw/old/*.Rda
