@@ -12,25 +12,23 @@ library(readxl)
 library(writexl)
 
 ## others
-library(RSelenium)
 library(assertthat)
 library(xtable)
 library(xml2)
-library(readxl)
-library(netstat)
 library(patchwork)
 library(viridis)
-library(here)
-library(readxl)
 library(stringi)
+library(janitor)
+library(ggpubr)
 
-## https://mrchypark.github.io/post/KoNLP-설치-방법/
-## devtools::install_github('haven-jeon/KoNLP')
-## https://blog.naver.com/song_sec/221800361879
-library(KoNLP)
-
-## devtools::install_github("ben-aaron188/rgpt3")
-## library(rgpt3)
+## optional: only needed by scraping/NLP scripts
+if (requireNamespace("RSelenium", quietly = TRUE)) {
+  library(RSelenium)
+  library(netstat)
+}
+if (requireNamespace("KoNLP", quietly = TRUE)) {
+  library(KoNLP)
+}
 
 # Functions ====================================================================
 extract_pt_content <- function(x, date = NULL) {
@@ -339,18 +337,6 @@ theta_post_viz <- function(stats_summ,
   return(p)
 }
 
-gamma_filter <- function(x, subset) {
-  x %>%
-    imap(
-      ~ if ("respondent" %in% names(.x)) {
-        .x %>%
-          filter(respondent %in% subset_list[[subset]])
-      } else {
-        .x
-      }
-    )
-}
-
 prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
                  useNA = "ifany") {
   if (length(vars) > 2) {
@@ -386,3 +372,39 @@ prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
     return(temp)
   }
 }
+
+# Global objects ===============================================================
+## Population weights (KOSIS)
+## https://kosis.kr/visual/populationKorea/
+##   PopulationPyramidDetail.do
+demo_weight <- tibble(
+  gender = rep(c("M", "F"), each = 7),
+  age_group = rep(
+    c(
+      "20-29", "30-39", "40-49",
+      "50-59", "60-69", "70-79", "80+"
+    ),
+    2
+  ),
+  population = c(
+    2131906, 1421062, 1055723,
+    698026, 372092, 126042, 21092,
+    2123879, 1505391, 1049241,
+    776204, 492048, 195551, 38090
+  )
+) %>%
+  ## Collapse 60+ to match survey SQ2_2 coding
+  mutate(
+    age_group = ifelse(
+      age_group %in% c("60-69", "70-79", "80+"),
+      "60+",
+      age_group
+    )
+  ) %>%
+  group_by(gender, age_group) %>%
+  summarise(
+    population = sum(population),
+    .groups = "drop"
+  ) %>%
+  mutate(weight = population / sum(population)) %>%
+  select(gender, age_group, weight)
