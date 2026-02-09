@@ -8,13 +8,13 @@ if (!file.exists(fname)) {
   post_out <- MCMCpaircompare2d(
     pwc.data = pwc_df,
     theta.constraints = theta_constraints,
-    burnin = 5000,
-    mcmc = 100000,
-    thin = 5,
+    burnin = MCMC_BURNIN,
+    mcmc = MCMC_ITER,
+    thin = MCMC_THIN,
     verbose = 3000,
     store.theta = TRUE,
     store.gamma = TRUE,
-    tune = 0.5
+    tune = MCMC_TUNE
   )
   saveRDS(post_out, fname)
 } else {
@@ -53,13 +53,13 @@ if (!file.exists(fname)) {
   postDP_out <- MCMCpaircompare2dDP(
     pwc.data = pwc_df,
     theta.constraints = theta_constraints,
-    burnin = 5000,
-    mcmc = 100000,
-    thin = 5,
+    burnin = MCMC_BURNIN,
+    mcmc = MCMC_ITER,
+    thin = MCMC_THIN,
     verbose = 10000,
     store.theta = TRUE,
     store.gamma = TRUE,
-    tune = 0.5
+    tune = MCMC_TUNE
   )
   saveRDS(postDP_out, fname)
 } else {

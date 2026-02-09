@@ -13,13 +13,13 @@ run_subgroup_dp <- function(sub_pwc,
     out <- MCMCpaircompare2dDP(
       pwc.data = as.data.frame(sub_pwc),
       theta.constraints = constraints,
-      burnin = 2000,
-      mcmc = 50000,
-      thin = 5,
+      burnin = MCMC_BURNIN,
+      mcmc = MCMC_ITER,
+      thin = MCMC_THIN,
       verbose = 5000,
       store.theta = TRUE,
       store.gamma = TRUE,
-      tune = 0.5
+      tune = MCMC_TUNE
     )
     saveRDS(out, fname)
   } else {

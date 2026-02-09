@@ -187,7 +187,7 @@ low_tfidf <- petition.dfn %>%
   select(pos_cleaned) %>%
   distinct()
 ## infrequent words appearing in many documents:
-## 고용노동, 교육, 보건복지, 여성가족, ..., 
+## 고용노동, 교육, 보건복지, 여성가족, ...,
 ## 추천해서, 투표하기, 서로간, 등기, 배송료, ...
 ## these are the majority of words
 
@@ -326,7 +326,8 @@ f <- ggplot(data = doc.prob.k) +
   theme_bw()
 ggsave(
   here("output", "topic_dist_02-12.pdf"),
-  f, width = 10, height = 5
+  f,
+  width = 10, height = 5
 )
 
 

@@ -439,7 +439,8 @@ save_theta_dim_plot <- function(stats_summ,
 }
 
 save_theta_quality_plots <- function(
-    stats_summ, prefix) {
+  stats_summ, prefix
+) {
   short <- c(
     clarity_specificity = "clarity",
     logic_consistency = "logic",
