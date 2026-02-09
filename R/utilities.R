@@ -1,5 +1,6 @@
 # Libraries ====================================================================
 library(MCMCpack)
+library(MASS) # avoid package conflict
 
 ## tidyverse
 library(plyr)
