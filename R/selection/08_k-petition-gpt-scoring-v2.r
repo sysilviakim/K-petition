@@ -85,7 +85,7 @@ evaluate_bodytext <- function(text) {
     "\n\n[민원 내용]",
     text
   )
-  
+
   # API 요청
   response <- POST(
     url = api_url,
@@ -104,16 +104,16 @@ evaluate_bodytext <- function(text) {
     ), auto_unbox = TRUE),
     encode = "json"
   )
-  
+
   # 실패 처리
   if (http_error(response)) {
     warning("API request failed. Status code: ", status_code(response))
     return(NA)
   }
-  
+
   # 응답 파싱
   content_json <- content(response, as = "parsed", simplifyVector = FALSE)
-  
+
   # GPT 응답 문자열 추출
   gpt_output <- tryCatch(
     {
@@ -129,16 +129,16 @@ evaluate_bodytext <- function(text) {
       return(NA)
     }
   )
-  
+
   if (is.na(gpt_output) || gpt_output == "") {
     warning("GPT output is empty or NA.")
     return(NA)
   }
-  
+
   # ```json 코드 블록 제거
   gpt_output_clean <- gsub("^```json\\s*|\\s*```$", "", gpt_output)
-  
-  
+
+
   # JSON 파싱
   parsed_result <- tryCatch(
     {
@@ -157,7 +157,7 @@ evaluate_bodytext <- function(text) {
       )
     }
   )
-  
+
   return(parsed_result)
 }
 
@@ -167,21 +167,21 @@ dir.create("gpt_evaluation_results_v2", showWarnings = FALSE)
 # 2. 평가 수행 + 매건 저장
 for (i in seq(1, length(bodytext_vector))) { # 첫 번째 데이터부터 시작
   file_path <- file.path("gpt_evaluation_results_v2", paste0("eval_", i, ".json"))
-  
+
   if (file.exists(file_path)) {
     next # 이미 저장된 경우 건너뜀
   }
-  
+
   text <- bodytext_vector[[i]]
   if (is.na(text) || text == "") {
     warning(paste("Skipping empty bodytext at index", i))
     next
   }
-  
+
   Sys.sleep(1) # API rate limit 대응
-  
+
   result <- evaluate_bodytext(text)
-  
+
   # JSON 형식으로 저장
   write_json(result, file_path, pretty = TRUE, auto_unbox = TRUE)
 }
@@ -192,7 +192,7 @@ evaluation_df <- map_dfr(files, function(f) {
   res <- tryCatch(fromJSON(f), error = function(e) {
     return(NULL)
   })
-  
+
   if (is.null(res)) {
     return(tibble(
       clarity_score = NA, clarity_reason = NA,
@@ -203,7 +203,7 @@ evaluation_df <- map_dfr(files, function(f) {
       validity_and_feasibility_score = NA, validity_and_feasibility_reason = NA
     ))
   }
-  
+
   tibble(
     clarity_score = res$clarity$score,
     specificity_score = res$specificity$score,

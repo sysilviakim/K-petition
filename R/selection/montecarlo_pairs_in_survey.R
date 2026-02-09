@@ -70,7 +70,6 @@ N * P * table(pet_pair_df$category) / K
 N * P * table(pet_pair_df$category) / sum(table(pet_pair_df$category))
 
 
-
 # Generate Random Pairs of Petitions + Petition for Scale Question =============
 pet_df <-
   read_excel("data/screenshots/main/final/공개제안_tidy_url_appended.xlsx")

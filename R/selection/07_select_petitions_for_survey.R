@@ -4,15 +4,15 @@ source(here::here("R", "utilities.R"))
 ## Output from script #17 GPT scoring
 gpt <- read_csv(here("data", "tidy", "evaluated_data_2024_final.csv")) %>%
   filter(!is.na(clarity_specificity_score)) %>%
-  ## 43 rows with reasons as "attachment only"? 
+  ## 43 rows with reasons as "attachment only"?
   filter(
     branch %in% c(
       "국토교통부", "보건복지부", "교육부", "행정안전부", "환경부",
       "경찰청", "고용노동부", "문화체육관광부", "농림축산식품부", "기획재정부",
-      "법무부", "국방부", "산업통상자원부", "산림청", "식품의약품안전처", 
-      "국가보훈부", "여성가족부", "국세청", "소방청", "중소벤처기업부", 
+      "법무부", "국방부", "산업통상자원부", "산림청", "식품의약품안전처",
+      "국가보훈부", "여성가족부", "국세청", "소방청", "중소벤처기업부",
       "금융위원회", "인사혁신처", "과학기술정보통신부", "저출산고령사회위원회",
-      "외교부", "해양수산부", "병무청", "공정거래위원회", "질병관리청", 
+      "외교부", "해양수산부", "병무청", "공정거래위원회", "질병관리청",
       "방송통신위원회", "농촌진흥청", "국가유산청", "통일부", "방위사업청",
       "조달청", "국가교육위원회", "국민권익위원회", "개인정보보호위원회",
       "관세청", "해양경찰청", "우주항공청", "기상청", "대검찰청", "특허청",
@@ -119,10 +119,10 @@ gpt <- gpt %>%
     )
   )
 
-prop(gpt, "clarity")      ## 56.9% (w/ prompt change + filtering)
-prop(gpt, "logic")        ## 20.1%
-prop(gpt, "tone")         ## 86.8%
-prop(gpt, "validity")     ## 49.1%
+prop(gpt, "clarity") ## 56.9% (w/ prompt change + filtering)
+prop(gpt, "logic") ## 20.1%
+prop(gpt, "tone") ## 86.8%
+prop(gpt, "validity") ## 49.1%
 
 ## Create binary 4-digit patterns with 0-1 -------------------------------------
 pattern01 <- c(
@@ -172,23 +172,23 @@ gpt_sample <- gpt %>%
 gpt_housing <- gpt %>%
   filter(grepl("부동산", text)) %>%
   filter(
-    title == "가로주택 정비사업 분할소송을 중단해주세요" | 
+    title == "가로주택 정비사업 분할소송을 중단해주세요" |
       title == "부동산 거래 사고방지 제안" |
-      grepl("건설업 부정당업자 추석 명절 사면 청구", title) | 
-      title == "공인중개사법 중개대상물 소재지" | 
-      grepl("부동산 광고 올리는게 점점 복잡해져서", title) | 
-      grepl("3D 프린팅", title) | 
-      title == "서민용 신규 오피스텔 잔금 대출, 규제 풀어주세요" | 
-      title == "전세 계약 시 개인 임대인의 보증 보험 가입 의무화 방안" | 
-      title == "은행 대출 규제 완화" | 
-      title == "공공 일반분양 무주택요건 강화가 필요합니다." | 
-      title == "재개발, 재건축에서 국민아파트 공급 확대 정책(규제 혁파)" | 
-      grepl("민생토론",  title) | 
-      title == "전세 사기 방지를 위한 부동산 투기 억제 법안 제안" | 
-      title == "생활안정자금 추가약정서 위반에 따른 소명요청" | 
+      grepl("건설업 부정당업자 추석 명절 사면 청구", title) |
+      title == "공인중개사법 중개대상물 소재지" |
+      grepl("부동산 광고 올리는게 점점 복잡해져서", title) |
+      grepl("3D 프린팅", title) |
+      title == "서민용 신규 오피스텔 잔금 대출, 규제 풀어주세요" |
+      title == "전세 계약 시 개인 임대인의 보증 보험 가입 의무화 방안" |
+      title == "은행 대출 규제 완화" |
+      title == "공공 일반분양 무주택요건 강화가 필요합니다." |
+      title == "재개발, 재건축에서 국민아파트 공급 확대 정책(규제 혁파)" |
+      grepl("민생토론", title) |
+      title == "전세 사기 방지를 위한 부동산 투기 억제 법안 제안" |
+      title == "생활안정자금 추가약정서 위반에 따른 소명요청" |
       title == "전세사기피해자 지원(재산세 감면) 개선요청" |
       title == "청약에서 40·50대는 버림받은 세대인가?(가점제도 개선)" |
-      grepl("부동산 거래계약서 개인정보", title) | 
+      grepl("부동산 거래계약서 개인정보", title) |
       grepl("8.8 부동산대책 중 매입임대주택 활성화 방안", title)
   )
 nrow(gpt_housing)
@@ -202,13 +202,13 @@ gpt_pension <- gpt %>%
   filter(grepl("연금", text)) %>%
   filter(
     title == "노령연금 지급 대상자 변경" |
-      title == "국민연금 고갈 방지를 위한 제안입니다" | 
-      title == "기초연금 개선(안)" | 
-      title == "출산 기여 연금제 제도 도입" | 
-      grepl("기초연금 신청시 자영업자 고용보험가입자에 대한", title) | 
-      title == "기초연금 지급대상자 확대 요청" | 
-      title == "국민연금을 개인이 관리할 수 있도록 해주세요" | 
-      title == "국민연금 고갈에 대한 문제 해결에 대한 방안" | 
+      title == "국민연금 고갈 방지를 위한 제안입니다" |
+      title == "기초연금 개선(안)" |
+      title == "출산 기여 연금제 제도 도입" |
+      grepl("기초연금 신청시 자영업자 고용보험가입자에 대한", title) |
+      title == "기초연금 지급대상자 확대 요청" |
+      title == "국민연금을 개인이 관리할 수 있도록 해주세요" |
+      title == "국민연금 고갈에 대한 문제 해결에 대한 방안" |
       title == "퇴직연금(DC형) 금융기관 이전의 불편함 해소 요청"
   )
 nrow(gpt_pension)
@@ -236,12 +236,12 @@ full_df <- c("배달", "킥보드", "연금", "부동산", "사교육", "저출�
     KY = NA
   ) %>%
   select(
-    category, no, topic, combo = combination, label, 
+    category, no, topic,
+    combo = combination, label,
     SK, BK, KY, title, everything()
   )
-  
+
 write_xlsx(
   full_df,
   path = here("data", "공개제안_전체.xlsx")
 )
-
