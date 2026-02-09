@@ -1,7 +1,7 @@
 # Subgroup pairwise IRT analysis
 
 # Setup ========================================================================
-source(here::here("R", "15_survey_descriptives.R"))
+source(here::here("R", "08_survey_descriptives.R"))
 
 df_sub <- survey_rename(df)
 
