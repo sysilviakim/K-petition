@@ -2,8 +2,6 @@
 ## "Wed Jul 17 17:03:32 2024"
 
 source(here::here("R", "utilities.R"))
-library(glmnet)
-library(xgboost)
 
 # Load data ====================================================================
 ## load dfm
@@ -249,7 +247,7 @@ pred_out_train <- cbind(pred_responded, train_responded)
 pred_responded <- predict(lasso_out_res, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_responded, test_responded)
 
-pdf("output/lasso_responded.pdf", width = 10, height = 6)
+pdf(here("output", "lasso_responded.pdf"), width = 10, height = 6)
 par(mfrow = c(1, 2))
 plot(
   pred_out_train,
@@ -287,7 +285,7 @@ pred_out_train <- cbind(pred_d2res, train_days_to_response)
 
 pred_d2res <- predict(lasso_out_d2res, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_d2res, test_days_to_response)
-pdf("output/lasso_d2r.pdf", width = 10, height = 6)
+pdf(here("output", "lasso_d2r.pdf"), width = 10, height = 6)
 plot(
   pred_out_train,
   xlab = "Predicted Vals",
@@ -326,7 +324,7 @@ pred_out_train <- cbind(pred_d2imp, train_days_to_implement)
 
 pred_d2imp <- predict(lasso_out_d2imp, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_d2imp, test_days_to_implement)
-pdf("output/lasso_d2i.pdf", width = 10, height = 6)
+pdf(here("output", "lasso_d2i.pdf"), width = 10, height = 6)
 par(mfrow = c(1, 2))
 plot(
   pred_out_train,

@@ -22,6 +22,12 @@ library(stringi)
 library(janitor)
 library(ggpubr)
 
+## ML / prediction
+library(glmnet)
+library(topicmodels)
+library(ranger)
+library(pROC)
+
 ## optional: only needed by scraping/NLP scripts
 if (requireNamespace("RSelenium", quietly = TRUE)) {
   library(RSelenium)
@@ -29,6 +35,19 @@ if (requireNamespace("RSelenium", quietly = TRUE)) {
 }
 if (requireNamespace("KoNLP", quietly = TRUE)) {
   library(KoNLP)
+}
+if (requireNamespace("xgboost", quietly = TRUE)) {
+  library(xgboost)
+}
+if (requireNamespace("wordcloud2", quietly = TRUE)) {
+  library(wordcloud2)
+  library(htmlwidgets)
+}
+if (requireNamespace("ldatuning", quietly = TRUE)) {
+  library(ldatuning)
+}
+if (requireNamespace("textmineR", quietly = TRUE)) {
+  library(textmineR)
 }
 
 # Functions ====================================================================
@@ -374,7 +393,84 @@ prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
   }
 }
 
+engineer_respondent_features <- function(x) {
+  x %>%
+    mutate(
+      female = as.numeric(SQ1 == 2),
+      age_c = scale(SQ2_1)[, 1],
+      edu_c = scale(SQ3)[, 1],
+      income_c = scale(SQ7)[, 1],
+      ideology_c = scale(Q2)[, 1],
+      ppp = as.numeric(Q3 == 2),
+      opposition = as.numeric(
+        Q3 %in% c(1, 3:7)
+      ),
+      populist_num = as.numeric(Q6_7 >= 4)
+    )
+}
+
+save_theta_dim_plot <- function(stats_summ,
+                                fname,
+                                dim = NULL,
+                                title = NULL,
+                                label = FALSE,
+                                width = 6,
+                                height = 6) {
+  p <- theta_post_viz(
+    stats_summ,
+    color = dim,
+    label = label
+  )
+  if (!is.null(title)) {
+    p <- p +
+      guides(
+        color = guide_legend(
+          title = title
+        )
+      )
+  }
+  pdf(
+    here("fig", fname),
+    width = width,
+    height = height
+  )
+  print(p)
+  dev.off()
+}
+
+save_theta_quality_plots <- function(
+    stats_summ, prefix) {
+  short <- c(
+    clarity_specificity = "clarity",
+    logic_consistency = "logic",
+    tone_manner = "manner",
+    validity_feasibility = "validity"
+  )
+  for (dim in names(quality_dims)) {
+    save_theta_dim_plot(
+      stats_summ,
+      paste0(prefix, "_", short[dim], ".pdf"),
+      dim = dim,
+      title = quality_dims[dim]
+    )
+  }
+}
+
 # Global objects ===============================================================
+## MCMC configuration
+MCMC_BURNIN <- 5000
+MCMC_ITER <- 100000
+MCMC_THIN <- 5
+MCMC_TUNE <- 0.5
+
+## Quality dimension labels
+quality_dims <- c(
+  clarity_specificity = "Clarity and Specificity",
+  logic_consistency = "Logic and Consistency",
+  tone_manner = "Tone and Manner",
+  validity_feasibility = "Validity and Feasibility"
+)
+
 ## Population weights (KOSIS)
 ## https://kosis.kr/visual/populationKorea/
 ##   PopulationPyramidDetail.do

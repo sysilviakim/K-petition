@@ -4,11 +4,11 @@ source(here::here("R", "utilities.R"))
 ## this code runs topic models to generate topic vectors for petitions
 ## original text with space correction
 petition_df <- read_csv(
-  "data/tidy/pub_petition_corrected.csv"
+  here("data", "tidy", "pub_petition_corrected.csv")
 )
 ## lemmatized text with space correction
 petition_lm <- read_csv(
-  "data/tidy/pub_petition_corrected_lm.csv"
+  here("data", "tidy", "pub_petition_corrected_lm.csv")
 )
 
 ## limit scope to post 2013
@@ -41,7 +41,9 @@ petition <- petition %>%
 ## some pruning
 ## 0. special characters, one-character words, stopwords
 ## remove stopwords
-stopwords <- read_csv("data/kiwipiepy_stopwords.csv")
+stopwords <- read_csv(
+  here("data", "kiwipiepy_stopwords.csv")
+)
 stopwords <- stopwords$Stopword
 petition <- petition %>%
   filter(!words %in% stopwords)
@@ -129,8 +131,6 @@ doc_count <- Matrix::rowSums(dfm)
 dfm <- dfm[doc_count > 1, ]
 
 ## fit LDA
-library(topicmodels)
-library(textmineR)
 
 ## k=10
 lda_out10 <- LDA(dfm, k = 10, control = list(seed = 1234))
@@ -140,7 +140,7 @@ writexl::write_xlsx(
   lda_topic_words %>%
     group_by(topic) %>%
     slice_max(beta, n = 5),
-  "output/topic_term_df_k10.xlsx"
+  here("output", "topic_term_df_k10.xlsx")
 )
 
 lda_doc_topics <- tidy(lda_out10, matrix = "gamma")
@@ -175,7 +175,7 @@ writexl::write_xlsx(
   lda_topic_words %>%
     group_by(topic) %>%
     slice_max(beta, n = 5),
-  "output/topic_term_df_k15.xlsx"
+  here("output", "topic_term_df_k15.xlsx")
 )
 
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
@@ -238,13 +238,13 @@ writexl::write_xlsx(
   lda_topic_words %>%
     group_by(topic) %>%
     slice_max(beta, n = 5),
-  "output/topic_term_df_k11.xlsx"
+  here("output", "topic_term_df_k11.xlsx")
 )
 
 sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out@beta
 
-saveRDS(lda_out, "data/TopicK11.rds")
+saveRDS(lda_out, here("data", "TopicK11.rds"))
 
 ## prep regression data frame
 title <- rownames(dfm)
@@ -263,4 +263,7 @@ df <- petition_df %>%
   mutate(title = paste0(id, ":", title)) %>%
   left_join(topic_df, by = "title")
 
-saveRDS(df, "data/tidy/pub_petition_02-23_cleaned.rds")
+saveRDS(
+  df,
+  here("data", "tidy", "pub_petition_02-23_cleaned.rds")
+)

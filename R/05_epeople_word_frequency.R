@@ -2,13 +2,13 @@
 ## "Fri Feb 16 15:57:10 2024"
 
 source(here::here("R", "utilities.R"))
-library(wordcloud2)
-library(htmlwidgets)
-library(topicmodels)
 
 # Merge and process data =======================================================
 years <- 2002:2023
-file.names <- paste0("data/tidy/petition_konlp", years, ".rds")
+file.names <- here(
+  "data", "tidy",
+  paste0("petition_konlp", years, ".rds")
+)
 petition.df <- as_tibble(map_dfr(file.names, readRDS))
 nrow(petition.df) ## 1041038
 
@@ -145,7 +145,7 @@ threshold <- quantile(wc.df$Freq, 0.99)
 wc.df <- wc.df %>%
   filter(Freq > threshold)
 wordcloud2(wc.df) %>%
-  saveWidget("output/wc.pdf")
+  saveWidget(here("output", "wc.pdf"))
 
 wordcloud2(wc.df, figPath = "data/kor_penin.png", size = 1.5) ## doesn't work...
 
@@ -176,7 +176,7 @@ quantile(petition.dfn$tf_idf, na.rm = TRUE)
 ##          0%          25%          50%          75%         100%
 ## 0.002129251  0.065440287  0.154765445  2.240160670 12.079749497
 
-pdf("output/tf_idf_density.pdf", width = 6, height = 4)
+pdf(here("output", "tf_idf_density.pdf"), width = 6, height = 4)
 plot(density(petition.dfn$tf_idf, na.rm = TRUE), main = "TF-IDF Density Plot")
 dev.off()
 
@@ -266,13 +266,13 @@ table(doc.prob.k$topic)
 petition.dfm <- petition.dfn %>%
   cast_dfm(document = title, term = pos_cleaned, value = n)
 
-saveRDS(petition.dfm, "data/DFM_Aug14.rds")
+saveRDS(petition.dfm, here("data", "DFM_Aug14.rds"))
 
 ## fit LDA
 K <- 5
 lda.fit <- LDA(petition.dfm, k = K)
 
-saveRDS(lda.fit, "output/lda_out_5.rds")
+saveRDS(lda.fit, here("output", "lda_out_5.rds"))
 
 ## describe topics: top 20 terms for each topic
 word.prob.k <- tidy(lda.fit, matrix = "beta")
@@ -303,7 +303,10 @@ doc.prob.k <- doc.prob.k %>%
 topN.terms.mat <- as.data.frame(topN.terms.mat)
 colnames(topN.terms.mat) <-
   c("energy", "telecomm", "primary school", "college", "social welfare")
-writexl::write_xlsx(topN.terms.mat, "output/topic_term.xlsx")
+writexl::write_xlsx(
+  topN.terms.mat,
+  here("output", "topic_term.xlsx")
+)
 
 doc.prob.k <- doc.prob.k %>%
   mutate(
@@ -321,11 +324,13 @@ doc.prob.k <- doc.prob.k %>%
 f <- ggplot(data = doc.prob.k) +
   geom_bar(aes(x = year, fill = factor(topic)), position = "dodge") +
   theme_bw()
-ggsave("output/topic_dist_02-12.pdf", f, width = 10, height = 5)
+ggsave(
+  here("output", "topic_dist_02-12.pdf"),
+  f, width = 10, height = 5
+)
 
 
 ## find optimal topic number
-library(ldatuning)
 topics_range <- seq(5, 40, by = 1) ## search grid
 
 topic_grid_search <- FindTopicsNumber(

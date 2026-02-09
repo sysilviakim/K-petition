@@ -39,72 +39,13 @@ for (col in theta_cols[1:4]) {
 dev.off()
 
 ## Visualize -------------------------------------------------------------------
-pdf(
-  here("fig", "theta_post_median.pdf"),
-  width = 6, height = 6
+save_theta_dim_plot(
+  stats_summ, "theta_post_median.pdf",
+  label = TRUE
 )
-theta_post_viz(stats_summ, label = TRUE)
-dev.off()
-
-pdf(
-  here("fig", "theta_post_median_clarity.pdf"),
-  width = 6, height = 6
+save_theta_quality_plots(
+  stats_summ, "theta_post_median"
 )
-theta_post_viz(
-  stats_summ,
-  color = "clarity_specificity"
-) +
-  guides(
-    color = guide_legend(
-      title = "Clarity and Specificity"
-    )
-  )
-dev.off()
-
-pdf(
-  here("fig", "theta_post_median_logic.pdf"),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ,
-  color = "logic_consistency"
-) +
-  guides(
-    color = guide_legend(
-      title = "Logic and Consistency"
-    )
-  )
-dev.off()
-
-pdf(
-  here("fig", "theta_post_median_manner.pdf"),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ,
-  color = "tone_manner"
-) +
-  guides(
-    color = guide_legend(
-      title = "Tone and Manner"
-    )
-  )
-dev.off()
-
-pdf(
-  here("fig", "theta_post_median_validity.pdf"),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ,
-  color = "validity_feasibility"
-) +
-  guides(
-    color = guide_legend(
-      title = "Validity and Feasibility"
-    )
-  )
-dev.off()
 
 # MCMC: 2D pairwise IRT with DP ================================================
 fname <- here("output/mcmcDP_out.rds")
@@ -128,82 +69,13 @@ if (!file.exists(fname)) {
 stats_summ_dp <- stats_summ_create(postDP_out)
 
 ## Visualize -------------------------------------------------------------------
-pdf(
-  here("fig", "theta_post_median_dp.pdf"),
-  width = 6, height = 6
+save_theta_dim_plot(
+  stats_summ_dp, "theta_post_median_dp.pdf",
+  label = TRUE
 )
-theta_post_viz(stats_summ_dp, label = TRUE)
-dev.off()
-
-pdf(
-  here(
-    "fig",
-    "theta_post_median_dp_clarity.pdf"
-  ),
-  width = 6, height = 6
+save_theta_quality_plots(
+  stats_summ_dp, "theta_post_median_dp"
 )
-theta_post_viz(
-  stats_summ_dp,
-  color = "clarity_specificity"
-) +
-  guides(
-    color = guide_legend(
-      title = "Clarity and Specificity"
-    )
-  )
-dev.off()
-
-pdf(
-  here(
-    "fig", "theta_post_median_dp_logic.pdf"
-  ),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ_dp,
-  color = "logic_consistency"
-) +
-  guides(
-    color = guide_legend(
-      title = "Logic and Consistency"
-    )
-  )
-dev.off()
-
-pdf(
-  here(
-    "fig", "theta_post_median_dp_manner.pdf"
-  ),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ_dp,
-  color = "tone_manner"
-) +
-  guides(
-    color = guide_legend(
-      title = "Tone and Manner"
-    )
-  )
-dev.off()
-
-pdf(
-  here(
-    "fig",
-    "theta_post_median_dp_validity.pdf"
-  ),
-  width = 6, height = 6
-)
-theta_post_viz(
-  stats_summ_dp,
-  color = "validity_feasibility"
-) +
-  guides(
-    color = guide_legend(
-      title = "Validity and Feasibility"
-    )
-  )
-dev.off()
 
 # DP cluster analysis ==========================================================
 n_clust <- table(postDP_out[, "n.clusters"])
@@ -247,13 +119,8 @@ print(
 )
 
 ## Combined figure for paper ---------------------------------------------------
-p_combined <- theta_post_viz(
+save_theta_dim_plot(
   stats_summ,
-  label = TRUE
+  "theta_post_median_combined.pdf",
+  label = TRUE, width = 7, height = 7
 )
-pdf(
-  here("fig", "theta_post_median_combined.pdf"),
-  width = 7, height = 7
-)
-p_combined
-dev.off()

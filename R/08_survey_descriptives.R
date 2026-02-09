@@ -264,7 +264,7 @@ p_attn <- ggplot(
   theme(strip.text = element_text(size = 10))
 
 ggsave(
-  "fig/attention_time.pdf",
+  here("fig", "attention_time.pdf"),
   plot = p_attn, width = 10, height = 5
 )
 
@@ -382,6 +382,6 @@ p_choice <- ggplot(
   theme(legend.position = "bottom")
 
 ggsave(
-  "fig/choice_frequency.pdf",
+  here("fig", "choice_frequency.pdf"),
   plot = p_choice, width = 7, height = 9
 )
