@@ -2,8 +2,14 @@
 source(here::here("R", "utilities.R"))
 
 ## this code runs topic models to generate topic vectors for petitions
-petition_df <- read_csv("data/tidy/pub_petition_corrected.csv") ## original text with space correction
-petition_lm <- read_csv("data/tidy/pub_petition_corrected_lm.csv") ## lemmatized text with space correction
+## original text with space correction
+petition_df <- read_csv(
+  "data/tidy/pub_petition_corrected.csv"
+)
+## lemmatized text with space correction
+petition_lm <- read_csv(
+  "data/tidy/pub_petition_corrected_lm.csv"
+)
 
 ## limit scope to post 2013
 idx <- petition_df$year >= 2013
@@ -249,7 +255,10 @@ topic_df <- as_tibble(cbind(lda_out@gamma, title)) %>%
 
 ## merge with other covariates
 df <- petition_df %>%
-  select(title, area, status, date_petitioned, branch, date_answered, date_implemented) %>%
+  select(
+    title, area, status, date_petitioned,
+    branch, date_answered, date_implemented
+  ) %>%
   mutate(id = 1:nrow(petition_df)) %>%
   mutate(title = paste0(id, ":", title)) %>%
   left_join(topic_df, by = "title")

@@ -290,19 +290,19 @@ theta_post_viz <- function(stats_summ,
       aes(x = theta1_median, y = theta2_median)
     )
   }
-  
+
   if (isTRUE(label)) {
-    p <- p + 
+    p <- p +
       geom_text(aes(label = item), hjust = 0, vjust = 0, color = "black")
   }
 
   temp <- stats_summ$gamma %>%
-    ## Keep only rows with maximum median, minimum median, 
+    ## Keep only rows with maximum median, minimum median,
     ## and median of median
     filter(
       median == max(median) | median == min(median) | median == median(median)
     )
-  
+
   if (nrow(temp) == 2) {
     ## Generate the median, as the number of rows was probably even
     temp <- temp %>%
@@ -313,7 +313,7 @@ theta_post_viz <- function(stats_summ,
         )
       )
   }
-  
+
   p <- p +
     geom_point() +
     xlim(-3, 3) +
@@ -349,7 +349,7 @@ prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
   if (!(useNA %in% c("no", "ifany", "always"))) {
     stop("Invalid useNA argument.")
   }
-  
+
   if (length(vars) == 1) {
     temp <- prop.table(table(df[[vars]], dnn = vars, useNA = useNA)) * 100
   }
@@ -358,14 +358,14 @@ prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
       table(df[[vars[1]]], df[[vars[2]]], dnn = vars, useNA = useNA)
     ) * 100
   }
-  
+
   if (!is.null(sort)) {
     temp <- sort(temp, decreasing = sort)
   }
   if (!is.null(head)) {
     temp <- head(temp, head)
   }
-  
+
   temp <- formatC(temp, format = "f", digits = digit)
   if (print) {
     print(temp, quote = FALSE)

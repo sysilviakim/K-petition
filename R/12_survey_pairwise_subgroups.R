@@ -33,7 +33,8 @@ make_subgroup_grid <- function(ss, title) {
   p1 <- theta_post_viz(ss, label = TRUE) +
     ggtitle(title)
   p2 <- theta_post_viz(
-    ss, color = "clarity_specificity"
+    ss,
+    color = "clarity_specificity"
   ) +
     guides(
       color = guide_legend(
@@ -41,7 +42,8 @@ make_subgroup_grid <- function(ss, title) {
       )
     )
   p3 <- theta_post_viz(
-    ss, color = "logic_consistency"
+    ss,
+    color = "logic_consistency"
   ) +
     guides(
       color = guide_legend(
@@ -49,7 +51,8 @@ make_subgroup_grid <- function(ss, title) {
       )
     )
   p4 <- theta_post_viz(
-    ss, color = "tone_manner"
+    ss,
+    color = "tone_manner"
   ) +
     guides(
       color = guide_legend(
@@ -194,16 +197,20 @@ ss_all <- stats_summ_create(
 )
 
 p_all <- theta_post_viz(
-  ss_all, label = TRUE
+  ss_all,
+  label = TRUE
 ) + ggtitle("All Respondents")
 p_ppp_c <- theta_post_viz(
-  ss_ppp, label = TRUE
+  ss_ppp,
+  label = TRUE
 ) + ggtitle("PPP Supporters")
 p_opp_c <- theta_post_viz(
-  ss_opp, label = TRUE
+  ss_opp,
+  label = TRUE
 ) + ggtitle("Opposition")
 p_pop_c <- theta_post_viz(
-  ss_pop, label = TRUE
+  ss_pop,
+  label = TRUE
 ) + ggtitle("Populist Attitudes")
 
 g_subgroups <- ggarrange(

@@ -32,7 +32,7 @@ deleted <- petition_raw %>%
 petition <- petition %>%
   mutate(
     across(
-      contains("body") & !contains("raw"), 
+      contains("body") & !contains("raw"),
       ~ {
         ## remove special characters
         out <- str_replace_all(., "[^[:alnum:]]", " ")
@@ -58,7 +58,7 @@ voca_list <- list(
 save(voca_list, file = here("data", "tidy", "voca_list.Rda"))
 
 ## Some error messages:
-## java.lang.ArrayIndexOutOfBoundsException: 
+## java.lang.ArrayIndexOutOfBoundsException:
 ## Index 5000 out of bounds for length 5000
 
 ## extract 용언(/n) (불용어 제거)
@@ -77,7 +77,7 @@ p_list <- voca_list %>%
       mutate(pos_cleaned = str_replace_all(pos, "/.*$", "다"))
   )
 
-## n + p 
+## n + p
 voca_processed_list <- names(voca_list) %>%
   map(
     ~ bind_rows(noun_list[[.x]], p_list[[.x]]) %>%

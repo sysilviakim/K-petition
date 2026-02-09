@@ -27,13 +27,16 @@ theta_constraints <- list(
 # Load data ====================================================================
 df_list <- list(
   raw = read_xlsx(
-    stri_trans_nfc(fname), sheet = "Raw"
+    stri_trans_nfc(fname),
+    sheet = "Raw"
   ),
   label = read_xlsx(
-    stri_trans_nfc(fname), sheet = "Label"
+    stri_trans_nfc(fname),
+    sheet = "Label"
   ),
   open = read_xlsx(
-    stri_trans_nfc(fname), sheet = "Open"
+    stri_trans_nfc(fname),
+    sheet = "Open"
   ),
   questions = read_xlsx(
     stri_trans_nfc(fname),

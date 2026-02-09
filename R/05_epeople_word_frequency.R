@@ -51,44 +51,64 @@ nrow(petition.df) ## 770121
 ## further pruning
 ## 1) 대명사 제거: 이것, 저것, 그것, 이런, 저런, 그런, 이거, 저거, 그거, 이럴, 저럴, 그럴,
 petition.df <- petition.df %>%
-    mutate(pos_cleaned = str_replace_all(pos_cleaned, "이것|저것|그것|이런|저런|그런|이거|저거|그거|이럴|저럴|그럴",""))
+  mutate(pos_cleaned = str_replace_all(
+    pos_cleaned,
+    "이것|저것|그것|이런|저런|그런|이거|저거|그거|이럴|저럴|그럴",
+    ""
+  ))
 
-petition.df <- petition.df %>% ## other non-essentials that get attached to words
-    mutate(pos_cleaned = str_replace_all(pos_cleaned, "같은|같이|있는|없는|않은|않는|때문|다는|밖에|라는|라고|하는|어떤|어디|언제",""))
+## other non-essentials that get attached to words
+petition.df <- petition.df %>%
+  mutate(pos_cleaned = str_replace_all(
+    pos_cleaned,
+    "같은|같이|있는|없는|않은|않는|때문|다는|밖에|라는|라고|하는|어떤|어디|언제",
+    ""
+  ))
 
 petition.df <- petition.df %>% filter(pos_cleaned != "")
 
 ## 2) 조사로 끝나는 단어들 정리: 뒷편에, 웰빙시대에, 저희도, 그런점을
 petition.df <- petition.df %>%
-    mutate(last_char = str_sub(pos_cleaned,-1,-1)) %>%
-    mutate(last_two_char = str_sub(pos_cleaned,-2,-1)) %>%
-    mutate(last_three_char = str_sub(pos_cleaned,-3,-1))
+  mutate(last_char = str_sub(pos_cleaned, -1, -1)) %>%
+  mutate(last_two_char = str_sub(pos_cleaned, -2, -1)) %>%
+  mutate(last_three_char = str_sub(pos_cleaned, -3, -1))
 
-josa1 <- c("은","는","이","가","에","을","를","께")
-josa2 <- c("에는","에게","에도","에서","게서")
-josa3 <- c("에서는","에게는","에게도","에게서")
+josa1 <- c("은", "는", "이", "가", "에", "을", "를", "께")
+josa2 <- c("에는", "에게", "에도", "에서", "게서")
+josa3 <- c("에서는", "에게는", "에게도", "에게서")
 petition.df %>% filter(last_three_char %in% josa3)
 petition.df %>% filter(last_two_char %in% josa2)
 petition.df %>% filter(last_char %in% josa1)
 
 petition.df <- petition.df %>%
-    ## if a given token ends with 에서는,에게는,에게도, delete the last three characters
-    mutate(pos_cleaned = if_else(last_three_char %in% josa3, str_sub(pos_cleaned,1,-4), pos_cleaned)) %>%
-    ## if a given token ends with 에는, 에게, 게는, 게도, 에도, delete the last two characters
-    mutate(pos_cleaned = if_else(last_two_char %in% josa2, str_sub(pos_cleaned,1,-3), pos_cleaned)) %>%
-    ## if a given token ends with 은,는,이,가..., delete the last character
-    mutate(pos_cleaned = if_else(last_char %in% josa1, str_sub(pos_cleaned,1,-2), pos_cleaned)) ## this step has relatively high incorrect removals
+  ## 에서는, 에게는, 에게도: delete last 3 chars
+  mutate(pos_cleaned = if_else(
+    last_three_char %in% josa3,
+    str_sub(pos_cleaned, 1, -4), pos_cleaned
+  )) %>%
+  ## 에는, 에게, 게는, 게도, 에도: delete last 2 chars
+  mutate(pos_cleaned = if_else(
+    last_two_char %in% josa2,
+    str_sub(pos_cleaned, 1, -3), pos_cleaned
+  )) %>%
+  ## 은,는,이,가...: delete last char
+  ## (relatively high incorrect removals)
+  mutate(pos_cleaned = if_else(
+    last_char %in% josa1,
+    str_sub(pos_cleaned, 1, -2), pos_cleaned
+  ))
 
 ## 3) 단수 복수 구분 제거: 민초들 -> 민초
 petition.df <- petition.df %>%
-    mutate(last_char = str_sub(pos_cleaned,-1,-1))
+  mutate(last_char = str_sub(pos_cleaned, -1, -1))
 
 petition.df %>% filter(last_char == "들")
 
 petition.df <- petition.df %>%
-    mutate(pos_cleaned = if_else(last_char == "들", str_sub(pos_cleaned,1,-2), pos_cleaned))
-
-
+  mutate(pos_cleaned = if_else(
+    last_char == "들",
+    str_sub(pos_cleaned, 1, -2), pos_cleaned
+  ))
 
 
 # Word frequencies =============================================================
@@ -130,8 +150,6 @@ wordcloud2(wc.df) %>%
 wordcloud2(wc.df, figPath = "data/kor_penin.png", size = 1.5) ## doesn't work...
 
 
-
-
 ## another clean-up
 petition.df <- petition.df %>%
   ## remove extra white spaces
@@ -154,28 +172,31 @@ nrow(petition.dfn) ## 598582
 petition.dfn <- petition.dfn %>%
   bind_tf_idf(pos_cleaned, title, n)
 
-quantile(petition.dfn$tf_idf,na.rm=TRUE)
-##          0%          25%          50%          75%         100% 
-## 0.002129251  0.065440287  0.154765445  2.240160670 12.079749497 
+quantile(petition.dfn$tf_idf, na.rm = TRUE)
+##          0%          25%          50%          75%         100%
+## 0.002129251  0.065440287  0.154765445  2.240160670 12.079749497
 
-pdf("output/tf_idf_density.pdf",width=6,height=4)
-plot(density(petition.dfn$tf_idf,na.rm=TRUE),main="TF-IDF Density Plot")
+pdf("output/tf_idf_density.pdf", width = 6, height = 4)
+plot(density(petition.dfn$tf_idf, na.rm = TRUE), main = "TF-IDF Density Plot")
 dev.off()
 
-## words with very low tf-idf scores (common words appearing across many documents)
+## words with very low tf-idf scores
+## (common words appearing across many documents)
 low_tfidf <- petition.dfn %>%
-    filter(tf_idf < 0.1) %>%
-    select(pos_cleaned) %>%
-    distinct()
+  filter(tf_idf < 0.1) %>%
+  select(pos_cleaned) %>%
+  distinct()
 ## infrequent words appearing in many documents:
-## 고용노동, 교육, 보건복지, 여성가족, ..., 추천해서, 투표하기, 서로간, 등기, 배송료, ...
+## 고용노동, 교육, 보건복지, 여성가족, ..., 
+## 추천해서, 투표하기, 서로간, 등기, 배송료, ...
 ## these are the majority of words
 
-## words with too high tf-idf scores (likely words appearing frequently in only a few documents)
+## words with too high tf-idf scores
+## (likely frequent in only a few documents)
 high_tfidf <- petition.dfn %>%
-    filter(tf_idf > 4) %>%
-    select(pos_cleaned) %>%
-    distinct()
+  filter(tf_idf > 4) %>%
+  select(pos_cleaned) %>%
+  distinct()
 ## frequent words appearing in few documents: names of cities and regions, typos
 
 ## is it okay to remove them? probably region-specific problems...
@@ -183,17 +204,17 @@ high_tfidf <- petition.dfn %>%
 ## remove words with too low or too high tf-idf scores
 petition.dfn <- petition.dfn %>%
   filter(tf_idf > 0.1 & tf_idf < 4)
- 
-dim(petition.dfn) ## 299454 
+
+dim(petition.dfn) ## 299454
 
 ## append year
 petition.df.idx <- petition.df %>%
-    select(title,area,year,month,pos_cleaned) %>%
-    distinct()
+  select(title, area, year, month, pos_cleaned) %>%
+  distinct()
 
 ## duplicate issue: inflates the rows by about 1000
 petition.dfn <- petition.dfn %>%
-  left_join(petition.df.idx, by = c("title","pos_cleaned"))
+  left_join(petition.df.idx, by = c("title", "pos_cleaned"))
 
 ## turn to document-term matrix
 ## first run for 2010 to 2012
@@ -245,7 +266,7 @@ table(doc.prob.k$topic)
 petition.dfm <- petition.dfn %>%
   cast_dfm(document = title, term = pos_cleaned, value = n)
 
-saveRDS(petition.dfm,"data/DFM_Aug14.rds")
+saveRDS(petition.dfm, "data/DFM_Aug14.rds")
 
 ## fit LDA
 K <- 5
@@ -305,19 +326,18 @@ ggsave("output/topic_dist_02-12.pdf", f, width = 10, height = 5)
 
 ## find optimal topic number
 library(ldatuning)
-topics_range <- seq(5, 40, by=1) ## search grid
+topics_range <- seq(5, 40, by = 1) ## search grid
 
 topic_grid_search <- FindTopicsNumber(
-    petition.dfm,
-    topics = topics_range,
-    metrics = c("CaoJuan2009", "Arun2010", "Deveaud2014"),
-    method = "VEM",
-    control = list(seed = 123),
-    mc.cores = 2,
-    verbose = TRUE
-##    libpath="/Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/library"
+  petition.dfm,
+  topics = topics_range,
+  metrics = c("CaoJuan2009", "Arun2010", "Deveaud2014"),
+  method = "VEM",
+  control = list(seed = 123),
+  mc.cores = 2,
+  verbose = TRUE
+  ## libpath="/Library/Frameworks/R.framework/
+  ##   Versions/4.3-arm64/Resources/library"
 )
 
 plot(topic_grid_search)
-
-

@@ -1,9 +1,7 @@
 # Fits the Bayesian pairwise IRT for the survey data
-
-# Setup ========================================================================
 source(here::here("R", "08_survey_descriptives.R"))
 
-# MCMC: 2D pairwise IRT =======================================================
+# MCMC: 2D pairwise IRT ========================================================
 fname <- here("output/mcmc_out.rds")
 set.seed(1234)
 if (!file.exists(fname)) {
@@ -25,9 +23,10 @@ if (!file.exists(fname)) {
 
 stats_summ <- stats_summ_create(post_out)
 
-## Convergence diagnostics ---------------------------------------------------
+## Convergence diagnostics -----------------------------------------------------
 theta_cols <- grep(
-  "^theta", colnames(post_out), value = TRUE
+  "^theta", colnames(post_out),
+  value = TRUE
 )
 pdf(
   here("fig", "mcmc_diagnostics.pdf"),
@@ -39,7 +38,7 @@ for (col in theta_cols[1:4]) {
 }
 dev.off()
 
-## Visualize -----------------------------------------------------------------
+## Visualize -------------------------------------------------------------------
 pdf(
   here("fig", "theta_post_median.pdf"),
   width = 6, height = 6
@@ -52,7 +51,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ, color = "clarity_specificity"
+  stats_summ,
+  color = "clarity_specificity"
 ) +
   guides(
     color = guide_legend(
@@ -66,7 +66,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ, color = "logic_consistency"
+  stats_summ,
+  color = "logic_consistency"
 ) +
   guides(
     color = guide_legend(
@@ -80,7 +81,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ, color = "tone_manner"
+  stats_summ,
+  color = "tone_manner"
 ) +
   guides(
     color = guide_legend(
@@ -94,7 +96,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ, color = "validity_feasibility"
+  stats_summ,
+  color = "validity_feasibility"
 ) +
   guides(
     color = guide_legend(
@@ -103,7 +106,7 @@ theta_post_viz(
   )
 dev.off()
 
-# MCMC: 2D pairwise IRT with DP ===============================================
+# MCMC: 2D pairwise IRT with DP ================================================
 fname <- here("output/mcmcDP_out.rds")
 if (!file.exists(fname)) {
   postDP_out <- MCMCpaircompare2dDP(
@@ -124,7 +127,7 @@ if (!file.exists(fname)) {
 
 stats_summ_dp <- stats_summ_create(postDP_out)
 
-## Visualize -----------------------------------------------------------------
+## Visualize -------------------------------------------------------------------
 pdf(
   here("fig", "theta_post_median_dp.pdf"),
   width = 6, height = 6
@@ -157,7 +160,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ_dp, color = "logic_consistency"
+  stats_summ_dp,
+  color = "logic_consistency"
 ) +
   guides(
     color = guide_legend(
@@ -173,7 +177,8 @@ pdf(
   width = 6, height = 6
 )
 theta_post_viz(
-  stats_summ_dp, color = "tone_manner"
+  stats_summ_dp,
+  color = "tone_manner"
 ) +
   guides(
     color = guide_legend(
@@ -241,9 +246,10 @@ print(
   file = here("tab", "dp_cluster.tex")
 )
 
-## Combined figure for paper -------------------------------------------------
+## Combined figure for paper ---------------------------------------------------
 p_combined <- theta_post_viz(
-  stats_summ, label = TRUE
+  stats_summ,
+  label = TRUE
 )
 pdf(
   here("fig", "theta_post_median_combined.pdf"),

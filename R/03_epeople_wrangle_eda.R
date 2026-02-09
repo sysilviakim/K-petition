@@ -168,7 +168,9 @@ petition %>%
 answer_rate <- petition %>%
   group_by(year) %>%
   group_split(.keep = TRUE) %>%
-  `names<-`({.} %>% map(~ .x$year[1]) %>% unlist()) %>%
+  `names<-`({
+    .
+  } %>% map(~ .x$year[1]) %>% unlist()) %>%
   map(
     ~ .x %>%
       count(status) %>%
@@ -208,8 +210,14 @@ p2 <- pub_total %>%
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-## p2 <- pdf_default(p2) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-## p1 <- pdf_default(p1) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+## p2 <- pdf_default(p2) +
+##   theme(axis.text.x = element_text(
+##     angle = 45, hjust = 1
+##   ))
+## p1 <- pdf_default(p1) +
+##   theme(axis.text.x = element_text(
+##     angle = 45, hjust = 1
+##   ))
 p1 + p2
 ggsave(here("fig", "petition_acceptance_rate.pdf"), width = 8, height = 3.5)
 
@@ -260,7 +268,7 @@ p <- petition %>%
   ylab("") +
   scale_fill_brewer(palette = "Set3") +
   theme_bw() +
-  scale_y_continuous(labels = scales::percent) + 
+  scale_y_continuous(labels = scales::percent) +
   scale_x_continuous(breaks = seq(2012, 2023, 1))
 p + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 3))
 ## pdf_default(p) + theme(legend.position = "bottom") +
