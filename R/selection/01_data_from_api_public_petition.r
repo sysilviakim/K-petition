@@ -22,7 +22,8 @@ for (year in 2002:2024) {
     regFrom = regFrom, # Registration start date for the current year
     regTo = regTo, # Registration end date for the current year
     firstIndex = 1, # Current page number
-    recordCountPerPage = 9999999 # default is 10 but it can be set to a large number!
+    # default is 10 but can be set to a large number
+    recordCountPerPage = 9999999
   )
 
   # Make the GET request with the defined parameters

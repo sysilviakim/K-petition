@@ -17,7 +17,12 @@ colnames(data) <- c(
 
 # current_issues, improvement_plan, expected_effect 세 열을 합쳐서 bodytext_vector 생성
 bodytext_vector <- data %>%
-  mutate(combined_text = paste(current_issues, improvement_plan, expected_effect, sep = "\n\n")) %>%
+  mutate(
+    combined_text = paste(
+      current_issues, improvement_plan,
+      expected_effect, sep = "\n\n"
+    )
+  ) %>%
   pull(combined_text)
 
 # OpenAI API 키 및 엔드포인트 설정
@@ -29,9 +34,13 @@ evaluate_bodytext <- function(text) {
   # 평가 기준을 포함한 프롬프트 (한국어 버전)
   prompt <- paste(
     "당신은 공공 제안을 평가하는 전문가입니다.",
-    "다음 기준에 따라 민원 내용을 평가해 주세요. 각 기준에 대해 1점(매우 낮음)부터 5점(매우 높음)까지 점수를 부여하고, 그 이유도 간단히 덧붙여 주세요.",
+    "다음 기준에 따라 민원 내용을 평가해 주세요.",
+    "각 기준에 대해 1점(매우 낮음)부터 5점(매우 높음)까지",
+    "점수를 부여하고, 그 이유도 간단히 덧붙여 주세요.",
     "응답은 다음 형식의 JSON으로 제공해 주세요:",
-    "\n\n{\n  \"clarity\": { \"score\": 4, \"reason\": \"핵심 주장은 분명하나 일부 문장은 다소 모호함.\" },\n  ...\n}",
+    "\n\n{\n  \"clarity\": { \"score\": 4,",
+    "\"reason\": \"핵심 주장은 분명하나",
+    "일부 문장은 다소 모호함.\" },\n  ...\n}",
     "항목별 설명은 간략하게 요약해 주세요. 모든 항목을 JSON 구조에 맞춰 빠짐없이 포함해 주세요.",
     "\n\n[평가 기준]",
     "\n1. 명확성 (clarity):",
@@ -224,9 +233,15 @@ write_excel_csv(result2, "evaluated_data_2024_slim.csv")
 result %>%
   select(
     clarity_score, specificity_score, logic_and_consistency_score,
-    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+    formal_completeness_score,
+    emotionality_score,
+    validity_and_feasibility_score
   ) %>%
-  pivot_longer(cols = everything(), names_to = "criteria", values_to = "score") %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "criteria",
+    values_to = "score"
+  ) %>%
   ggplot(aes(x = score)) +
   geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
   facet_wrap(~criteria) +

@@ -38,10 +38,19 @@ make_assignments <- function(pid = pet_id, P = 10, S = 5) {
 assignments <- map(1:N, ~ make_assignments())
 
 # 쌍비교 배정 결과 정리 -------------------------------------------------------
-pairwise_df <- map2_dfr(assignments, 1:N, ~ mutate(.x$pair_df, Respondent_id = .y))
+pairwise_df <- map2_dfr(
+  assignments, 1:N,
+  ~ mutate(.x$pair_df, Respondent_id = .y)
+)
 
 # 스케일 배정 결과 정리 -------------------------------------------------------
-scale_df <- map2_dfr(assignments, 1:N, ~ tibble(Respondent_id = .y, Petition_scale = .x$scale))
+scale_df <- map2_dfr(
+  assignments, 1:N,
+  ~ tibble(
+    Respondent_id = .y,
+    Petition_scale = .x$scale
+  )
+)
 
 # 스케일 문항에 1~5 순서 부여
 scale_df <- scale_df %>%
@@ -55,7 +64,10 @@ writexl::write_xlsx(
     pairwise_assignments = pairwise_df, # 시트1: 쌍비교 문항
     scale_assignments = scale_df # 시트2: 스케일 문항
   ),
-  path = "data/screenshots/main/final/공개제안_random_assignments_10pair_5scale.xlsx"
+  path = paste0(
+    "data/screenshots/main/final/",
+    "공개제안_random_assignments_10pair_5scale.xlsx"
+  )
 )
 
 # ===========================
@@ -64,7 +76,11 @@ showtext_auto()
 
 # 청원이 쌍비교에서 등장한 횟수 분포 시각화
 pair_count <- pairwise_df %>%
-  pivot_longer(cols = c(Pair_A, Pair_B), names_to = "pair_role", values_to = "Petition_ID") %>%
+  pivot_longer(
+    cols = c(Pair_A, Pair_B),
+    names_to = "pair_role",
+    values_to = "Petition_ID"
+  ) %>%
   count(Petition_ID, name = "pairwise_count")
 
 # 시각화

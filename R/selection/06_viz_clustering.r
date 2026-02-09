@@ -9,29 +9,62 @@ library(gridExtra)
 library(viridis)
 
 # CSV 데이터 불러오기
-petitions_data <- read.csv("evaluated_data_2024_slim.csv", header = TRUE, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
+petitions_data <- read.csv(
+  "evaluated_data_2024_slim.csv",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fileEncoding = "UTF-8"
+)
 
 # 데이터 전처리
-petitions_data$date_petitioned <- ymd(petitions_data$date_petitioned, quiet = TRUE)
-petitions_data$date_answered <- ymd(petitions_data$date_answered, quiet = TRUE)
-petitions_data$date_scraped <- ymd(petitions_data$date_scraped, quiet = TRUE)
-petitions_data$response_days <- as.numeric(petitions_data$date_answered - petitions_data$date_petitioned)
+petitions_data$date_petitioned <- ymd(
+  petitions_data$date_petitioned, quiet = TRUE
+)
+petitions_data$date_answered <- ymd(
+  petitions_data$date_answered, quiet = TRUE
+)
+petitions_data$date_scraped <- ymd(
+  petitions_data$date_scraped, quiet = TRUE
+)
+petitions_data$response_days <- as.numeric(
+  petitions_data$date_answered -
+    petitions_data$date_petitioned
+)
 
 petitions_data <- petitions_data %>%
   mutate(
     clarity_score = ifelse(is.na(clarity_score), 0, clarity_score),
     specificity_score = ifelse(is.na(specificity_score), 0, specificity_score),
-    logic_and_consistency_score = ifelse(is.na(logic_and_consistency_score), 0, logic_and_consistency_score),
-    formal_completeness_score = ifelse(is.na(formal_completeness_score), 0, formal_completeness_score),
-    emotionality_score = ifelse(is.na(emotionality_score), 0, emotionality_score),
-    validity_and_feasibility_score = ifelse(is.na(validity_and_feasibility_score), 0, validity_and_feasibility_score),
-    total_score = clarity_score + specificity_score + logic_and_consistency_score +
-      formal_completeness_score + emotionality_score + validity_and_feasibility_score
+    logic_and_consistency_score = ifelse(
+      is.na(logic_and_consistency_score),
+      0, logic_and_consistency_score
+    ),
+    formal_completeness_score = ifelse(
+      is.na(formal_completeness_score),
+      0, formal_completeness_score
+    ),
+    emotionality_score = ifelse(
+      is.na(emotionality_score),
+      0, emotionality_score
+    ),
+    validity_and_feasibility_score = ifelse(
+      is.na(validity_and_feasibility_score),
+      0, validity_and_feasibility_score
+    ),
+    total_score =
+      clarity_score + specificity_score +
+      logic_and_consistency_score +
+      formal_completeness_score +
+      emotionality_score +
+      validity_and_feasibility_score
   )
 
 # 1. 종합 점수 상위 20% 청원 추출
 top_percent <- 0.2
-threshold_total_score <- quantile(petitions_data$total_score, 1 - top_percent, na.rm = TRUE)
+threshold_total_score <- quantile(
+  petitions_data$total_score,
+  1 - top_percent, na.rm = TRUE
+)
 top_scored_petitions <- petitions_data %>%
   filter(total_score >= threshold_total_score)
 
@@ -70,12 +103,28 @@ plot_top_score_comparison <- function(score_column, score_name, data) {
     scale_fill_manual(values = c("상위 20%" = "salmon", "그 외" = "lightgray"))
 }
 
-plot_clarity <- plot_top_score_comparison("clarity_score", "명확성", petitions_data)
-plot_specificity <- plot_top_score_comparison("specificity_score", "구체성", petitions_data)
-plot_logic <- plot_top_score_comparison("logic_and_consistency_score", "논리일관성", petitions_data)
-plot_completeness <- plot_top_score_comparison("formal_completeness_score", "형식완성도", petitions_data)
-plot_emotionality <- plot_top_score_comparison("emotionality_score", "감정적측면", petitions_data)
-plot_validity <- plot_top_score_comparison("validity_and_feasibility_score", "타당성실현가능성", petitions_data)
+plot_clarity <- plot_top_score_comparison(
+  "clarity_score", "명확성", petitions_data
+)
+plot_specificity <- plot_top_score_comparison(
+  "specificity_score", "구체성", petitions_data
+)
+plot_logic <- plot_top_score_comparison(
+  "logic_and_consistency_score",
+  "논리일관성", petitions_data
+)
+plot_completeness <- plot_top_score_comparison(
+  "formal_completeness_score",
+  "형식완성도", petitions_data
+)
+plot_emotionality <- plot_top_score_comparison(
+  "emotionality_score",
+  "감정적측면", petitions_data
+)
+plot_validity <- plot_top_score_comparison(
+  "validity_and_feasibility_score",
+  "타당성실현가능성", petitions_data
+)
 
 grid.arrange(plot_clarity, plot_specificity, plot_logic,
   plot_completeness, plot_emotionality, plot_validity,
@@ -86,7 +135,9 @@ grid.arrange(plot_clarity, plot_specificity, plot_logic,
 score_data_no_na <- petitions_data %>%
   select(
     clarity_score, specificity_score, logic_and_consistency_score,
-    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+    formal_completeness_score,
+    emotionality_score,
+    validity_and_feasibility_score
   ) %>%
   na.omit()
 
@@ -99,7 +150,11 @@ wss <- (nrow(scaled_score_data) - 1) * sum(apply(scaled_score_data, 2, var))
 for (i in 2:10) {
   wss[i] <- sum(kmeans(scaled_score_data, centers = i)$withinss)
 }
-plot(1:10, wss, type = "b", xlab = "Number of Clusters", ylab = "Within groups sum of squares")
+plot(
+  1:10, wss, type = "b",
+  xlab = "Number of Clusters",
+  ylab = "Within groups sum of squares"
+)
 
 # 최적의 클러스터 수 결정 후 k 값 설정 (예: 3)
 k <- 3
@@ -109,7 +164,12 @@ kmeans_result <- kmeans(scaled_score_data, centers = k, nstart = 25)
 score_data_no_na <- score_data_no_na %>%
   mutate(row_id = row_number())
 
-kmeans_result_df <- tibble(row_id = as.numeric(rownames(scaled_score_data)), cluster = factor(kmeans_result$cluster))
+kmeans_result_df <- tibble(
+  row_id = as.numeric(
+    rownames(scaled_score_data)
+  ),
+  cluster = factor(kmeans_result$cluster)
+)
 
 clustered_petitions <- petitions_data %>%
   mutate(row_id = row_number()) %>%
@@ -127,9 +187,19 @@ cluster_means_long <- clustered_petitions %>%
     emotionality = mean(emotionality_score, na.rm = TRUE),
     validity = mean(validity_and_feasibility_score, na.rm = TRUE)
   ) %>%
-  pivot_longer(cols = -cluster, names_to = "score_type", values_to = "average_score")
+  pivot_longer(
+    cols = -cluster,
+    names_to = "score_type",
+    values_to = "average_score"
+  )
 
-ggplot(cluster_means_long, aes(x = score_type, y = average_score, group = cluster, color = cluster)) +
+ggplot(
+  cluster_means_long,
+  aes(
+    x = score_type, y = average_score,
+    group = cluster, color = cluster
+  )
+) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 3) +
   theme_minimal() +
@@ -152,7 +222,13 @@ cluster_area_distribution <- clustered_petitions %>%
   summarise(n = n()) %>%
   mutate(proportion = n / sum(n))
 
-ggplot(cluster_area_distribution, aes(x = reorder(area, proportion), y = proportion, fill = cluster)) +
+ggplot(
+  cluster_area_distribution,
+  aes(
+    x = reorder(area, proportion),
+    y = proportion, fill = cluster
+  )
+) +
   geom_bar(stat = "identity", position = "dodge") +
   coord_flip() +
   theme_minimal() +

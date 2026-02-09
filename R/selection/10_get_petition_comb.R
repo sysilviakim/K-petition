@@ -26,7 +26,10 @@ pet <- pet %>%
 
 ## 7 cases that didn't meet majority consensus
 ## manual filling
-pet$comb_fin[c(2, 3, 5, 10, 28, 29, 61)] <- c("1000", "1000", "0011", "1010", "1000", "1011", "1000")
+pet$comb_fin[c(2, 3, 5, 10, 28, 29, 61)] <- c(
+  "1000", "1000", "0011", "1010",
+  "1000", "1011", "1000"
+)
 
 ## tabulate
 tb <- table(pet$comb_fin, pet$category)
@@ -55,36 +58,94 @@ pet_tidy <- pet %>%
 write_xlsx(pet_tidy, "data/screenshots/main/공개제안_tidy.xlsx")
 
 ## 배달
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "배달"), df2 = pet_tidy %>% filter(category == "배달")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "배달"),
+  df2 = pet_tidy %>% filter(category == "배달")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_delivery_df <- tibble(category = "배달", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_delivery_df <- tibble(
+  category = "배달",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 ## 부동산
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "부동산"), df2 = pet_tidy %>% filter(category == "부동산")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "부동산"),
+  df2 = pet_tidy %>% filter(category == "부동산")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_apt_df <- tibble(category = "부동산", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_apt_df <- tibble(
+  category = "부동산",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 ## 사교육
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "사교육"), df2 = pet_tidy %>% filter(category == "사교육")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "사교육"),
+  df2 = pet_tidy %>% filter(category == "사교육")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_edu_df <- tibble(category = "사교육", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_edu_df <- tibble(
+  category = "사교육",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 ## 연금
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "연금"), df2 = pet_tidy %>% filter(category == "연금")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "연금"),
+  df2 = pet_tidy %>% filter(category == "연금")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_pension_df <- tibble(category = "연금", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_pension_df <- tibble(
+  category = "연금",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 ## 저출산
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "저출산"), df2 = pet_tidy %>% filter(category == "저출산")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "저출산"),
+  df2 = pet_tidy %>% filter(category == "저출산")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_birth_df <- tibble(category = "저출산", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_birth_df <- tibble(
+  category = "저출산",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 ## 킥보드
-get_pairs_df <- crossing(df1 = pet_tidy %>% filter(category == "킥보드"), df2 = pet_tidy %>% filter(category == "킥보드")) %>%
+get_pairs_df <- crossing(
+  df1 = pet_tidy %>% filter(category == "킥보드"),
+  df2 = pet_tidy %>% filter(category == "킥보드")
+) %>%
   filter(df1$id < df2$id, df1$comb_fin != df2$comb_fin)
-pairs_kick_df <- tibble(category = "킥보드", "id1" = get_pairs_df$df1$id, "id2" = get_pairs_df$df2$id, "comb1" = get_pairs_df$df1$comb_fin, "comb2" = get_pairs_df$df2$comb_fin)
+pairs_kick_df <- tibble(
+  category = "킥보드",
+  "id1" = get_pairs_df$df1$id,
+  "id2" = get_pairs_df$df2$id,
+  "comb1" = get_pairs_df$df1$comb_fin,
+  "comb2" = get_pairs_df$df2$comb_fin
+)
 
 pairs_df <- pairs_delivery_df %>%
-  bind_rows(pairs_apt_df, pairs_edu_df, pairs_pension_df, pairs_birth_df, pairs_kick_df)
+  bind_rows(
+    pairs_apt_df, pairs_edu_df,
+    pairs_pension_df, pairs_birth_df,
+    pairs_kick_df
+  )
 
 write_xlsx(pairs_df, "data/screenshots/main/공개제안_pairs.xlsx")

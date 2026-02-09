@@ -8,22 +8,48 @@ library(scales)
 library(viridis)
 
 # CSV 데이터 불러오기
-petitions_data <- read.csv("evaluated_data_2024_slim.csv", header = TRUE, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
+petitions_data <- read.csv(
+  "evaluated_data_2024_slim.csv",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fileEncoding = "UTF-8"
+)
 
 # 데이터 전처리
-petitions_data$date_petitioned <- ymd(petitions_data$date_petitioned, quiet = TRUE)
-petitions_data$date_answered <- ymd(petitions_data$date_answered, quiet = TRUE)
-petitions_data$date_scraped <- ymd(petitions_data$date_scraped, quiet = TRUE)
-petitions_data$response_days <- as.numeric(petitions_data$date_answered - petitions_data$date_petitioned)
+petitions_data$date_petitioned <- ymd(
+  petitions_data$date_petitioned, quiet = TRUE
+)
+petitions_data$date_answered <- ymd(
+  petitions_data$date_answered, quiet = TRUE
+)
+petitions_data$date_scraped <- ymd(
+  petitions_data$date_scraped, quiet = TRUE
+)
+petitions_data$response_days <- as.numeric(
+  petitions_data$date_answered -
+    petitions_data$date_petitioned
+)
 
 petitions_data <- petitions_data %>%
   mutate(
     clarity_score = ifelse(is.na(clarity_score), 0, clarity_score),
     specificity_score = ifelse(is.na(specificity_score), 0, specificity_score),
-    logic_and_consistency_score = ifelse(is.na(logic_and_consistency_score), 0, logic_and_consistency_score),
-    formal_completeness_score = ifelse(is.na(formal_completeness_score), 0, formal_completeness_score),
-    emotionality_score = ifelse(is.na(emotionality_score), 0, emotionality_score),
-    validity_and_feasibility_score = ifelse(is.na(validity_and_feasibility_score), 0, validity_and_feasibility_score)
+    logic_and_consistency_score = ifelse(
+      is.na(logic_and_consistency_score),
+      0, logic_and_consistency_score
+    ),
+    formal_completeness_score = ifelse(
+      is.na(formal_completeness_score),
+      0, formal_completeness_score
+    ),
+    emotionality_score = ifelse(
+      is.na(emotionality_score),
+      0, emotionality_score
+    ),
+    validity_and_feasibility_score = ifelse(
+      is.na(validity_and_feasibility_score),
+      0, validity_and_feasibility_score
+    )
   )
 
 # 1. 영역별 민원 수 막대 그래프
@@ -109,7 +135,9 @@ ggplot(scores_by_area, aes(x = score_type, y = average_score, fill = area)) +
 score_corr <- petitions_data %>%
   select(
     clarity_score, specificity_score, logic_and_consistency_score,
-    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+    formal_completeness_score,
+    emotionality_score,
+    validity_and_feasibility_score
   )
 
 corr_data <- cor(score_corr)
@@ -118,7 +146,10 @@ names(corr_df) <- c("Score1", "Score2", "Correlation")
 
 ggplot(corr_df, aes(x = Score1, y = Score2, fill = Correlation)) +
   geom_tile() +
-  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  scale_fill_gradient2(
+    low = "blue", mid = "white",
+    high = "red", midpoint = 0
+  ) +
   theme_minimal() +
   labs(title = "점수 간 상관관계 히트맵") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -126,8 +157,11 @@ ggplot(corr_df, aes(x = Score1, y = Score2, fill = Correlation)) +
 # 6. 각 점수 분포 밀도 그래프
 scores_long <- petitions_data %>%
   select(
-    clarity_score, specificity_score, logic_and_consistency_score,
-    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+    clarity_score, specificity_score,
+    logic_and_consistency_score,
+    formal_completeness_score,
+    emotionality_score,
+    validity_and_feasibility_score
   ) %>%
   pivot_longer(
     cols = everything(),
@@ -186,14 +220,26 @@ ggplot(status_scores, aes(x = score_type, y = average_score, fill = status)) +
 
 # 8. 종합 점수 계산 및 영역별 비교
 petitions_data <- petitions_data %>%
-  mutate(total_score = clarity_score + specificity_score + logic_and_consistency_score +
-    formal_completeness_score + emotionality_score + validity_and_feasibility_score)
+  mutate(
+    total_score =
+      clarity_score + specificity_score +
+      logic_and_consistency_score +
+      formal_completeness_score +
+      emotionality_score +
+      validity_and_feasibility_score
+  )
 
 area_total_score <- petitions_data %>%
   group_by(area) %>%
   summarise(avg_total_score = mean(total_score))
 
-ggplot(area_total_score, aes(x = reorder(area, avg_total_score), y = avg_total_score, fill = area)) +
+ggplot(
+  area_total_score,
+  aes(
+    x = reorder(area, avg_total_score),
+    y = avg_total_score, fill = area
+  )
+) +
   geom_bar(stat = "identity") +
   coord_flip() +
   theme_minimal() +

@@ -39,7 +39,9 @@ evaluate_bodytext <- function(text) {
     "아래 민원 내용을 꼼꼼하게 정독한 후, 평가 기준에 따라 신중하게 평가해 주세요.",
     "각 항목에 대해 1점(매우 낮음)부터 5점(매우 높음)까지 실제로 차별적인 점수를 부여해 주세요.",
     "모든 항목을 3점이나 4점에 집중시키지 말고, 민원 내용의 질에 따라 높은 점수와 낮은 점수를 명확히 구분해 주세요.",
-    "응답은 반드시 다음 형식의 JSON으로 제공해 주세요. 각 항목에는 점수(score: 1~5)와 그에 대한 간결하면서도 구체적인 평가 이유(reason)를 포함해야 합니다.",
+    "응답은 반드시 다음 형식의 JSON으로 제공해 주세요.",
+    "각 항목에는 점수(score: 1~5)와 그에 대한",
+    "간결하면서도 구체적인 평가 이유(reason)를 포함해야 합니다.",
     "\n예시:\n",
     "{\n",
     "  \"clarity\": {\n",
@@ -166,7 +168,10 @@ dir.create("gpt_evaluation_results_v2", showWarnings = FALSE)
 
 # 2. 평가 수행 + 매건 저장
 for (i in seq(1, length(bodytext_vector))) { # 첫 번째 데이터부터 시작
-  file_path <- file.path("gpt_evaluation_results_v2", paste0("eval_", i, ".json"))
+  file_path <- file.path(
+    "gpt_evaluation_results_v2",
+    paste0("eval_", i, ".json")
+  )
 
   if (file.exists(file_path)) {
     next # 이미 저장된 경우 건너뜀
@@ -240,9 +245,15 @@ write_excel_csv(result2, "evaluated_data_2024_v2_slim.csv")
 result %>%
   select(
     clarity_score, specificity_score, logic_and_consistency_score,
-    formal_completeness_score, emotionality_score, validity_and_feasibility_score
+    formal_completeness_score,
+    emotionality_score,
+    validity_and_feasibility_score
   ) %>%
-  pivot_longer(cols = everything(), names_to = "criteria", values_to = "score") %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "criteria",
+    values_to = "score"
+  ) %>%
   ggplot(aes(x = score)) +
   geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
   facet_wrap(~criteria) +
