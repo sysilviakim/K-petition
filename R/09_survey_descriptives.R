@@ -1,5 +1,5 @@
 # Setup ========================================================================
-source(here::here("R", "utilities.R"))
+source(here::here("R", "08_survey_wrangling.R"))
 fname <- here(
   stri_trans_nfc(
     "data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx"
@@ -23,31 +23,6 @@ theta_constraints <- list(
 
 ## 성x연령 균등할당
 ## 30대 남 123, 40대 여 123, 나머지 전부 122
-
-# Load data ====================================================================
-df_list <- list(
-  raw = read_xlsx(
-    stri_trans_nfc(fname),
-    sheet = "Raw"
-  ),
-  label = read_xlsx(
-    stri_trans_nfc(fname),
-    sheet = "Label"
-  ),
-  open = read_xlsx(
-    stri_trans_nfc(fname),
-    sheet = "Open"
-  ),
-  questions = read_xlsx(
-    stri_trans_nfc(fname),
-    sheet = stri_trans_nfc("변수 가이드")
-  ) %>%
-    rename(
-      varname = stri_trans_nfc("변수명"),
-      question = stri_trans_nfc("변수 내용")
-    )
-)
-df <- df_list$raw
 
 # Petition post characteristics ================================================
 post_types <- here(
