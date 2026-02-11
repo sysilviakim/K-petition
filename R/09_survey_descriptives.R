@@ -129,7 +129,7 @@ demo_table <- df %>%
     `Age Range` = as.character(age_group),
     Education = as.character(edu4),
     Income = as.character(median_income),
-    Party = as.character(party_group),
+    Party = as.character(pid3),
     Ideology = case_when(
       ideology <= 2 ~ "Progressive",
       ideology %in% 3:5 ~ "Moderate",

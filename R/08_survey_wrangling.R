@@ -9,6 +9,8 @@ fname <- here(
 ## 성x연령 균등할당
 ## 30대 남 123, 40대 여 123, 나머지 전부 122
 
+time_vars <- paste0("q13_q14_time_", 1:8)
+
 # Load data ====================================================================
 df_list <- list(
   raw = read_xlsx(
@@ -350,7 +352,7 @@ df <- df %>%
     ),
     ## Response time per respondent
     median_time = apply(
-      select(., all_of(paste0("q13_q14_time_", 1:8))), 1, median
+      select(., all_of(time_vars)), 1, median
     ),
     log_time = log(median_time + 1)
   )
