@@ -114,39 +114,51 @@ summary(body_nchar$body_nchar)
 ## Draw the distribution over all years ----------------------------------------
 p <- body_nchar %>%
   ggplot(aes(x = body_nchar)) +
-  geom_histogram(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_histogram(colour = "#440154", fill = "#440154") +
   labs(x = "Number of Characters", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
   theme_bw()
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_length_distribution.pdf"), width = 5, height = 3)
+pdf(
+  here("fig", "petition_length_distribution.pdf"),
+  width = 5, height = 3
+)
+print(p)
+dev.off()
 
 ## Logged version because it's very skewed
 p <- body_nchar %>%
   ggplot(aes(x = log(body_nchar))) +
-  geom_histogram(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_histogram(colour = "#440154", fill = "#440154") +
   labs(x = "Number of Characters (Logged)", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
   theme_bw()
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_length_dist_logged.pdf"), width = 5, height = 3)
+pdf(
+  here("fig", "petition_length_dist_logged.pdf"),
+  width = 5, height = 3
+)
+print(p)
+dev.off()
 
 ## Average values over years? --------------------------------------------------
 p <- body_nchar %>%
   group_by(year) %>%
   summarise(mean_nchar = median(body_nchar)) %>%
   ggplot(aes(x = year, y = mean_nchar)) +
-  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_col(colour = "#440154", fill = "#440154") +
   labs(x = "Year", y = "Average Number of Characters") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_length_avg_over_years.pdf"), width = 5, height = 3)
+pdf(
+  here(
+    "fig",
+    "petition_length_avg_over_years.pdf"
+  ),
+  width = 5, height = 3
+)
+print(p)
+dev.off()
 
 # Is the response rate increasing over time? ===================================
 
@@ -191,7 +203,7 @@ answer_rate <- answer_rate %>%
 ## Draw... actually with the number of petitions over the years
 p1 <- answer_rate %>%
   ggplot(aes(x = year, y = perc)) +
-  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_col(colour = "#440154", fill = "#440154") +
   labs(x = "Year", y = "Percentage of Accepted Petitions") +
   theme_bw() +
   scale_y_continuous(labels = scales::percent) +
@@ -203,7 +215,7 @@ p2 <- pub_total %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
   filter(year > 2011 & year < 2024) %>%
   ggplot(aes(x = year, y = total)) +
-  geom_col(colour = "#6baed6", fill = "#6baed6") +
+  geom_col(colour = "#440154", fill = "#440154") +
   labs(x = "Year", y = "Number of Petitions") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_continuous(breaks = seq(2012, 2023, 1)) +
@@ -218,8 +230,12 @@ p2 <- pub_total %>%
 ##   theme(axis.text.x = element_text(
 ##     angle = 45, hjust = 1
 ##   ))
-p1 + p2
-ggsave(here("fig", "petition_acceptance_rate.pdf"), width = 8, height = 3.5)
+pdf(
+  here("fig", "petition_acceptance_rate.pdf"),
+  width = 8, height = 3.5
+)
+print(p1 + p2)
+dev.off()
 
 # Which areas were the petitions concentrated on? ==============================
 ## First, check for missing values ---> none!
@@ -245,14 +261,19 @@ sort(table(petition$area), decreasing = TRUE)
 p <- ggplot(data = petition, aes(x = year, fill = area)) +
   geom_bar(position = "fill") +
   ylab("") +
-  scale_fill_brewer(palette = "Set3") +
+  scale_fill_viridis_d() +
   theme_bw() +
   scale_y_continuous(labels = scales::percent)
 
-p + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 3))
-## pdf_default(p) + theme(legend.position = "bottom") +
-##   guides(fill = guide_legend(nrow = 3))
-ggsave(here("fig", "petition_area_over_time.pdf"), width = 10, height = 5.5)
+pdf(
+  here("fig", "petition_area_over_time.pdf"),
+  width = 10, height = 5.5
+)
+print(
+  p + theme(legend.position = "bottom") +
+    guides(fill = guide_legend(nrow = 3))
+)
+dev.off()
 
 ## Yes, they have! Early 2002--2004 focused on labor
 ## 2005--2007 on education/culture/sports/tourism
@@ -266,32 +287,40 @@ p <- petition %>%
   ggplot(aes(x = year_petitioned, fill = area)) +
   geom_bar(position = "fill") +
   ylab("") +
-  scale_fill_brewer(palette = "Set3") +
+  scale_fill_viridis_d() +
   theme_bw() +
   scale_y_continuous(labels = scales::percent) +
   scale_x_continuous(breaks = seq(2012, 2023, 1))
-p + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 3))
-## pdf_default(p) + theme(legend.position = "bottom") +
-##   guides(fill = guide_legend(nrow = 3))
-ggsave(
-  here("fig", "petition_area_over_time_truncated.pdf"),
+pdf(
+  here(
+    "fig",
+    "petition_area_over_time_truncated.pdf"
+  ),
   width = 10, height = 5.5
 )
+print(
+  p + theme(legend.position = "bottom") +
+    guides(fill = guide_legend(nrow = 3))
+)
+dev.off()
 
 # Is there a seasonality in filing petitions? ==================================
 ## Month of petition -----------------------------------------------------------
 ## Just frequency plot without any fills
 ## Slight increases in Jan, Mar, and Dec
 p <- ggplot(data = petition, aes(x = month_petitioned)) +
-  geom_bar(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_bar(colour = "#440154", fill = "#440154") +
   theme_bw() +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = month.abb) +
   xlab("Month Petitioned") +
   ylab("Count")
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_all_monthly.pdf"), width = 8, height = 5)
+pdf(
+  here("fig", "petition_all_monthly.pdf"),
+  width = 8, height = 5
+)
+print(p)
+dev.off()
 
 ## How about if split between years? 2014--2023
 ## Significant fluctuation of monthly patterns over years
@@ -299,16 +328,19 @@ ggsave(here("fig", "petition_all_monthly.pdf"), width = 8, height = 5)
 p <- petition %>%
   filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
   ggplot(aes(x = month_petitioned)) +
-  geom_bar(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_bar(colour = "#440154", fill = "#440154") +
   facet_wrap(~year_petitioned, ncol = 5) +
   theme_bw() +
   ## x-axis label is month.abb but only every three months
   scale_x_discrete(breaks = c("Mar", "Jun", "Sep", "Dec")) +
   xlab("Month Petitioned") +
   ylab("Count")
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_monthly_by_year.pdf"), width = 8, height = 5)
+pdf(
+  here("fig", "petition_monthly_by_year.pdf"),
+  width = 8, height = 5
+)
+print(p)
+dev.off()
 
 ## How about if split between areas? 2014--2023
 ## Hike in labor issues in Oct? Mar education makes sense, but ...
@@ -317,41 +349,52 @@ p <- petition %>%
   ggplot(aes(x = month_petitioned, fill = area, colour = area)) +
   geom_bar() +
   facet_wrap(~area, ncol = 5) +
-  scale_fill_brewer(palette = "Set3") +
-  scale_colour_brewer(palette = "Set3") +
+  scale_fill_viridis_d() +
+  scale_colour_viridis_d() +
   theme_bw() +
   scale_x_discrete(breaks = c("Mar", "Jun", "Sep", "Dec")) +
   xlab("Month Petitioned") +
   ylab("Count")
-p + theme(legend.position = "bottom") + guides(fill = guide_legend(nrow = 3))
-## pdf_default(p) + theme(legend.position = "bottom") +
-##   guides(fill = guide_legend(nrow = 3))
-ggsave(here("fig", "petition_monthly_by_area.pdf"), width = 12, height = 5.5)
+pdf(
+  here("fig", "petition_monthly_by_area.pdf"),
+  width = 12, height = 5.5
+)
+print(
+  p + theme(legend.position = "bottom") +
+    guides(fill = guide_legend(nrow = 3))
+)
+dev.off()
 
 ## Weekdays --------------------------------------------------------------------
 ## Just frequency plot without any fills
 ## Activities are significantly higher during weekdays, not weekend
 p <- ggplot(data = petition, aes(x = wday_petitioned)) +
-  geom_bar(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_bar(colour = "#440154", fill = "#440154") +
   theme_bw() +
   scale_y_continuous(labels = scales::comma) +
   xlab("Weekday Petitioned") +
   ylab("Count")
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_all_weekdays.pdf"), width = 8, height = 5)
+pdf(
+  here("fig", "petition_all_weekdays.pdf"),
+  width = 8, height = 5
+)
+print(p)
+dev.off()
 
 ## How about if split between years? 2014--2023
 ## Same inverse-U curve, except 2018 on Sundays??
 p <- petition %>%
   filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
   ggplot(aes(x = wday_petitioned)) +
-  geom_bar(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_bar(colour = "#440154", fill = "#440154") +
   facet_wrap(~year_petitioned, ncol = 5) +
   theme_bw() +
   scale_x_discrete(breaks = c("Sun", "Tue", "Thu", "Sat")) +
   xlab("Weekday Petitioned") +
   ylab("Count")
-p
-## pdf_default(p)
-ggsave(here("fig", "petition_weekdays_by_year.pdf"), width = 8, height = 5)
+pdf(
+  here("fig", "petition_weekdays_by_year.pdf"),
+  width = 8, height = 5
+)
+print(p)
+dev.off()

@@ -92,18 +92,22 @@ ss_income1 <- stats_summ_create(post_income1)
 g_income0 <- make_subgroup_grid(
   ss_income0, "Below Median Income"
 )
-ggsave(
+pdf(
   here("fig", "theta_post_dp_income0.pdf"),
-  plot = g_income0, width = 10, height = 10
+  width = 10, height = 10
 )
+print(g_income0)
+dev.off()
 
 g_income1 <- make_subgroup_grid(
   ss_income1, "Above Median Income"
 )
-ggsave(
+pdf(
   here("fig", "theta_post_dp_income1.pdf"),
-  plot = g_income1, width = 10, height = 10
+  width = 10, height = 10
 )
+print(g_income1)
+dev.off()
 
 # By party =====================================================================
 pwc_with_party <- pwc_df %>%
@@ -134,24 +138,28 @@ ss_opp <- stats_summ_create(post_opp)
 g_ppp <- make_subgroup_grid(
   ss_ppp, "PPP Supporters"
 )
-ggsave(
+pdf(
   here(
     "fig",
     "theta_post_median_combined_ppp.pdf"
   ),
-  plot = g_ppp, width = 10, height = 10
+  width = 10, height = 10
 )
+print(g_ppp)
+dev.off()
 
 g_opp <- make_subgroup_grid(
   ss_opp, "Opposition Supporters"
 )
-ggsave(
+pdf(
   here(
     "fig",
     "theta_post_median_combined_opp.pdf"
   ),
-  plot = g_opp, width = 10, height = 10
+  width = 10, height = 10
 )
+print(g_opp)
+dev.off()
 
 # By populist attitudes ========================================================
 pwc_with_pop <- pwc_df %>%
@@ -173,20 +181,22 @@ ss_pop <- stats_summ_create(post_pop)
 g_pop <- make_subgroup_grid(
   ss_pop, "Populist Attitudes"
 )
-ggsave(
+pdf(
   here(
     "fig",
     "theta_post_median_combined_pop.pdf"
   ),
-  plot = g_pop, width = 10, height = 10
+  width = 10, height = 10
 )
+print(g_pop)
+dev.off()
 
 # Combined subgroup comparison =================================================
 ## Load full-sample model from script 16
 fname_full <- here("output/mcmc_out.rds")
 if (!file.exists(fname_full)) {
   stop(
-    "Run 16_survey_pairwise_irt.R first ",
+    "Run 10_survey_pairwise_irt.R first ",
     "to generate mcmc_out.rds"
   )
 }
@@ -215,7 +225,9 @@ g_subgroups <- ggarrange(
   p_all, p_ppp_c, p_opp_c, p_pop_c,
   ncol = 2, nrow = 2
 )
-ggsave(
+pdf(
   here("fig", "theta_post_median_subgroups.pdf"),
-  plot = g_subgroups, width = 12, height = 12
+  width = 12, height = 12
 )
+print(g_subgroups)
+dev.off()

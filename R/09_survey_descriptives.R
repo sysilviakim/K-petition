@@ -31,9 +31,15 @@ m1_resp <- c(
   "female", "age", "edu", "income",
   "seoul", "married", "has_young_child", "log_time"
 )
-m2_resp <- c(m1_resp, "subj_class", "life_sat")
-m3_resp <- c(m2_resp, "ideology", "ppp", "voted_yoon", "voted_lee")
-m4_resp <- c(m3_resp, "social_trust", "populism_idx", "instit_trust")
+m2_resp <- c(m1_resp, "subj_class", "life_satisfaction")
+m3_resp <- c(
+  m2_resp, "ideology", "ppp",
+  "voted_yoon_2022", "voted_lee_2025"
+)
+m4_resp <- c(
+  m3_resp, "social_trust",
+  "populism_broad", "instit_trust"
+)
 
 # Petition post characteristics ================================================
 post_types <- here(
@@ -58,6 +64,31 @@ post_types <- post_types %>%
   ) %>%
   rename(item = id) %>%
   mutate(item = as.character(item))
+
+# Text features (shared by scripts 14, 16) ===========
+text_features <- post_types %>%
+  mutate(
+    nchar = nchar(text),
+    nword = str_count(text, "\\S+"),
+    nsent = str_count(text, "[.!?。]") + 1,
+    avg_sent_len = nword / nsent,
+    quality_sum = as.numeric(
+      substr(comb_fin, 1, 1)
+    ) + as.numeric(
+      substr(comb_fin, 2, 2)
+    ) + as.numeric(
+      substr(comb_fin, 3, 3)
+    ) + as.numeric(
+      substr(comb_fin, 4, 4)
+    )
+  ) %>%
+  select(
+    item, category, comb_fin,
+    clarity_specificity, logic_consistency,
+    tone_manner, validity_feasibility,
+    quality_sum, nchar, nword, nsent,
+    avg_sent_len
+  )
 
 # Pairwise comparison data =====================================================
 pwc_df <- map_dfr(1:8, function(i) {
@@ -108,17 +139,19 @@ p_attn <- ggplot(
   attention_df,
   aes(x = seconds)
 ) +
-  geom_histogram(bins = 50, fill = "gray60") +
+  geom_histogram(bins = 50, fill = "#440154") +
   facet_wrap(~pair, ncol = 4) +
   xlab("Response Time (Seconds)") +
   ylab("Count") +
   theme_minimal() +
   theme(strip.text = element_text(size = 10))
 
-ggsave(
+pdf(
   here("fig", "attention_time.pdf"),
-  plot = p_attn, width = 10, height = 5
+  width = 10, height = 5
 )
+print(p_attn)
+dev.off()
 
 # Demographics =================================================================
 demo_table <- df %>%
@@ -159,18 +192,11 @@ demo_table <- df %>%
     Category
   )
 
-demo_xtable <- xtable(
+save_xtable(
   demo_table,
   caption = "Survey Respondent Demographics",
-  label = "tab:demographics"
-)
-print_xtable <- capture.output(
-  print(
-    demo_xtable,
-    include.rownames = FALSE,
-    booktabs = TRUE,
-    file = here("tab", "demographics.tex")
-  )
+  label = "tab:demographics",
+  file = "demographics.tex"
 )
 
 # Choice frequency =============================================================
@@ -219,7 +245,9 @@ p_choice <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-ggsave(
+pdf(
   here("fig", "choice_frequency.pdf"),
-  plot = p_choice, width = 7, height = 9
+  width = 7, height = 9
 )
+print(p_choice)
+dev.off()

@@ -324,11 +324,12 @@ doc.prob.k <- doc.prob.k %>%
 f <- ggplot(data = doc.prob.k) +
   geom_bar(aes(x = year, fill = factor(topic)), position = "dodge") +
   theme_bw()
-ggsave(
+pdf(
   here("output", "topic_dist_02-12.pdf"),
-  f,
   width = 10, height = 5
 )
+print(f)
+dev.off()
 
 
 ## find optimal topic number

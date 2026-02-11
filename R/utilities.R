@@ -350,7 +350,7 @@ theta_post_viz <- function(stats_summ,
       ),
       inherit.aes = FALSE,
       arrow = arrow(length = unit(0.1, "inches")),
-      color = "red"
+      color = "#440154"
     ) +
     scale_color_viridis_d(end = .85) +
     theme(legend.position = "bottom", legend.box = "vertical")
@@ -393,19 +393,85 @@ prop <- function(df, vars, digit = 1, sort = NULL, head = NULL, print = TRUE,
   }
 }
 
-engineer_respondent_features <- function(x) {
-  x %>%
+## One-hot encode: expand factors via model.matrix
+onehot <- function(data, vars) {
+  mm <- model.matrix(
+    ~ 0 + .,
+    data = data[, vars, drop = FALSE]
+  )
+  out <- as.data.frame(mm)
+  names(out) <- make.names(names(out))
+  out
+}
+
+## 5-fold CV with random forest (one-hot encoded)
+run_rf_cv <- function(data, outcome, vars, seed = 1234, k = 5) {
+  raw <- data %>%
+    select(all_of(c(outcome, vars))) %>%
+    na.omit()
+  y <- raw[[outcome]]
+  mdf <- cbind(
+    setNames(data.frame(y), outcome),
+    onehot(raw, vars)
+  )
+
+  set.seed(seed)
+  n <- nrow(mdf)
+  folds <- sample(rep(1:k, length.out = n))
+  preds <- numeric(n)
+
+  for (f in 1:k) {
+    train <- mdf[folds != f, ]
+    test <- mdf[folds == f, ]
+    rf <- ranger(
+      as.formula(paste(outcome, "~ .")),
+      data = train,
+      probability = TRUE,
+      num.trees = 500,
+      min.node.size = 20
+    )
+    preds[folds == f] <- predict(
+      rf, test
+    )$predictions[, 2]
+  }
+
+  auc_val <- as.numeric(
+    roc(y, preds, quiet = TRUE)$auc
+  )
+  acc_val <- mean((preds > 0.5) == y)
+  c(AUC = auc_val, Accuracy = acc_val)
+}
+
+## Permutation importance (one-hot encoded)
+fit_and_rank <- function(data, outcome, vars,
+                         ref_vars = NULL) {
+  raw <- data %>%
+    select(all_of(c(outcome, vars))) %>%
+    na.omit()
+  y <- raw[[outcome]]
+  mdf <- cbind(
+    setNames(data.frame(y), outcome),
+    onehot(raw, vars)
+  )
+  rf <- ranger(
+    as.formula(paste(outcome, "~ .")),
+    data = mdf,
+    importance = "permutation",
+    probability = TRUE,
+    num.trees = 1000,
+    min.node.size = 20
+  )
+  data.frame(
+    variable = names(rf$variable.importance),
+    importance = rf$variable.importance
+  ) %>%
+    arrange(desc(importance)) %>%
     mutate(
-      female = as.numeric(SQ1 == 2),
-      age_c = scale(SQ2_1)[, 1],
-      edu_c = scale(SQ3)[, 1],
-      income_c = scale(SQ7)[, 1],
-      ideology_c = scale(Q2)[, 1],
-      ppp = as.numeric(Q3 == 2),
-      opposition = as.numeric(
-        Q3 %in% c(1, 3:7)
+      type = case_when(
+        variable %in% ref_vars ~ "Petition",
+        TRUE ~ "Respondent"
       ),
-      populist_num = as.numeric(Q6_7 >= 4)
+      rank = row_number()
     )
 }
 
@@ -438,6 +504,28 @@ save_theta_dim_plot <- function(stats_summ,
   dev.off()
 }
 
+save_xtable <- function(x, caption, label, file,
+                        include_rownames = FALSE,
+                        sanitize = FALSE,
+                        digits = NULL) {
+  xt <- xtable(
+    x,
+    caption = caption,
+    label = label,
+    digits = digits
+  )
+  args <- list(
+    xt,
+    booktabs = TRUE,
+    include.rownames = include_rownames,
+    file = here("tab", file)
+  )
+  if (sanitize) {
+    args$sanitize.text.function <- identity
+  }
+  do.call(print, args)
+}
+
 save_theta_quality_plots <- function(
   stats_summ, prefix
 ) {
@@ -455,6 +543,52 @@ save_theta_quality_plots <- function(
       title = quality_dims[dim]
     )
   }
+}
+
+stats_summ_create <- function(out) {
+  theta_summ <- left_join(
+    irt_summ("theta1", out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(
+        ~ paste0("theta1_", .), -item
+      ) %>%
+      mutate(
+        item = gsub("theta1.", "", item)
+      ),
+    irt_summ("theta2", out) %>%
+      as.data.frame() %>%
+      rownames_to_column(var = "item") %>%
+      rename_with(
+        ~ paste0("theta2_", .), -item
+      ) %>%
+      mutate(
+        item = gsub("theta2.", "", item)
+      )
+  ) %>%
+    mutate(item = gsub("item.", "", item)) %>%
+    left_join(
+      post_types %>% select(-text),
+      by = "item"
+    )
+
+  gamma_summ <- irt_summ("gamma", out) %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "respondent") %>%
+    mutate(
+      respondent = gsub(
+        "gamma.", "", respondent
+      )
+    ) %>%
+    left_join(
+      df %>%
+        mutate(
+          respondent = as.character(NO)
+        ),
+      by = "respondent"
+    )
+
+  list(theta = theta_summ, gamma = gamma_summ)
 }
 
 # Global objects ===============================================================

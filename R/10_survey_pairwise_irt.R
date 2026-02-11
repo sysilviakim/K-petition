@@ -104,18 +104,11 @@ dp_cluster <- stats_summ_dp$gamma %>%
     party = get_mode(Q3)
   )
 
-dp_xtable <- xtable(
+save_xtable(
   dp_cluster,
-  caption = paste(
-    "DP Cluster Demographics Summary"
-  ),
-  label = "tab:dp_cluster"
-)
-print(
-  dp_xtable,
-  include.rownames = FALSE,
-  booktabs = TRUE,
-  file = here("tab", "dp_cluster.tex")
+  caption = "DP Cluster Demographics Summary",
+  label = "tab:dp_cluster",
+  file = "dp_cluster.tex"
 )
 
 ## Combined figure for paper ---------------------------------------------------

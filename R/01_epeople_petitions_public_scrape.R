@@ -78,7 +78,7 @@ p <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   ggplot(aes(x = gsub("year", "", year), y = total)) +
   ## colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(5)
-  geom_col(colour = "#C6DBEF", fill = "#C6DBEF") +
+  geom_col(colour = "#440154", fill = "#440154") +
   ## Use ggrepel so that text will not overlap ---> bad idea, looks horrid
   geom_text(
     aes(label = formatC(total, format = "d", big.mark = ",")),
@@ -94,7 +94,12 @@ p <- pub_total %>%
   scale_y_continuous(labels = scales::comma)
 p + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ## pdf_default(p) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(here("fig", "pub_petition_num_total.pdf"), width = 8, height = 5)
+pdf(
+  here("fig", "pub_petition_num_total.pdf"),
+  width = 8, height = 5
+)
+print(p)
+dev.off()
 
 # 공개 제안(public petitions) content ==========================================
 ## Loop ------------------------------------------------------------------------
