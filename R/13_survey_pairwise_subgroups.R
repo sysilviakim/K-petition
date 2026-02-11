@@ -1,9 +1,7 @@
 # Subgroup pairwise IRT analysis
 
 # Setup ========================================================================
-source(here::here("R", "08_survey_descriptives.R"))
-
-df_sub <- survey_rename(df)
+source(here::here("R", "09_survey_descriptives.R"))
 
 ## Helper: run DP model for a subgroup
 run_subgroup_dp <- function(sub_pwc,
@@ -68,7 +66,7 @@ make_subgroup_grid <- function(ss, title) {
 # By economic status ===========================================================
 pwc_with_demo <- pwc_df %>%
   left_join(
-    df_sub %>% select(NO, median_income),
+    df %>% select(NO, median_income),
     by = "NO"
   )
 
@@ -110,22 +108,22 @@ ggsave(
 # By party =====================================================================
 pwc_with_party <- pwc_df %>%
   left_join(
-    df_sub %>% select(NO, party_group),
+    df %>% select(NO, pid3),
     by = "NO"
   )
 
 post_ppp <- run_subgroup_dp(
   pwc_with_party %>%
-    filter(party_group == "PPP") %>%
-    select(-party_group),
+    filter(pid3 == "PPP") %>%
+    select(-pid3),
   here("output/mcmcDP_out_ppp.rds"),
   theta_constraints
 )
 
 post_opp <- run_subgroup_dp(
   pwc_with_party %>%
-    filter(party_group == "Opposition") %>%
-    select(-party_group),
+    filter(pid3 == "Opposition") %>%
+    select(-pid3),
   here("output/mcmcDP_out_opp.rds"),
   theta_constraints
 )
@@ -158,14 +156,14 @@ ggsave(
 # By populist attitudes ========================================================
 pwc_with_pop <- pwc_df %>%
   left_join(
-    df_sub %>% select(NO, populist),
+    df %>% select(NO, populist_broad),
     by = "NO"
   )
 
 post_pop <- run_subgroup_dp(
   pwc_with_pop %>%
-    filter(populist == TRUE) %>%
-    select(-populist),
+    filter(populist_broad == TRUE) %>%
+    select(-populist_broad),
   here("output/mcmcDP_out_pop.rds"),
   theta_constraints
 )

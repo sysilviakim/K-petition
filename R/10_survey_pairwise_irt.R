@@ -1,5 +1,5 @@
 # Fits the Bayesian pairwise IRT for the survey data
-source(here::here("R", "08_survey_descriptives.R"))
+source(here::here("R", "09_survey_descriptives.R"))
 
 # MCMC: 2D pairwise IRT ========================================================
 fname <- here("output/mcmc_out.rds")

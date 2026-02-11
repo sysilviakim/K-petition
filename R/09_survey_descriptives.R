@@ -1,10 +1,5 @@
 # Setup ========================================================================
 source(here::here("R", "08_survey_wrangling.R"))
-fname <- here(
-  stri_trans_nfc(
-    "data/main/공개 청원 및 민원에 대한 인식조사(1,222's).xlsx"
-  )
-)
 
 ## Theta constraints -----------------------------------------------------------
 ## item 1: 1011. clear, weak logic, well mannered, valid
@@ -21,8 +16,24 @@ theta_constraints <- list(
   item.49 = list(2, "+")
 )
 
-## 성x연령 균등할당
-## 30대 남 123, 40대 여 123, 나머지 전부 122
+## Variable groups -------------------------------------------------------------
+petition_vars <- c(
+  "diff_quality", "diff_nchar", "diff_nword", "diff_nsent", "diff_avg_sent",
+  "diff_clarity", "diff_logic", "diff_manner", "diff_validity", "same_category"
+)
+
+## Nested additive blocks (Option A)
+## M1: demographics
+## M2: + socioeconomic
+## M3: + political
+## M4: + attitudes / trust
+m1_resp <- c(
+  "female", "age", "edu", "income",
+  "seoul", "married", "has_young_child", "log_time"
+)
+m2_resp <- c(m1_resp, "subj_class", "life_sat")
+m3_resp <- c(m2_resp, "ideology", "ppp", "voted_yoon", "voted_lee")
+m4_resp <- c(m3_resp, "social_trust", "populism_idx", "instit_trust")
 
 # Petition post characteristics ================================================
 post_types <- here(
@@ -78,143 +89,9 @@ pwc_df <- pwc_df %>%
   ungroup()
 pwc_df <- as.data.frame(pwc_df)
 
-# Functions ====================================================================
-survey_rename <- function(x, wrangle = TRUE) {
-  out <- x %>%
-    rename(
-      gender = SQ1,
-      age = SQ2_1,
-      age_range = SQ2_2,
-      edu = SQ3,
-      residence = SQ4,
-      married = SQ5,
-      kids = SQ6,
-      income = SQ7,
-      occupation = SQ8,
-      occupation_etc = SQ8_etc,
-      livelihood = SQ9,
-      life = Q1,
-      ideology = Q2,
-      party = Q3,
-      party_etc = Q3_etc,
-      pres22 = Q4,
-      pres22_etc = Q4_etc,
-      pres25 = Q5,
-      pres25_etc = Q5_etc
-    )
-
-  if (wrangle) {
-    out <- out %>%
-      mutate(
-        ## Option 5: 400만원 이상-500만원 미만
-        ## 2025 기준 3인 가족 중위소득 = 500만원
-        median_income = factor(
-          ifelse(income > 5, 1, 0),
-          levels = c(0, 1),
-          labels = c(
-            "Below Median", "Above Median"
-          )
-        ),
-        ## Party: Q3 codes
-        ## 1=DPK, 2=PPP, 3=JIP, 4=Jinbo,
-        ## 5=Reform, 6=BI, 7=SD, 8=Other
-        party_group = case_when(
-          party == 2 ~ "PPP",
-          party %in% c(1, 3:7) ~ "Opposition",
-          TRUE ~ "Other"
-        ),
-        party_group = factor(
-          party_group,
-          levels = c(
-            "PPP", "Opposition", "Other"
-          )
-        ),
-        ## Populist: Q6_7 >= 4
-        populist = Q6_7 >= 4
-      )
-  }
-
-  return(out)
-}
-
-stats_summ_create <- function(out) {
-  theta_summ <- left_join(
-    irt_summ("theta1", out) %>%
-      as.data.frame() %>%
-      rownames_to_column(var = "item") %>%
-      rename_with(
-        ~ paste0("theta1_", .), -item
-      ) %>%
-      mutate(
-        item = gsub("theta1.", "", item)
-      ),
-    irt_summ("theta2", out) %>%
-      as.data.frame() %>%
-      rownames_to_column(var = "item") %>%
-      rename_with(
-        ~ paste0("theta2_", .), -item
-      ) %>%
-      mutate(
-        item = gsub("theta2.", "", item)
-      )
-  ) %>%
-    mutate(item = gsub("item.", "", item)) %>%
-    left_join(
-      post_types %>% select(-text),
-      by = "item"
-    )
-
-  gamma_summ <- irt_summ("gamma", out) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "respondent") %>%
-    mutate(
-      respondent = gsub("gamma.", "", respondent)
-    ) %>%
-    left_join(
-      df %>%
-        select(
-          NO,
-          SQ1, SQ2_1, SQ2_2, SQ3, SQ4,
-          SQ5, SQ6, SQ7, SQ8, SQ8_etc,
-          SQ9, Q1, Q2, Q3, Q3_etc,
-          Q4, Q4_etc, Q5, Q5_etc, Q6_7
-        ) %>%
-        mutate(respondent = as.character(NO)),
-      by = "respondent"
-    ) %>%
-    survey_rename()
-
-  list(theta = theta_summ, gamma = gamma_summ)
-}
-
-# Survey weights ===============================================================
-## Map survey codes to demo_weight groups
-## SQ1: 1=M, 2=F
-## SQ2_2: 1=20s, 2=30s, 3=40s, 4=50s, 5=60+
-age_map <- c(
-  "1" = "20-29", "2" = "30-39",
-  "3" = "40-49", "4" = "50-59",
-  "5" = "60+"
-)
-
-df <- df %>%
-  mutate(
-    wt_gender = ifelse(SQ1 == 1, "M", "F"),
-    wt_age = age_map[as.character(SQ2_2)]
-  ) %>%
-  left_join(
-    demo_weight,
-    by = c(
-      "wt_gender" = "gender",
-      "wt_age" = "age_group"
-    )
-  ) %>%
-  rename(wt = weight)
-
 # Attention ====================================================================
-time_cols <- paste0("q13_q14_time_", 1:8)
 attention_df <- df %>%
-  select(NO, all_of(time_cols)) %>%
+  select(NO, all_of(time_vars)) %>%
   pivot_longer(
     -NO,
     names_to = "pair",
@@ -244,29 +121,15 @@ ggsave(
 )
 
 # Demographics =================================================================
-df_renamed <- survey_rename(df)
-
-## Summary table
-demo_table <- df_renamed %>%
+demo_table <- df %>%
   transmute(
     Gender = ifelse(
-      gender == 1, "Male", "Female"
+      female == 1, "Female", "Male"
     ),
-    `Age Range` = case_when(
-      age_range == 1 ~ "20-29",
-      age_range == 2 ~ "30-39",
-      age_range == 3 ~ "40-49",
-      age_range == 4 ~ "50-59",
-      age_range == 5 ~ "60+"
-    ),
-    Education = case_when(
-      edu <= 2 ~ "Middle school or below",
-      edu == 3 ~ "High school",
-      edu == 4 ~ "University",
-      edu >= 5 ~ "Graduate"
-    ),
-    Income = median_income,
-    Party = party_group,
+    `Age Range` = as.character(age_group),
+    Education = as.character(edu4),
+    Income = as.character(median_income),
+    Party = as.character(party_group),
     Ideology = case_when(
       ideology <= 2 ~ "Progressive",
       ideology %in% 3:5 ~ "Moderate",
