@@ -131,6 +131,14 @@ df <- df %>%
       levels = seq(5),
       labels = c("Upper", "Upper-middle", "Middle", "Lower-middle", "Lower")
     ),
+    subj_class3 = factor(
+      case_when(
+        SQ9 %in% c(1, 2) ~ "Upper",
+        SQ9 == 3 ~ "Middle",
+        SQ9 %in% c(4, 5) ~ "Lower"
+      ),
+      levels = c("Lower", "Middle", "Upper")
+    ),
     ## Q1. 현재의 전반적인 생활을 고려할 때 귀하의 삶에 어느 정도 만족하십니까?
     ## 0-10 slider bar
     life_satisfaction = Q1,
