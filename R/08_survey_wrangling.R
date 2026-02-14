@@ -263,8 +263,8 @@ df <- df %>%
     ## Q6_7	Q6. [동의도] 7) 한국 사회에서는 엘리트 집단이 자신들의 이익을 위해
     ##            사회를 운영하고 있으며, 일반 국민들의 목소리는 무시되고 있다.
     anti_elite_2 = Q6_7,
-    populism_broad = (Q6_5 + Q6_6 + Q6_7) / 3,
-    populist_broad = as.numeric(populism_broad > 3),
+    anti_elite = (Q6_6 + Q6_7) / 2,
+    anti_elitist = as.numeric(anti_elite > 3),
     ## Q7: 귀하는 다음의 대한민국 주요 정치 제도 및 기관에 대해서
     ## 얼마나 신뢰하고 계십니까? 5-point Likert scale
     ## 1 = 전혀 신뢰하지 않음, 5 = 매우 신뢰함
