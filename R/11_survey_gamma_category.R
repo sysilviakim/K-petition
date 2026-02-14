@@ -20,13 +20,55 @@ stats_summ_dp <- stats_summ_create(postDP_out)
 
 gamma_df <- stats_summ$gamma
 
+## T-tests ---------------------------------------------------------------------
+t_party <- t.test(
+  gamma_df$median[gamma_df$pid3 == "PPP"],
+  gamma_df$median[gamma_df$pid3 == "Opposition"]
+)
+t_party
+
+t_income <- t.test(
+  gamma_df$median[gamma_df$median_income == "Below Median"],
+  gamma_df$median[gamma_df$median_income == "Above Median"]
+)
+t_income
+
+## Significant
+t_populist <- t.test(
+  gamma_df$median[gamma_df$populist == TRUE],
+  gamma_df$median[gamma_df$populist == FALSE]
+)
+t_populist
+
+## KS tests --------------------------------------------------------------------
+ks_party <- ks.test(
+  gamma_df$median[gamma_df$pid3 == "PPP"],
+  gamma_df$median[gamma_df$pid3 == "Opposition"]
+)
+ks_party
+
+ks_income <- ks.test(
+  gamma_df$median[gamma_df$median_income == "Below Median"],
+  gamma_df$median[gamma_df$median_income == "Above Median"]
+)
+ks_income
+
+## Significant
+ks_populist <- ks.test(
+  gamma_df$median[gamma_df$populist == TRUE],
+  gamma_df$median[gamma_df$populist == FALSE]
+)
+ks_populist
+
+## Regression ------------------------------------------------------------------
 m_gamma <- lm(
   median ~ female + age_group + edu4 + seoul + married + 
     has_young_child + median_income + subj_class3 + 
     ideo3 + ppp + voted_yoon_2022 + voted_lee_2025 + 
-    populist_broad + instit_trust_high,
+    populist + anti_elitist + instit_trust_high,
   data = gamma_df
 )
+summary(m_gamma)
 
 ## Save regression table
 save_xtable(
@@ -41,85 +83,17 @@ save_xtable(
   sanitize = TRUE
 )
 
-## Visualize gamma distribution by subgroup
-p_gamma_party <- ggplot(
-  gamma_df %>% filter(pid3 != "Other"),
-  aes(x = median, fill = pid3)
-) +
-  geom_density(alpha = 0.5) +
-  xlab(expression(gamma ~ "(Respondent Direction)")) +
-  ylab("Density") +
-  scale_fill_viridis_d(name = "Party") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-
-p_gamma_pop <- ggplot(
-  gamma_df,
-  aes(
-    x = median,
-    fill = factor(
-      populist,
-      labels = c("Non-Populist", "Populist")
-    )
-  )
-) +
-  geom_density(alpha = 0.5) +
-  xlab(expression(gamma ~ "(Respondent Direction)")) +
-  ylab("Density") +
-  scale_fill_viridis_d(name = "") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-
-p_gamma_income <- ggplot(
-  gamma_df,
-  aes(x = median, fill = median_income)
-) +
-  geom_density(alpha = 0.5) +
-  xlab(expression(gamma ~ "(Respondent Direction)")) +
-  ylab("Density") +
-  scale_fill_viridis_d(name = "Income") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
-
-p_gamma_combined <- ggarrange(
-  p_gamma_party, p_gamma_pop, p_gamma_income,
-  ncol = 3, nrow = 1
-)
-pdf(
-  here("fig", "gamma_distributions.pdf"),
-  width = 14, height = 4.5
-)
-print(p_gamma_combined)
-dev.off()
-
-## KS tests for formal comparison
-ks_party <- ks.test(
-  gamma_df$median[gamma_df$pid3 == "PPP"],
-  gamma_df$median[gamma_df$pid3 == "Opposition"]
-)
-ks_income <- ks.test(
-  gamma_df$median[
-    gamma_df$median_income == "Below Median"
-  ],
-  gamma_df$median[
-    gamma_df$median_income == "Above Median"
-  ]
-)
-ks_pop <- ks.test(
-  gamma_df$median[gamma_df$populist == TRUE],
-  gamma_df$median[gamma_df$populist == FALSE]
-)
-
 # 2. Category confounds ========================================================
 ## Do petition categories cluster in the theta space?
 ## If yes, perceived quality may partly reflect topic preference
 theta_df <- stats_summ$theta
+theta_df$category_en <- category_en[theta_df$category]
 
 p_category <- ggplot(
   theta_df,
   aes(
     x = theta1_median, y = theta2_median,
-    color = category
+    color = category_en
   )
 ) +
   geom_point(size = 3) +

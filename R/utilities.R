@@ -517,6 +517,7 @@ save_xtable <- function(x, caption, label, file,
   args <- list(
     xt,
     booktabs = TRUE,
+    floating = FALSE,
     include.rownames = include_rownames,
     file = here("tab", file)
   )
@@ -597,6 +598,24 @@ MCMC_BURNIN <- 5000
 MCMC_ITER <- 100000
 MCMC_THIN <- 5
 MCMC_TUNE <- 0.5
+
+## Welfare category classification
+welfare_categories <- c(
+  "\uBD80\uB3D9\uC0B0", "\uC5F0\uAE08", "\uC800\uCD9C\uC0B0"
+)
+nonwelfare_categories <- c(
+  "\uBC30\uB2EC", "\uD0A5\uBCF4\uB4DC"
+)
+
+## Category Korean-to-English mapping
+category_en <- c(
+  "\uBC30\uB2EC" = "Delivery",
+  "\uBD80\uB3D9\uC0B0" = "Real Estate",
+  "\uC0AC\uAD50\uC721" = "Private Education",
+  "\uC5F0\uAE08" = "Pension",
+  "\uC800\uCD9C\uC0B0" = "Low Birth Rate",
+  "\uD0A5\uBCF4\uB4DC" = "E-scooter"
+)
 
 ## Quality dimension labels
 quality_dims <- c(

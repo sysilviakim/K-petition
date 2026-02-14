@@ -28,17 +28,20 @@ petition_vars <- c(
 ## M3: + political
 ## M4: + attitudes / trust
 m1_resp <- c(
-  "female", "age", "edu", "income",
-  "seoul", "married", "has_young_child", "log_time"
+  "female", "age_group", "edu4",
+  "seoul", "married", "has_young_child",
+  "log_time"
 )
-m2_resp <- c(m1_resp, "subj_class", "life_satisfaction")
+m2_resp <- c(
+  m1_resp, "median_income", "subj_class3"
+)
 m3_resp <- c(
-  m2_resp, "ideology", "ppp",
+  m2_resp, "ideo3", "ppp",
   "voted_yoon_2022", "voted_lee_2025"
 )
 m4_resp <- c(
-  m3_resp, "social_trust",
-  "populism_broad", "instit_trust"
+  m3_resp, "populist", "anti_elitist",
+  "instit_trust_high"
 )
 
 # Petition post characteristics ================================================
@@ -163,11 +166,7 @@ demo_table <- df %>%
     Education = as.character(edu4),
     Income = as.character(median_income),
     Party = as.character(pid3),
-    Ideology = case_when(
-      ideology <= 2 ~ "Progressive",
-      ideology %in% 3:5 ~ "Moderate",
-      ideology >= 6 ~ "Conservative"
-    )
+    Ideology = as.character(ideo3)
   ) %>%
   pivot_longer(
     everything(),
