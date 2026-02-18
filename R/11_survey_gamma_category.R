@@ -105,10 +105,7 @@ gamma_tests <- ttest_table %>%
 
 save_xtable(
   gamma_tests,
-  caption = paste(
-    "T-Tests and KS Tests of",
-    "$\\\\gamma$ by Subgroup"
-  ),
+  caption = "T-Tests and KS Tests of $\\\\gamma$ by Subgroup",
   label = "tab:gamma_tests",
   file = "gamma_tests.tex",
   digits = 4,
@@ -161,10 +158,7 @@ p_category <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(
-  here("fig", "theta_by_category.pdf"),
-  width = 5, height = 5
-)
+pdf(here("fig", "theta_by_category.pdf"), width = 5, height = 5)
 print(Kmisc::pdf_default(p_category))
 dev.off()
 
@@ -206,10 +200,7 @@ anova_table <- bind_rows(
 
 save_xtable(
   anova_table,
-  caption = paste(
-    "One-Way ANOVA: Petition Category",
-    "Predicting Theta Position"
-  ),
+  caption = "One-Way ANOVA: Petition Category Predicting Theta Position",
   label = "tab:anova_category",
   file = "anova_category.tex",
   digits = 4,
@@ -275,10 +266,7 @@ quality_reg <- bind_rows(
 
 save_xtable(
   quality_reg,
-  caption = paste(
-    "OLS: Quality Codes vs. Quality Codes",
-    "+ Category Predicting Theta"
-  ),
+  caption = "OLS: Quality Codes vs. Quality Codes + Category Predicting Theta",
   label = "tab:quality_category_reg",
   file = "quality_category_reg.tex",
   digits = 3
@@ -310,10 +298,7 @@ quality_fit <- data.frame(
 
 save_xtable(
   quality_fit,
-  caption = paste(
-    "Model Fit: Quality Codes vs.",
-    "Quality + Category"
-  ),
+  caption = "Model Fit: Quality Codes vs. Quality + Category",
   label = "tab:quality_category_fit",
   file = "quality_category_fit.tex",
   digits = 4

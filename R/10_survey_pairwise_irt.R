@@ -28,10 +28,7 @@ theta_cols <- grep(
   "^theta", colnames(post_out),
   value = TRUE
 )
-pdf(
-  here("fig", "mcmc_diagnostics.pdf"),
-  width = 10, height = 8
-)
+pdf(here("fig", "mcmc_diagnostics.pdf"), width = 10, height = 8)
 par(mfrow = c(2, 2))
 for (col in theta_cols[1:4]) {
   traceplot(post_out[, col], main = col)

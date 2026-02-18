@@ -1,5 +1,9 @@
 source(here::here("R", "09_survey_descriptives.R"))
 
+# Choice accuracy model and theta credible intervals
+# 1. What predicts choosing the higher-quality petition?
+# 2. Theta estimates with uncertainty visualization
+
 # Setup and wrangling ==========================================================
 ## Load full-sample model
 post_out <- readRDS(here("output/mcmc_out.rds"))
@@ -141,7 +145,10 @@ pwc_eff_diff <- pwc_accuracy %>%
     )
   )
 
-# Choice accuracy model ========================================================
+# 1. Choice accuracy model =====================================================
+## What predicts choosing the higher-quality petition?
+## Do expert decisions and crowd-sourced perceived effectiveness align
+## with choices?
 
 ## Accuracy by quality gap by experts ------------------------------------------
 acc_expert <- pwc_diff %>%
@@ -274,4 +281,149 @@ save_xtable(
   label = "tab:choice_accuracy_eff",
   file = "choice_accuracy_eff.tex",
   include_rownames = TRUE
+)
+
+# 2. Theta credible intervals ==================================================
+## Which expert-coded dimensions predict where a petition lands on 
+## each theta dimension?
+## Does crowd-sourced perceived effectiveness correlate with the 
+## IRT-recovered latent positions?
+  
+theta_df <- stats_summ$theta
+
+theta_ci <- theta_df %>%
+  arrange(theta1_median) %>%
+  mutate(
+    rank = row_number(),
+    quality_sum = count_ones(comb_fin)
+  ) %>%
+  ## Join mean perceived effectiveness to theta
+  left_join(
+    mean_eff %>%
+      select(item, mean_eff),
+    by = "item"
+  )
+
+# Expert vs. respondent agreement ==============================================
+## Boxplot ---------------------------------------------------------------------
+eff_by_dim <- mean_eff %>%
+  left_join(
+    post_types %>%
+      select(
+        item, comb_fin,
+        clarity_specificity,
+        logic_consistency,
+        tone_manner,
+        validity_feasibility
+      ),
+    by = "item"
+  ) %>%
+  mutate(quality_sum = count_ones(comb_fin))
+
+p_eff_expert <- ggplot(
+  eff_by_dim,
+  aes(x = factor(quality_sum), y = mean_eff)
+) +
+  geom_boxplot(fill = ACCENT, alpha = 0.5) +
+  geom_jitter(width = 0.1, alpha = 0.5) +
+  xlab("Quality Score (sum of 1s)") +
+  ylab("Mean Perceived Effectiveness") +
+  theme_minimal()
+
+pdf(here("fig", "effectiveness_by_quality.pdf"), width = 6, height = 5)
+print(p_eff_expert)
+dev.off()
+
+## Correlation -----------------------------------------------------------------
+cor_expert_eff <- cor.test(
+  eff_by_dim$quality_sum,
+  eff_by_dim$mean_eff,
+  method = "spearman"
+)
+cor_expert_eff
+
+## Lower than I expected
+cor(eff_by_dim$quality_sum, eff_by_dim$mean_eff)
+
+## OLS: which expert dimensions predict respondent-perceived effectiveness? ----
+lm_eff_expert <- lm(
+  mean_eff ~ clarity_specificity + logic_consistency + 
+    tone_manner + validity_feasibility,
+  data = eff_by_dim
+)
+summary(lm_eff_expert)
+
+ct_eff_dim <- coeftest(
+  lm_eff_expert,
+  vcov = vcovHC(lm_eff_expert, type = "HC1")
+)
+
+save_xtable(
+  unclass(ct_eff_dim),
+  caption = paste0(
+    "OLS: Mean Perceived Effectiveness",
+    " on Expert Quality Codes (HC1 SEs).",
+    " Spearman $\\rho$ = ",
+    sprintf("%.3f", cor_expert_eff$estimate),
+    ", $p$ = ",
+    sprintf("%.3f", cor_expert_eff$p.value)
+  ),
+  label = "tab:expert_vs_respondent",
+  file = "expert_vs_respondent.tex",
+  include_rownames = TRUE
+)
+
+## Which quality dimension best predicts theta?
+lm_dim_theta1 <- lm(
+  theta1_median ~ clarity_specificity +
+    logic_consistency + tone_manner + validity_feasibility,
+  data = theta_df
+)
+lm_dim_theta2 <- lm(
+  theta2_median ~ clarity_specificity +
+    logic_consistency + tone_manner + validity_feasibility,
+  data = theta_df
+)
+
+dim_table <- bind_rows(
+  broom::tidy(lm_dim_theta1) %>%
+    mutate(outcome = "Theta 1D"),
+  broom::tidy(lm_dim_theta2) %>%
+    mutate(outcome = "Theta 2D")
+) %>%
+  select(outcome, term, estimate, std.error, p.value)
+
+save_xtable(
+  dim_table,
+  caption = "OLS Regression of Theta Positions on Expert Quality Codes",
+  label = "tab:theta_quality_regression",
+  file = "theta_quality_regression.tex"
+)
+
+## Theta vs. mean perceived effectiveness
+theta_eff <- theta_ci %>%
+  select(item, theta1_median, theta2_median, mean_eff, quality_sum)
+
+lm_eff_theta1 <- lm(
+  theta1_median ~ mean_eff,
+  data = theta_eff
+)
+lm_eff_theta2 <- lm(
+  theta2_median ~ mean_eff,
+  data = theta_eff
+)
+
+eff_table <- bind_rows(
+  broom::tidy(lm_eff_theta1) %>%
+    mutate(outcome = "Theta 1D"),
+  broom::tidy(lm_eff_theta2) %>%
+    mutate(outcome = "Theta 2D")
+) %>%
+  select(outcome, term, estimate, std.error, p.value)
+
+save_xtable(
+  eff_table,
+  caption = "OLS Regression of Theta Positions on Mean Perceived Effectiveness",
+  label = "tab:theta_effectiveness",
+  file = "theta_effectiveness.tex"
 )

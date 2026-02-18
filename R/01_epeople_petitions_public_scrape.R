@@ -78,7 +78,7 @@ p <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   ggplot(aes(x = gsub("year", "", year), y = total)) +
   ## colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(5)
-  geom_col(colour = "#440154", fill = "#440154") +
+  geom_col(colour = ACCENT, fill = ACCENT) +
   ## Use ggrepel so that text will not overlap ---> bad idea, looks horrid
   geom_text(
     aes(label = formatC(total, format = "d", big.mark = ",")),

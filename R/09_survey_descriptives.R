@@ -142,17 +142,14 @@ p_attn <- ggplot(
   attention_df,
   aes(x = seconds)
 ) +
-  geom_histogram(bins = 50, fill = "#440154") +
+  geom_histogram(bins = 50, fill = ACCENT) +
   facet_wrap(~pair, ncol = 4) +
   xlab("Response Time (Seconds)") +
   ylab("Count") +
   theme_minimal() +
   theme(strip.text = element_text(size = 10))
 
-pdf(
-  here("fig", "attention_time.pdf"),
-  width = 10, height = 5
-)
+pdf(here("fig", "attention_time.pdf"), width = 10, height = 5)
 print(p_attn)
 dev.off()
 
@@ -244,9 +241,6 @@ p_choice <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(
-  here("fig", "choice_frequency.pdf"),
-  width = 7, height = 9
-)
+pdf(here("fig", "choice_frequency.pdf"), width = 7, height = 9)
 print(p_choice)
 dev.off()

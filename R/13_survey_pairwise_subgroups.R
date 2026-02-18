@@ -92,20 +92,14 @@ ss_income1 <- stats_summ_create(post_income1)
 g_income0 <- make_subgroup_grid(
   ss_income0, "Below Median Income"
 )
-pdf(
-  here("fig", "theta_post_dp_income0.pdf"),
-  width = 10, height = 10
-)
+pdf(here("fig", "theta_post_dp_income0.pdf"), width = 10, height = 10)
 print(g_income0)
 dev.off()
 
 g_income1 <- make_subgroup_grid(
   ss_income1, "Above Median Income"
 )
-pdf(
-  here("fig", "theta_post_dp_income1.pdf"),
-  width = 10, height = 10
-)
+pdf(here("fig", "theta_post_dp_income1.pdf"), width = 10, height = 10)
 print(g_income1)
 dev.off()
 
@@ -138,40 +132,28 @@ ss_opp <- stats_summ_create(post_opp)
 g_ppp <- make_subgroup_grid(
   ss_ppp, "PPP Supporters"
 )
-pdf(
-  here(
-    "fig",
-    "theta_post_median_combined_ppp.pdf"
-  ),
-  width = 10, height = 10
-)
+pdf(here("fig", "theta_post_median_combined_ppp.pdf"), width = 10, height = 10)
 print(g_ppp)
 dev.off()
 
 g_opp <- make_subgroup_grid(
   ss_opp, "Opposition Supporters"
 )
-pdf(
-  here(
-    "fig",
-    "theta_post_median_combined_opp.pdf"
-  ),
-  width = 10, height = 10
-)
+pdf(here("fig", "theta_post_median_combined_opp.pdf"), width = 10, height = 10)
 print(g_opp)
 dev.off()
 
 # By populist attitudes ========================================================
 pwc_with_pop <- pwc_df %>%
   left_join(
-    df %>% select(NO, populist_broad),
+    df %>% select(NO, populist),
     by = "NO"
   )
 
 post_pop <- run_subgroup_dp(
   pwc_with_pop %>%
-    filter(populist_broad == TRUE) %>%
-    select(-populist_broad),
+    filter(populist == TRUE) %>%
+    select(-populist),
   here("output/mcmcDP_out_pop.rds"),
   theta_constraints
 )
@@ -181,13 +163,7 @@ ss_pop <- stats_summ_create(post_pop)
 g_pop <- make_subgroup_grid(
   ss_pop, "Populist Attitudes"
 )
-pdf(
-  here(
-    "fig",
-    "theta_post_median_combined_pop.pdf"
-  ),
-  width = 10, height = 10
-)
+pdf(here("fig", "theta_post_median_combined_pop.pdf"), width = 10, height = 10)
 print(g_pop)
 dev.off()
 
@@ -225,9 +201,6 @@ g_subgroups <- ggarrange(
   p_all, p_ppp_c, p_opp_c, p_pop_c,
   ncol = 2, nrow = 2
 )
-pdf(
-  here("fig", "theta_post_median_subgroups.pdf"),
-  width = 12, height = 12
-)
+pdf(here("fig", "theta_post_median_subgroups.pdf"), width = 12, height = 12)
 print(g_subgroups)
 dev.off()

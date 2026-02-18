@@ -114,7 +114,7 @@ summary(body_nchar$body_nchar)
 ## Draw the distribution over all years ----------------------------------------
 p <- body_nchar %>%
   ggplot(aes(x = body_nchar)) +
-  geom_histogram(colour = "#440154", fill = "#440154") +
+  geom_histogram(colour = ACCENT, fill = ACCENT) +
   labs(x = "Number of Characters", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
@@ -129,7 +129,7 @@ dev.off()
 ## Logged version because it's very skewed
 p <- body_nchar %>%
   ggplot(aes(x = log(body_nchar))) +
-  geom_histogram(colour = "#440154", fill = "#440154") +
+  geom_histogram(colour = ACCENT, fill = ACCENT) +
   labs(x = "Number of Characters (Logged)", y = "Frequency (1,000 Petitions)") +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = function(x) x / 1000) +
@@ -146,7 +146,7 @@ p <- body_nchar %>%
   group_by(year) %>%
   summarise(mean_nchar = median(body_nchar)) %>%
   ggplot(aes(x = year, y = mean_nchar)) +
-  geom_col(colour = "#440154", fill = "#440154") +
+  geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Average Number of Characters") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -203,7 +203,7 @@ answer_rate <- answer_rate %>%
 ## Draw... actually with the number of petitions over the years
 p1 <- answer_rate %>%
   ggplot(aes(x = year, y = perc)) +
-  geom_col(colour = "#440154", fill = "#440154") +
+  geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Percentage of Accepted Petitions") +
   theme_bw() +
   scale_y_continuous(labels = scales::percent) +
@@ -215,7 +215,7 @@ p2 <- pub_total %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
   filter(year > 2011 & year < 2024) %>%
   ggplot(aes(x = year, y = total)) +
-  geom_col(colour = "#440154", fill = "#440154") +
+  geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Number of Petitions") +
   scale_y_continuous(labels = scales::comma) +
   scale_x_continuous(breaks = seq(2012, 2023, 1)) +
@@ -309,7 +309,7 @@ dev.off()
 ## Just frequency plot without any fills
 ## Slight increases in Jan, Mar, and Dec
 p <- ggplot(data = petition, aes(x = month_petitioned)) +
-  geom_bar(colour = "#440154", fill = "#440154") +
+  geom_bar(colour = ACCENT, fill = ACCENT) +
   theme_bw() +
   scale_y_continuous(labels = scales::comma) +
   scale_x_discrete(labels = month.abb) +
@@ -328,7 +328,7 @@ dev.off()
 p <- petition %>%
   filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
   ggplot(aes(x = month_petitioned)) +
-  geom_bar(colour = "#440154", fill = "#440154") +
+  geom_bar(colour = ACCENT, fill = ACCENT) +
   facet_wrap(~year_petitioned, ncol = 5) +
   theme_bw() +
   ## x-axis label is month.abb but only every three months
@@ -369,7 +369,7 @@ dev.off()
 ## Just frequency plot without any fills
 ## Activities are significantly higher during weekdays, not weekend
 p <- ggplot(data = petition, aes(x = wday_petitioned)) +
-  geom_bar(colour = "#440154", fill = "#440154") +
+  geom_bar(colour = ACCENT, fill = ACCENT) +
   theme_bw() +
   scale_y_continuous(labels = scales::comma) +
   xlab("Weekday Petitioned") +
@@ -386,7 +386,7 @@ dev.off()
 p <- petition %>%
   filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
   ggplot(aes(x = wday_petitioned)) +
-  geom_bar(colour = "#440154", fill = "#440154") +
+  geom_bar(colour = ACCENT, fill = ACCENT) +
   facet_wrap(~year_petitioned, ncol = 5) +
   theme_bw() +
   scale_x_discrete(breaks = c("Sun", "Tue", "Thu", "Sat")) +

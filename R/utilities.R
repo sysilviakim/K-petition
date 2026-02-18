@@ -21,6 +21,8 @@ library(viridis)
 library(stringi)
 library(janitor)
 library(ggpubr)
+library(sandwich)
+library(lmtest)
 
 ## ML / prediction
 library(glmnet)
@@ -350,7 +352,7 @@ theta_post_viz <- function(stats_summ,
       ),
       inherit.aes = FALSE,
       arrow = arrow(length = unit(0.1, "inches")),
-      color = "#440154"
+      color = ACCENT
     ) +
     scale_color_viridis_d(end = .85) +
     theme(legend.position = "bottom", legend.box = "vertical")
@@ -504,6 +506,10 @@ save_theta_dim_plot <- function(stats_summ,
   dev.off()
 }
 
+count_ones <- function(x) {
+  nchar(gsub("0", "", x))
+}
+
 save_xtable <- function(x, caption, label, file,
                         include_rownames = FALSE,
                         sanitize = FALSE,
@@ -593,6 +599,9 @@ stats_summ_create <- function(out) {
 }
 
 # Global objects ===============================================================
+## Plot accent color (viridis-adjacent green)
+ACCENT <- "#21908C"
+
 ## MCMC configuration
 MCMC_BURNIN <- 5000
 MCMC_ITER <- 100000
