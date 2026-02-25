@@ -14,7 +14,7 @@ stats_summ <- stats_summ_create(post_out)
 ## Respondent features (from 08_survey_wrangling.R)
 resp_features <- df %>%
   select(
-    NO, female, age_group, edu4, seoul, 
+    NO, female, age_group, edu4, seoul,
     married, has_young_child, median_income, subj_class3,
     ideo3, ppp, voted_yoon_2022, voted_lee_2025,
     populist, anti_elitist, instit_trust_high
@@ -227,7 +227,7 @@ for (f in 1:k) {
 }
 
 # Evaluate =====================================================================
-models <- 
+models <-
   c("logit_pet", "logit_full", "lasso_pet", "lasso_full", "rf_pet", "rf_full")
 model_labels <- c(
   "Logistic (petition)", "Logistic (full)", "LASSO (petition)", "LASSO (full)",
@@ -252,6 +252,60 @@ save_xtable(
   caption = "Cross-Validated Prediction of Pairwise Petition Choices",
   label = "tab:prediction_cv",
   file = "prediction_cv.tex",
+  digits = 3
+)
+
+# Nested RF: petition-only + M1-M4 ============================================
+## m1_resp-m4_resp defined in 09_survey_descriptives.R
+set.seed(1234)
+res_pet <- run_rf_cv(
+  pred_df, "chose_item1", petition_vars
+)
+res_m1 <- run_rf_cv(
+  pred_df, "chose_item1",
+  c(petition_vars, m1_resp)
+)
+res_m2 <- run_rf_cv(
+  pred_df, "chose_item1",
+  c(petition_vars, m2_resp)
+)
+res_m3 <- run_rf_cv(
+  pred_df, "chose_item1",
+  c(petition_vars, m3_resp)
+)
+res_m4 <- run_rf_cv(
+  pred_df, "chose_item1",
+  c(petition_vars, m4_resp)
+)
+
+pred_comparison <- data.frame(
+  Model = c(
+    "Petition only",
+    "M1 (demographics)",
+    "M2 (+ socioeconomic)",
+    "M3 (+ political)",
+    "M4 (+ attitudes)"
+  ),
+  AUC = c(
+    res_pet["AUC"], res_m1["AUC"],
+    res_m2["AUC"], res_m3["AUC"],
+    res_m4["AUC"]
+  ),
+  Accuracy = c(
+    res_pet["Accuracy"], res_m1["Accuracy"],
+    res_m2["Accuracy"], res_m3["Accuracy"],
+    res_m4["Accuracy"]
+  )
+)
+
+save_xtable(
+  pred_comparison,
+  caption = paste(
+    "Random Forest Prediction:",
+    "Nested Model Comparison"
+  ),
+  label = "tab:prediction_extended",
+  file = "prediction_extended.tex",
   digits = 3
 )
 

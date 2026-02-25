@@ -136,6 +136,60 @@ save_xtable(
   sanitize = TRUE
 )
 
+## Nested models (M1-M3; M4 = m_gamma above) -----------------------------------
+m_gamma_m1 <- lm(
+  median ~ female + age_group + edu4 +
+    seoul + married + has_young_child,
+  data = gamma_df
+)
+
+m_gamma_m2 <- lm(
+  median ~ female + age_group + edu4 +
+    seoul + married + has_young_child +
+    median_income + subj_class3,
+  data = gamma_df
+)
+
+m_gamma_m3 <- lm(
+  median ~ female + age_group + edu4 +
+    seoul + married + has_young_child +
+    median_income + subj_class3 +
+    ideo3 + ppp +
+    voted_yoon_2022 + voted_lee_2025,
+  data = gamma_df
+)
+
+gamma_comparison <- data.frame(
+  Model = c("M1", "M2", "M3", "M4"),
+  R2 = c(
+    summary(m_gamma_m1)$r.squared,
+    summary(m_gamma_m2)$r.squared,
+    summary(m_gamma_m3)$r.squared,
+    summary(m_gamma)$r.squared
+  ),
+  Adj_R2 = c(
+    summary(m_gamma_m1)$adj.r.squared,
+    summary(m_gamma_m2)$adj.r.squared,
+    summary(m_gamma_m3)$adj.r.squared,
+    summary(m_gamma)$adj.r.squared
+  ),
+  N_predictors = c(
+    length(coef(m_gamma_m1)) - 1,
+    length(coef(m_gamma_m2)) - 1,
+    length(coef(m_gamma_m3)) - 1,
+    length(coef(m_gamma)) - 1
+  )
+)
+
+save_xtable(
+  gamma_comparison,
+  caption = "Gamma Regression: Nested Model Comparison ($R^2$)",
+  label = "tab:gamma_extended",
+  file = "gamma_extended.tex",
+  digits = 4,
+  sanitize = TRUE
+)
+
 # 2. Category confounds ========================================================
 ## Do petition categories cluster in the theta space?
 ## If yes, perceived quality may partly reflect topic preference
