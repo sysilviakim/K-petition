@@ -1,6 +1,7 @@
 ## toy run to test GPT API
 source(here::here("R", "utilities.R"))
 
+# Load data ====================================================================
 ## this code runs topic models to generate topic vectors for petitions
 ## requires kiwipiepy-corrected files; skip if not present
 if (!file.exists(here::here(
@@ -46,7 +47,7 @@ petition <- petition %>%
   unnest_tokens(words, token = "ngrams", n = 1, corrected_bodytext) %>%
   count(title, words)
 
-## some pruning
+## Pruning/wrangling/cleaning ==================================================
 ## 0. special characters, one-character words, stopwords
 ## remove stopwords
 stopwords <- read_csv(
@@ -75,7 +76,7 @@ onechar <- petition %>%
   select(words)
 onechar %>% slice(1:10)
 
-## 1. TF-IDF
+# 1. TF-IDF ====================================================================
 petition <- petition %>%
   bind_tf_idf(words, title, n)
 
@@ -129,7 +130,7 @@ vocab <- colnames(dfm)
 doc_id <- gsub("\\:.*", "", rownames(dfm))
 dim(dfm)
 
-## further pruning
+# Additional pruning ===========================================================
 ## remove words that appear only once in the data
 ## remove documents that only have one word
 word_count <- Matrix::colSums(dfm)
@@ -138,8 +139,7 @@ dfm <- dfm[, word_count > 1]
 doc_count <- Matrix::rowSums(dfm)
 dfm <- dfm[doc_count > 1, ]
 
-## fit LDA
-
+# Fit LDA ======================================================================
 ## k=10
 lda_out10 <- LDA(dfm, k = 10, control = list(seed = 1234))
 
@@ -170,7 +170,7 @@ colnames(beta) <- colnames(dfm)
 coherence <- CalcProbCoherence(beta, sparse_mat_dfm)
 mean(coherence)
 
-## perpexlity
+# Perplexity ===================================================================
 ## lower perplexity means better out-of-sample prediction (generalizable)
 perplexity_score <- perplexity(lda_out10)
 perplexity_score
@@ -190,7 +190,7 @@ sparse_mat_dfm <- as(dfm, "sparseMatrix")
 beta <- lda_out15@beta
 colnames(beta) <- colnames(dfm)
 
-## coherence score (0.3 ~ 0.5 acceptable)
+# Coherence score (0.3 ~ 0.5 acceptable) =======================================
 coherence <- CalcProbCoherence(beta, sparse_mat_dfm)
 mean(coherence)
 
@@ -254,7 +254,7 @@ beta <- lda_out@beta
 
 saveRDS(lda_out, here::here("data", "TopicK11.rds"))
 
-## prep regression data frame
+# Prep regression data frame ===================================================
 title <- rownames(dfm)
 topic_df <- as_tibble(cbind(lda_out@gamma, title)) %>%
   rename_with(~ str_replace(., "V", "Topic")) %>%

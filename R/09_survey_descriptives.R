@@ -68,7 +68,7 @@ post_types <- post_types %>%
   rename(item = id) %>%
   mutate(item = as.character(item))
 
-# Text features (shared by scripts 14, 16) ===========
+# Text features (shared by scripts 14, 16) =====================================
 text_features <- post_types %>%
   mutate(
     nchar = nchar(text),

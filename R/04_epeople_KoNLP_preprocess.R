@@ -1,10 +1,10 @@
 ## Preprocessing using KoNLP
-## "Thu Feb 15 14:25:15 2024"
 
 source(here::here("R", "utilities.R"))
 
 # Load cleaned data and preserve the raw text ==================================
-petition_raw <- readRDS(here::here("data", "tidy", "petition_konlp_all_years.rds"))
+petition_raw <- 
+  readRDS(here::here("data", "tidy", "petition_konlp_all_years.rds"))
 
 ## In earlier years, 현황, 개선방안 not parsed well ---> all in body_problem
 ## but in later years, the other body fields actually contain something

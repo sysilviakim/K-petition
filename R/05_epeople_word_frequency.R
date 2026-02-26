@@ -1,5 +1,4 @@
 ## Descriptive analysis of petitions data with KoNLP
-## "Fri Feb 16 15:57:10 2024"
 
 source(here::here("R", "utilities.R"))
 

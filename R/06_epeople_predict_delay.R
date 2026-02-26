@@ -10,7 +10,8 @@ petition_dfm <- readRDS(here::here("data/DFM.rds"))
 ## load meta data
 years <- 2002:2023
 ## this should be the path to the data in dropbox folder
-file.names <- here::here(paste0("data/tidy/pub_petition_content_", years, ".csv"))
+file.names <- 
+  here::here(paste0("data/tidy/pub_petition_content_", years, ".csv"))
 meta_df <- as_tibble(map_dfr(file.names, read_csv))
 
 # Deduplicate ==================================================================

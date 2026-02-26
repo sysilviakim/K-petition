@@ -109,9 +109,7 @@ model_oh <- cbind(
   model_df["chose_item1"],
   onehot(model_df, all_vars)
 )
-oh_vars <- setdiff(
-  names(model_oh), "chose_item1"
-)
+oh_vars <- setdiff(names(model_oh), "chose_item1")
 
 # Cross-validation =============================================================
 set.seed(1234)
@@ -255,7 +253,7 @@ save_xtable(
   digits = 3
 )
 
-# Nested RF: petition-only + M1-M4 ============================================
+# Nested RF: petition-only + M1-M4 =============================================
 ## m1_resp-m4_resp defined in 09_survey_descriptives.R
 set.seed(1234)
 res_pet <- run_rf_cv(
