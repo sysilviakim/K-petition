@@ -1,0 +1,8 @@
+variable,chi_sq,df,p_value,sig
+Gender,23.75,NA,0.0118,*
+Age Group,106.72,NA,2e-4,***
+Education,33.74,NA,0.0464,*
+Marital Status,70.6,NA,4e-4,***
+Income,47.14,NA,0.3271,
+Occupation,120.19,NA,0.4865,
+Political Ideology,21.77,NA,0.4737,
