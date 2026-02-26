@@ -45,7 +45,7 @@ m4_resp <- c(
 )
 
 # Petition post characteristics ================================================
-post_types <- here(
+post_types <- here::here(
   stri_trans_nfc(
     "data/screenshots/공개제안_tidy_url_appended.xlsx"
   )
@@ -149,7 +149,7 @@ p_attn <- ggplot(
   theme_minimal() +
   theme(strip.text = element_text(size = 10))
 
-pdf(here("fig", "attention_time.pdf"), width = 10, height = 5)
+pdf(here::here("fig", "attention_time.pdf"), width = 10, height = 5)
 print(p_attn)
 dev.off()
 
@@ -241,6 +241,6 @@ p_choice <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "choice_frequency.pdf"), width = 7, height = 9)
+pdf(here::here("fig", "choice_frequency.pdf"), width = 7, height = 9)
 print(p_choice)
 dev.off()

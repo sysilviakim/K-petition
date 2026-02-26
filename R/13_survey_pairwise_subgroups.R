@@ -74,7 +74,7 @@ post_income0 <- run_subgroup_dp(
   pwc_with_demo %>%
     filter(median_income == "Below Median") %>%
     select(-median_income),
-  here("output/mcmcDP_out_median_income0.rds"),
+  here::here("output/mcmcDP_out_median_income0.rds"),
   theta_constraints
 )
 
@@ -82,7 +82,7 @@ post_income1 <- run_subgroup_dp(
   pwc_with_demo %>%
     filter(median_income == "Above Median") %>%
     select(-median_income),
-  here("output/mcmcDP_out_median_income1.rds"),
+  here::here("output/mcmcDP_out_median_income1.rds"),
   theta_constraints
 )
 
@@ -92,14 +92,14 @@ ss_income1 <- stats_summ_create(post_income1)
 g_income0 <- make_subgroup_grid(
   ss_income0, "Below Median Income"
 )
-pdf(here("fig", "theta_post_dp_income0.pdf"), width = 10, height = 10)
+pdf(here::here("fig", "theta_post_dp_income0.pdf"), width = 10, height = 10)
 print(g_income0)
 dev.off()
 
 g_income1 <- make_subgroup_grid(
   ss_income1, "Above Median Income"
 )
-pdf(here("fig", "theta_post_dp_income1.pdf"), width = 10, height = 10)
+pdf(here::here("fig", "theta_post_dp_income1.pdf"), width = 10, height = 10)
 print(g_income1)
 dev.off()
 
@@ -114,7 +114,7 @@ post_ppp <- run_subgroup_dp(
   pwc_with_party %>%
     filter(pid3 == "PPP") %>%
     select(-pid3),
-  here("output/mcmcDP_out_ppp.rds"),
+  here::here("output/mcmcDP_out_ppp.rds"),
   theta_constraints
 )
 
@@ -122,7 +122,7 @@ post_opp <- run_subgroup_dp(
   pwc_with_party %>%
     filter(pid3 == "Opposition") %>%
     select(-pid3),
-  here("output/mcmcDP_out_opp.rds"),
+  here::here("output/mcmcDP_out_opp.rds"),
   theta_constraints
 )
 
@@ -132,14 +132,14 @@ ss_opp <- stats_summ_create(post_opp)
 g_ppp <- make_subgroup_grid(
   ss_ppp, "PPP Supporters"
 )
-pdf(here("fig", "theta_post_median_combined_ppp.pdf"), width = 10, height = 10)
+pdf(here::here("fig", "theta_post_median_combined_ppp.pdf"), width = 10, height = 10)
 print(g_ppp)
 dev.off()
 
 g_opp <- make_subgroup_grid(
   ss_opp, "Opposition Supporters"
 )
-pdf(here("fig", "theta_post_median_combined_opp.pdf"), width = 10, height = 10)
+pdf(here::here("fig", "theta_post_median_combined_opp.pdf"), width = 10, height = 10)
 print(g_opp)
 dev.off()
 
@@ -154,7 +154,7 @@ post_pop <- run_subgroup_dp(
   pwc_with_pop %>%
     filter(populist == TRUE) %>%
     select(-populist),
-  here("output/mcmcDP_out_pop.rds"),
+  here::here("output/mcmcDP_out_pop.rds"),
   theta_constraints
 )
 
@@ -163,13 +163,13 @@ ss_pop <- stats_summ_create(post_pop)
 g_pop <- make_subgroup_grid(
   ss_pop, "Populist Attitudes"
 )
-pdf(here("fig", "theta_post_median_combined_pop.pdf"), width = 10, height = 10)
+pdf(here::here("fig", "theta_post_median_combined_pop.pdf"), width = 10, height = 10)
 print(g_pop)
 dev.off()
 
 # Combined subgroup comparison =================================================
 ## Load full-sample model from script 16
-fname_full <- here("output/mcmc_out.rds")
+fname_full <- here::here("output/mcmc_out.rds")
 if (!file.exists(fname_full)) {
   stop(
     "Run 10_survey_pairwise_irt.R first ",
@@ -201,6 +201,6 @@ g_subgroups <- ggarrange(
   p_all, p_ppp_c, p_opp_c, p_pop_c,
   ncol = 2, nrow = 2
 )
-pdf(here("fig", "theta_post_median_subgroups.pdf"), width = 12, height = 12)
+pdf(here::here("fig", "theta_post_median_subgroups.pdf"), width = 12, height = 12)
 print(g_subgroups)
 dev.off()

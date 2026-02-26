@@ -4,7 +4,7 @@
 source(here::here("R", "utilities.R"))
 
 # Load cleaned data and preserve the raw text ==================================
-petition_raw <- readRDS(here("data", "tidy", "petition_konlp_all_years.rds"))
+petition_raw <- readRDS(here::here("data", "tidy", "petition_konlp_all_years.rds"))
 
 ## In earlier years, 현황, 개선방안 not parsed well ---> all in body_problem
 ## but in later years, the other body fields actually contain something
@@ -55,7 +55,7 @@ voca_list <- list(
   assessment = petition %>% unnest_tokens(pos, body_assessment, SimplePos09),
   result = petition %>% unnest_tokens(pos, body_result, SimplePos09)
 )
-save(voca_list, file = here("data", "tidy", "voca_list.Rda"))
+save(voca_list, file = here::here("data", "tidy", "voca_list.Rda"))
 
 ## Some error messages:
 ## java.lang.ArrayIndexOutOfBoundsException:
@@ -86,33 +86,33 @@ voca_processed_list <- names(voca_list) %>%
       select(title, area, year, month, pos_cleaned)
   )
 
-# Tidytext =====================================================================
-## extract nouns to create unique(feature list)
-voca <- unlist(sapply(petition$body_problem, extractNoun, USE.NAMES = FALSE))
-tb.voca <- sort(table(voca), decreasing = TRUE)
-tb.voca[1:10]
+# Tidytext (exploratory, non-essential) ========================================
+tryCatch({
+  ## extract nouns to create unique(feature list)
+  voca <- unlist(
+    sapply(petition$body_problem, extractNoun, USE.NAMES = FALSE)
+  )
+  tb.voca <- sort(table(voca), decreasing = TRUE)
 
-tb.voca <- table(voca.df.out$pos_cleaned)
-voca.ko <- names(tb.voca)
-tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
-tb.voca.sorted[1:10]
+  tb.voca <- table(voca.df.out$pos_cleaned)
+  voca.ko <- names(tb.voca)
+  tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
 
-# Tentative rules for further preprocessing ====================================
-## 1. special characters (underbar, emoji, semicolon, hyphen, comma, ...) ------
-voca.df.out$pos_cleaned <- str_replace_all(
-  string = voca.df.out$pos_cleaned, pattern = "[[:punct:]]", replace = ""
-)
-voca.df.out <- distinct(voca.df.out)
-voca.df.out <- voca.df.out %>% filter(pos_cleaned != "")
+  voca.df.out$pos_cleaned <- str_replace_all(
+    string = voca.df.out$pos_cleaned,
+    pattern = "[[:punct:]]",
+    replace = ""
+  )
+  voca.df.out <- distinct(voca.df.out)
+  voca.df.out <- voca.df.out %>% filter(pos_cleaned != "")
+  voca.df.out <- voca.df.out %>%
+    filter(!grepl("\\^|<|>|~", pos_cleaned))
+  voca.df.out <- voca.df.out %>%
+    filter(!grepl("[0-9]", pos_cleaned))
 
-voca.df.out <- voca.df.out %>%
-  filter(!grepl("\\^|<|>|~", pos_cleaned))
-
-## 2. remove words that contain numbers (dates, counts) ------------------------
-voca.df.out <- voca.df.out %>%
-  filter(!grepl("[0-9]", pos_cleaned))
-
-tb.voca <- table(voca.df.out$pos_cleaned)
-voca.ko <- names(tb.voca)
-tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
-tb.voca.sorted[1:10]
+  tb.voca <- table(voca.df.out$pos_cleaned)
+  voca.ko <- names(tb.voca)
+  tb.voca.sorted <- sort(tb.voca, decreasing = TRUE)
+}, error = function(e) {
+  message("Tidytext exploratory section skipped: ", e$message)
+})

@@ -5,7 +5,7 @@
 source(here::here("R", "09_survey_descriptives.R"))
 
 ## Load full-sample IRT estimates for comparison
-post_out <- readRDS(here("output/mcmc_out.rds"))
+post_out <- readRDS(here::here("output/mcmc_out.rds"))
 stats_summ <- stats_summ_create(post_out)
 
 # Feature engineering ==========================================================
@@ -347,7 +347,7 @@ p_importance <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "rf_variable_importance.pdf"), width = 7, height = 5)
+pdf(here::here("fig", "rf_variable_importance.pdf"), width = 7, height = 5)
 print(p_importance)
 dev.off()
 
@@ -393,7 +393,7 @@ p_lasso <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "lasso_coefficients.pdf"), width = 7, height = 5)
+pdf(here::here("fig", "lasso_coefficients.pdf"), width = 7, height = 5)
 print(p_lasso)
 dev.off()
 
@@ -497,7 +497,7 @@ p_perm <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "rf_permutation_importance.pdf"), width = 7, height = 5)
+pdf(here::here("fig", "rf_permutation_importance.pdf"), width = 7, height = 5)
 print(p_perm)
 dev.off()
 
@@ -548,6 +548,6 @@ p_compare <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "importance_comparison.pdf"), width = 12, height = 6)
+pdf(here::here("fig", "importance_comparison.pdf"), width = 12, height = 6)
 print(p_compare)
 dev.off()

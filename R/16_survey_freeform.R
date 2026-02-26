@@ -183,7 +183,7 @@ p_theme <- theme_summary %>%
   theme_minimal() +
   theme(axis.text.y = element_text(size = 9))
 
-pdf(here("fig", "q16_theme_frequency.pdf"), width = 8, height = 5)
+pdf(here::here("fig", "q16_theme_frequency.pdf"), width = 8, height = 5)
 p_theme
 dev.off()
 
@@ -197,7 +197,7 @@ p_words <- word_freq %>%
   labs(x = NULL, y = "Frequency") +
   theme_minimal()
 
-pdf(here("fig", "q16_top_words.pdf"), width = 7, height = 7)
+pdf(here::here("fig", "q16_top_words.pdf"), width = 7, height = 7)
 p_words
 dev.off()
 
@@ -250,7 +250,7 @@ p_length <- q16 %>%
   ) +
   theme_minimal()
 
-pdf(here("fig", "q16_response_length.pdf"), width = 6, height = 4)
+pdf(here::here("fig", "q16_response_length.pdf"), width = 6, height = 4)
 p_length
 dev.off()
 

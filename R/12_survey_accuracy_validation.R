@@ -6,7 +6,7 @@ source(here::here("R", "09_survey_descriptives.R"))
 
 # Setup and wrangling ==========================================================
 ## Load full-sample model
-post_out <- readRDS(here("output/mcmc_out.rds"))
+post_out <- readRDS(here::here("output/mcmc_out.rds"))
 stats_summ <- stats_summ_create(post_out)
 
 ## Perceived effectiveness (Q15, 0-100 slider) ---------------------------------
@@ -185,7 +185,7 @@ p_acc_expert <- ggplot(
   ylim(0, 1) +
   theme_minimal()
 
-pdf(here("fig", "choice_acc_expert.pdf"), width = 4, height = 3.5)
+pdf(here::here("fig", "choice_acc_expert.pdf"), width = 4, height = 3.5)
 print(p_acc_expert)
 dev.off()
 
@@ -224,7 +224,7 @@ p_acc_eff <- ggplot(
   ylim(0, 1) +
   theme_minimal()
 
-pdf(here("fig", "choice_acc_eff.pdf"), width = 6, height = 5)
+pdf(here::here("fig", "choice_acc_eff.pdf"), width = 6, height = 5)
 print(p_acc_eff)
 dev.off()
 
@@ -330,7 +330,7 @@ p_eff_expert <- ggplot(
   ylab("Mean Perceived Effectiveness") +
   theme_minimal()
 
-pdf(here("fig", "effectiveness_by_quality.pdf"), width = 6, height = 5)
+pdf(here::here("fig", "effectiveness_by_quality.pdf"), width = 6, height = 5)
 print(p_eff_expert)
 dev.off()
 

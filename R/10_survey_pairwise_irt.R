@@ -2,7 +2,7 @@
 source(here::here("R", "09_survey_descriptives.R"))
 
 # MCMC: 2D pairwise IRT ========================================================
-fname <- here("output/mcmc_out.rds")
+fname <- here::here("output/mcmc_out.rds")
 set.seed(1234)
 if (!file.exists(fname)) {
   post_out <- MCMCpaircompare2d(
@@ -28,7 +28,7 @@ theta_cols <- grep(
   "^theta", colnames(post_out),
   value = TRUE
 )
-pdf(here("fig", "mcmc_diagnostics.pdf"), width = 10, height = 8)
+pdf(here::here("fig", "mcmc_diagnostics.pdf"), width = 10, height = 8)
 par(mfrow = c(2, 2))
 for (col in theta_cols[1:4]) {
   traceplot(post_out[, col], main = col)
@@ -45,7 +45,7 @@ save_theta_quality_plots(
 )
 
 # MCMC: 2D pairwise IRT with DP ================================================
-fname <- here("output/mcmcDP_out.rds")
+fname <- here::here("output/mcmcDP_out.rds")
 if (!file.exists(fname)) {
   postDP_out <- MCMCpaircompare2dDP(
     pwc.data = pwc_df,

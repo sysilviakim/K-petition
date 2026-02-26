@@ -5,12 +5,12 @@ source(here::here("R", "utilities.R"))
 
 # Load data ====================================================================
 ## load dfm
-petition_dfm <- readRDS(here("data/DFM.rds"))
+petition_dfm <- readRDS(here::here("data/DFM.rds"))
 
 ## load meta data
 years <- 2002:2023
 ## this should be the path to the data in dropbox folder
-file.names <- here(paste0("data/tidy/pub_petition_content_", years, ".csv"))
+file.names <- here::here(paste0("data/tidy/pub_petition_content_", years, ".csv"))
 meta_df <- as_tibble(map_dfr(file.names, read_csv))
 
 # Deduplicate ==================================================================
@@ -89,7 +89,9 @@ doc_name <- doc_name[row.idx]
 ## save memory
 rm(list = c("petition_dfm", "col.idx", "row.idx"))
 
-doc_df <- tibble("docs" = doc_name)
+## DFM docnames have format "{id}:{title}"; strip prefix for join
+doc_title <- gsub("^[0-9]+:", "", doc_name)
+doc_df <- tibble("docs" = doc_title)
 meta_df <- meta_df %>%
   select(
     title, respond_delay, implement_petition_delay,
@@ -109,7 +111,7 @@ responded <- as.matrix(ifelse(is.na(doc_df$respond_delay), 0, 1))
 cv_lasso_out <- cv.glmnet(x = df, y = responded, alpha = 1, nfolds = 10)
 opt_lambda <- cv_lasso_out$lambda.min
 lasso_out_res <- glmnet(x = df, y = responded, alpha = 1, lambda = opt_lambda)
-save(lasso_out_res, file = here("output", "lasso_out_res.Rda"))
+save(lasso_out_res, file = here::here("output", "lasso_out_res.Rda"))
 coef_matrix <- coef(lasso_out_res)
 coef_matrix
 y1 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
@@ -148,7 +150,7 @@ lasso_out_d2res <- glmnet(
   y = ln_days_to_response[!NAs, ],
   alpha = 1, lambda = opt_lambda
 )
-save(lasso_out_d2res, file = here("output", "lasso_out_d2res.Rda"))
+save(lasso_out_d2res, file = here::here("output", "lasso_out_d2res.Rda"))
 coef_matrix <- coef(lasso_out_d2res)
 coef_matrix
 y2 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
@@ -179,7 +181,7 @@ lasso_out_d2imp <- glmnet(
   y = ln_days_to_implement[!NAs, ],
   alpha = 1, lambda = opt_lambda
 )
-save(lasso_out_d2imp, file = here("output", "lasso_out_d2imp.Rda"))
+save(lasso_out_d2imp, file = here::here("output", "lasso_out_d2imp.Rda"))
 coef_matrix <- coef(lasso_out_d2imp)
 coef_matrix
 y3 <- sort(coef_matrix[coef_matrix[, 1] != 0, ])
@@ -247,7 +249,7 @@ pred_out_train <- cbind(pred_responded, train_responded)
 pred_responded <- predict(lasso_out_res, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_responded, test_responded)
 
-pdf(here("output", "lasso_responded.pdf"), width = 10, height = 6)
+pdf(here::here("output", "lasso_responded.pdf"), width = 10, height = 6)
 par(mfrow = c(1, 2))
 plot(
   pred_out_train,
@@ -285,7 +287,7 @@ pred_out_train <- cbind(pred_d2res, train_days_to_response)
 
 pred_d2res <- predict(lasso_out_d2res, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_d2res, test_days_to_response)
-pdf(here("output", "lasso_d2r.pdf"), width = 10, height = 6)
+pdf(here::here("output", "lasso_d2r.pdf"), width = 10, height = 6)
 plot(
   pred_out_train,
   xlab = "Predicted Vals",
@@ -324,7 +326,7 @@ pred_out_train <- cbind(pred_d2imp, train_days_to_implement)
 
 pred_d2imp <- predict(lasso_out_d2imp, s = opt_lambda, newx = test_df)
 pred_out_test <- cbind(pred_d2imp, test_days_to_implement)
-pdf(here("output", "lasso_d2i.pdf"), width = 10, height = 6)
+pdf(here::here("output", "lasso_d2i.pdf"), width = 10, height = 6)
 par(mfrow = c(1, 2))
 plot(
   pred_out_train,

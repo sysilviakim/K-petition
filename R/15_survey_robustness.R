@@ -5,7 +5,7 @@
 source(here::here("R", "09_survey_descriptives.R"))
 
 ## Load full-sample model
-post_out <- readRDS(here("output/mcmc_out.rds"))
+post_out <- readRDS(here::here("output/mcmc_out.rds"))
 stats_summ <- stats_summ_create(post_out)
 
 # Flag fast respondents (likely inattentive) ===================================
@@ -38,7 +38,7 @@ attentive_ids <- time_wide %>%
 pwc_attentive <- pwc_df %>%
   filter(NO %in% attentive_ids)
 
-fname_att <- here("output/mcmc_out_attentive.rds")
+fname_att <- here::here("output/mcmc_out_attentive.rds")
 set.seed(1234)
 if (!file.exists(fname_att)) {
   post_attentive <- MCMCpaircompare2d(
@@ -117,6 +117,6 @@ p_robust2 <- ggplot(
   theme_minimal()
 
 p_robust_combined <- ggarrange(p_robust, p_robust2, ncol = 2)
-pdf(here("fig", "robustness_attentive.pdf"), width = 10, height = 5)
+pdf(here::here("fig", "robustness_attentive.pdf"), width = 10, height = 5)
 print(p_robust_combined)
 dev.off()

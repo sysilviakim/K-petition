@@ -6,11 +6,11 @@
 source(here::here("R", "09_survey_descriptives.R"))
 
 ## Load full-sample model
-post_out <- readRDS(here("output/mcmc_out.rds"))
+post_out <- readRDS(here::here("output/mcmc_out.rds"))
 stats_summ <- stats_summ_create(post_out)
 
 ## Load DP model
-postDP_out <- readRDS(here("output/mcmcDP_out.rds"))
+postDP_out <- readRDS(here::here("output/mcmcDP_out.rds"))
 stats_summ_dp <- stats_summ_create(postDP_out)
 
 # 1. Gamma regression ==========================================================
@@ -212,7 +212,7 @@ p_category <- ggplot(
   theme_minimal() +
   theme(legend.position = "bottom")
 
-pdf(here("fig", "theta_by_category.pdf"), width = 5, height = 5)
+pdf(here::here("fig", "theta_by_category.pdf"), width = 5, height = 5)
 print(Kmisc::pdf_default(p_category))
 dev.off()
 

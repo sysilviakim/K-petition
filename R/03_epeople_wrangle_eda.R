@@ -6,7 +6,7 @@ petition_list <- seq(2002, 2023) %>%
   map(
     ~ {
       temp <- read.csv(
-        here(paste0("data/tidy/pub_petition_content_", .x, ".csv"))
+        here::here(paste0("data/tidy/pub_petition_content_", .x, ".csv"))
       ) %>%
         rename(
           body_problem = `현황.및.문제점`,
@@ -95,10 +95,10 @@ petition <- petition %>%
   )
 
 ## Save the data ---------------------------------------------------------------
-saveRDS(petition, here("data", "tidy", "petition_konlp_all_years.rds"))
+saveRDS(petition, here::here("data", "tidy", "petition_konlp_all_years.rds"))
 
 # Exploratory analysis: load data ==============================================
-petition <- readRDS(here("data", "tidy", "petition_konlp_all_years.rds"))
+petition <- readRDS(here::here("data", "tidy", "petition_konlp_all_years.rds"))
 
 # What is the distribution of the number of petitions per year? --> already done
 # What is the distribution of the length of petitions? =========================
@@ -120,7 +120,7 @@ p <- body_nchar %>%
   scale_y_continuous(labels = function(x) x / 1000) +
   theme_bw()
 pdf(
-  here("fig", "petition_length_distribution.pdf"),
+  here::here("fig", "petition_length_distribution.pdf"),
   width = 5, height = 3
 )
 print(p)
@@ -135,7 +135,7 @@ p <- body_nchar %>%
   scale_y_continuous(labels = function(x) x / 1000) +
   theme_bw()
 pdf(
-  here("fig", "petition_length_dist_logged.pdf"),
+  here::here("fig", "petition_length_dist_logged.pdf"),
   width = 5, height = 3
 )
 print(p)
@@ -151,7 +151,7 @@ p <- body_nchar %>%
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 pdf(
-  here(
+  here::here(
     "fig",
     "petition_length_avg_over_years.pdf"
   ),
@@ -209,7 +209,7 @@ p1 <- answer_rate %>%
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-load(here("data", "raw", "pub_petition_num_total.Rda"))
+load(here::here("data", "raw", "pub_petition_num_total.Rda"))
 p2 <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
@@ -231,7 +231,7 @@ p2 <- pub_total %>%
 ##     angle = 45, hjust = 1
 ##   ))
 pdf(
-  here("fig", "petition_acceptance_rate.pdf"),
+  here::here("fig", "petition_acceptance_rate.pdf"),
   width = 8, height = 3.5
 )
 print(p1 + p2)
@@ -266,7 +266,7 @@ p <- ggplot(data = petition, aes(x = year, fill = area)) +
   scale_y_continuous(labels = scales::percent)
 
 pdf(
-  here("fig", "petition_area_over_time.pdf"),
+  here::here("fig", "petition_area_over_time.pdf"),
   width = 10, height = 5.5
 )
 print(
@@ -292,7 +292,7 @@ p <- petition %>%
   scale_y_continuous(labels = scales::percent) +
   scale_x_continuous(breaks = seq(2012, 2023, 1))
 pdf(
-  here(
+  here::here(
     "fig",
     "petition_area_over_time_truncated.pdf"
   ),
@@ -316,7 +316,7 @@ p <- ggplot(data = petition, aes(x = month_petitioned)) +
   xlab("Month Petitioned") +
   ylab("Count")
 pdf(
-  here("fig", "petition_all_monthly.pdf"),
+  here::here("fig", "petition_all_monthly.pdf"),
   width = 8, height = 5
 )
 print(p)
@@ -336,7 +336,7 @@ p <- petition %>%
   xlab("Month Petitioned") +
   ylab("Count")
 pdf(
-  here("fig", "petition_monthly_by_year.pdf"),
+  here::here("fig", "petition_monthly_by_year.pdf"),
   width = 8, height = 5
 )
 print(p)
@@ -356,7 +356,7 @@ p <- petition %>%
   xlab("Month Petitioned") +
   ylab("Count")
 pdf(
-  here("fig", "petition_monthly_by_area.pdf"),
+  here::here("fig", "petition_monthly_by_area.pdf"),
   width = 12, height = 5.5
 )
 print(
@@ -375,7 +375,7 @@ p <- ggplot(data = petition, aes(x = wday_petitioned)) +
   xlab("Weekday Petitioned") +
   ylab("Count")
 pdf(
-  here("fig", "petition_all_weekdays.pdf"),
+  here::here("fig", "petition_all_weekdays.pdf"),
   width = 8, height = 5
 )
 print(p)
@@ -393,7 +393,7 @@ p <- petition %>%
   xlab("Weekday Petitioned") +
   ylab("Count")
 pdf(
-  here("fig", "petition_weekdays_by_year.pdf"),
+  here::here("fig", "petition_weekdays_by_year.pdf"),
   width = 8, height = 5
 )
 print(p)

@@ -498,7 +498,7 @@ save_theta_dim_plot <- function(stats_summ,
       )
   }
   pdf(
-    here("fig", fname),
+    here::here("fig", fname),
     width = width,
     height = height
   )
@@ -525,7 +525,7 @@ save_xtable <- function(x, caption, label, file,
     booktabs = TRUE,
     floating = FALSE,
     include.rownames = include_rownames,
-    file = here("tab", file)
+    file = here::here("tab", file)
   )
   if (sanitize) {
     args$sanitize.text.function <- identity

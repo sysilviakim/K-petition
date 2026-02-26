@@ -5,7 +5,7 @@ source(here::here("R", "utilities.R"))
 
 # Merge and process data =======================================================
 years <- 2002:2023
-file.names <- here(
+file.names <- here::here(
   "data", "tidy",
   paste0("petition_konlp", years, ".rds")
 )
@@ -140,14 +140,18 @@ top10.year.df <- petition.df %>%
   top_n(10)
 
 ## word cloud
+tb.voca <- sort(table(petition.df$pos_cleaned), decreasing = TRUE)
 wc.df <- as.data.frame(tb.voca)
 threshold <- quantile(wc.df$Freq, 0.99)
 wc.df <- wc.df %>%
   filter(Freq > threshold)
-wordcloud2(wc.df) %>%
-  saveWidget(here("output", "wc.pdf"))
+tryCatch(
+  wordcloud2(wc.df) %>%
+    saveWidget(here::here("output", "wc.html")),
+  error = function(e) message("wordcloud2 saveWidget skipped: ", e$message)
+)
 
-wordcloud2(wc.df, figPath = "data/kor_penin.png", size = 1.5) ## doesn't work...
+## wordcloud2(wc.df, figPath = "data/kor_penin.png", size = 1.5)
 
 
 ## another clean-up
@@ -176,7 +180,7 @@ quantile(petition.dfn$tf_idf, na.rm = TRUE)
 ##          0%          25%          50%          75%         100%
 ## 0.002129251  0.065440287  0.154765445  2.240160670 12.079749497
 
-pdf(here("output", "tf_idf_density.pdf"), width = 6, height = 4)
+pdf(here::here("output", "tf_idf_density.pdf"), width = 6, height = 4)
 plot(density(petition.dfn$tf_idf, na.rm = TRUE), main = "TF-IDF Density Plot")
 dev.off()
 
@@ -247,6 +251,7 @@ for (k in 1:5) {
   top10.terms.mat[, k] <- top.terms %>%
     filter(topic == k) %>%
     ungroup() %>%
+    slice_head(n = 10) %>%
     select(term) %>%
     unlist()
 }
@@ -266,13 +271,13 @@ table(doc.prob.k$topic)
 petition.dfm <- petition.dfn %>%
   cast_dfm(document = title, term = pos_cleaned, value = n)
 
-saveRDS(petition.dfm, here("data", "DFM_Aug14.rds"))
+saveRDS(petition.dfm, here::here("data", "DFM_Aug14.rds"))
 
 ## fit LDA
 K <- 5
 lda.fit <- LDA(petition.dfm, k = K)
 
-saveRDS(lda.fit, here("output", "lda_out_5.rds"))
+saveRDS(lda.fit, here::here("output", "lda_out_5.rds"))
 
 ## describe topics: top 20 terms for each topic
 word.prob.k <- tidy(lda.fit, matrix = "beta")
@@ -286,6 +291,7 @@ for (k in 1:K) {
   topN.terms.mat[, k] <- top.terms %>%
     filter(topic == k) %>%
     ungroup() %>%
+    slice_head(n = N) %>%
     select(term) %>%
     unlist()
 }
@@ -305,7 +311,7 @@ colnames(topN.terms.mat) <-
   c("energy", "telecomm", "primary school", "college", "social welfare")
 writexl::write_xlsx(
   topN.terms.mat,
-  here("output", "topic_term.xlsx")
+  here::here("output", "topic_term.xlsx")
 )
 
 doc.prob.k <- doc.prob.k %>%
@@ -325,26 +331,26 @@ f <- ggplot(data = doc.prob.k) +
   geom_bar(aes(x = year, fill = factor(topic)), position = "dodge") +
   theme_bw()
 pdf(
-  here("output", "topic_dist_02-12.pdf"),
+  here::here("output", "topic_dist_02-12.pdf"),
   width = 10, height = 5
 )
 print(f)
 dev.off()
 
 
-## find optimal topic number
-topics_range <- seq(5, 40, by = 1) ## search grid
-
-topic_grid_search <- FindTopicsNumber(
-  petition.dfm,
-  topics = topics_range,
-  metrics = c("CaoJuan2009", "Arun2010", "Deveaud2014"),
-  method = "VEM",
-  control = list(seed = 123),
-  mc.cores = 2,
-  verbose = TRUE
-  ## libpath="/Library/Frameworks/R.framework/
-  ##   Versions/4.3-arm64/Resources/library"
-)
-
-plot(topic_grid_search)
+## find optimal topic number (requires ldatuning)
+if (exists("FindTopicsNumber")) {
+  topics_range <- seq(5, 40, by = 1)
+  topic_grid_search <- FindTopicsNumber(
+    petition.dfm,
+    topics = topics_range,
+    metrics = c("CaoJuan2009", "Arun2010", "Deveaud2014"),
+    method = "VEM",
+    control = list(seed = 123),
+    mc.cores = 2,
+    verbose = TRUE
+  )
+  plot(topic_grid_search)
+} else {
+  message("ldatuning not installed; skipping FindTopicsNumber")
+}
