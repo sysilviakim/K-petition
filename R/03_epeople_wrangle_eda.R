@@ -35,15 +35,27 @@ petition_list <- seq(2002, 2023) %>%
           year_petitioned = year(date_petitioned),
           year_answered = year(date_answered),
           year_implemented = year(date_implemented),
-          month_petitioned = month(date_petitioned, label = TRUE),
-          month_answered = month(date_answered, label = TRUE),
-          month_implemented = month(date_implemented, label = TRUE),
+          month_petitioned = month(
+            date_petitioned, label = TRUE, locale = "C"
+          ),
+          month_answered = month(
+            date_answered, label = TRUE, locale = "C"
+          ),
+          month_implemented = month(
+            date_implemented, label = TRUE, locale = "C"
+          ),
           day_petitioned = day(date_petitioned),
           day_answered = day(date_answered),
           day_implemented = day(date_implemented),
-          wday_petitioned = wday(date_petitioned, label = TRUE),
-          wday_answered = wday(date_answered, label = TRUE),
-          wday_implemented = wday(date_implemented, label = TRUE)
+          wday_petitioned = wday(
+            date_petitioned, label = TRUE, locale = "C"
+          ),
+          wday_answered = wday(
+            date_answered, label = TRUE, locale = "C"
+          ),
+          wday_implemented = wday(
+            date_implemented, label = TRUE, locale = "C"
+          )
         )
       return(out)
     }
@@ -128,6 +140,7 @@ dev.off()
 
 ## Logged version because it's very skewed
 p <- body_nchar %>%
+  filter(body_nchar > 0) %>%
   ggplot(aes(x = log(body_nchar))) +
   geom_histogram(colour = ACCENT, fill = ACCENT) +
   labs(x = "Number of Characters (Logged)", y = "Frequency (1,000 Petitions)") +
