@@ -184,7 +184,7 @@ p_theme <- theme_summary %>%
   theme(axis.text.y = element_text(size = 9))
 
 pdf(here::here("fig", "q16_theme_frequency.pdf"), width = 8, height = 5)
-p_theme
+print(p_theme)
 dev.off()
 
 # Top words figure =============================================================
@@ -198,7 +198,7 @@ p_words <- word_freq %>%
   theme_minimal()
 
 pdf(here::here("fig", "q16_top_words.pdf"), width = 7, height = 7)
-p_words
+print(p_words)
 dev.off()
 
 # Theme by demographics ========================================================
@@ -241,7 +241,7 @@ p_length <- q16 %>%
     color = "white"
   ) +
   geom_vline(
-    xintercept = median(q16$nchar),
+    xintercept = median(q16$nchar, na.rm = TRUE),
     linetype = "dashed"
   ) +
   labs(
@@ -251,7 +251,7 @@ p_length <- q16 %>%
   theme_minimal()
 
 pdf(here::here("fig", "q16_response_length.pdf"), width = 6, height = 4)
-p_length
+print(p_length)
 dev.off()
 
 # Summary table ================================================================

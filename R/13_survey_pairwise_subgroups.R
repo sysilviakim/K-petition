@@ -162,7 +162,7 @@ p_all <- theta_post_viz(ss_all, label = TRUE) +
   ggtitle("All Respondents")
 p_ppp_c <- theta_post_viz(ss_ppp, label = TRUE) +
   ggtitle("PPP Supporters")
-p_opp_c <- theta_post_viz(ss_opp, abel = TRUE) +
+p_opp_c <- theta_post_viz(ss_opp, label = TRUE) +
   ggtitle("Opposition")
 p_pop_c <- theta_post_viz(ss_pop, label = TRUE) +
   ggtitle("Populist Attitudes")

@@ -83,7 +83,7 @@ voca_processed_list <- names(voca_list) %>%
     ~ bind_rows(noun_list[[.x]], p_list[[.x]]) %>%
       filter(nchar(pos_cleaned) > 1) %>%
       filter(nchar(pos_cleaned) < 10) %>%
-      select(title, area, year, month, pos_cleaned)
+      select(title, area, year, month = month_petitioned, pos_cleaned)
   )
 
 # Tidytext (exploratory, non-essential) ========================================
