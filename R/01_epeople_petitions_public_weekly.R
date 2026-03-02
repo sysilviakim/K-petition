@@ -49,6 +49,9 @@ for (wk in week_list) {
     as.numeric() %>%
     max(na.rm = TRUE)
 
+  ## No pagination rendered means 0 or 1 page of results
+  if (!is.finite(max_pages)) max_pages <- 1L
+
   ## Initialize petition content list
   ## Nested list: page number -> petition number -> content
   pub_petition_content <- vector("list", max_pages)
@@ -66,11 +69,27 @@ for (wk in week_list) {
     ## Find clickable links using a class
     petitions <- client$find_elements("css selector", ".left a")
 
+    ## Empty week: save marker and skip
+    if (length(petitions) == 0) {
+      pub_petition_content <- data.frame()
+      save(
+        pub_petition_content,
+        file = here::here(
+          "data", "raw",
+          paste0(
+            "pub_petition_content_list_week_",
+            format(wk, "%Y%m%d"), ".Rda"
+          )
+        )
+      )
+      break
+    }
+
     ## Initialize nested list
     pub_petition_content[[p]] <- vector("list", length(petitions))
 
     ## Loop over petitions
-    for (i in 1:length(petitions)) {
+    for (i in seq_len(length(petitions))) {
       title <- petitions[[i]]$get_text()
       ## Scroll into center of viewport, then JS-click to bypass overlays
       client$execute_script(sprintf(
