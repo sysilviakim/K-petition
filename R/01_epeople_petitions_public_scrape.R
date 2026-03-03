@@ -33,6 +33,10 @@ pages <- "?pageIndex="
 ## Using RSelenium for JavaScript-rendered pages -------------------------------
 rd <- rsDriver(browser = "firefox", chromever = NULL, port = free_port())
 remDr <- rd$client
+on.exit({
+  remDr$close()
+  rd$server$stop()
+}, add = TRUE)
 remDr$navigate(url)
 
 ## Set years to scrape ---------------------------------------------------------

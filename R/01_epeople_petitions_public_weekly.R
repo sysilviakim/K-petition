@@ -9,6 +9,7 @@ library(selenium)
 client <- SeleniumSession$new(
   browser = "chrome", port = 5554L
 )
+on.exit(client$close(), add = TRUE)
 client$navigate(
   "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 )
