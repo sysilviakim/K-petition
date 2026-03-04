@@ -413,12 +413,18 @@ make_heatmap <- function(df, demo_var, demo_label) {
 ## Generate all heatmaps
 plots <- map2(demo_vars, demo_labels, ~ make_heatmap(df_sub, .x, .y))
 
-## Save to PDF
-pdf_path <- here("output", "openended_demographics.pdf")
-pdf(pdf_path, width = 14, height = 6)
-walk(plots, print)
-dev.off()
-cat("\nDemographic heatmaps saved to:", pdf_path, "\n")
+## Save each figure as a separate PDF
+fig_names <- c(
+  "gender", "age_group", "education",
+  "marital", "income", "occupation", "ideology"
+)
+dir.create(here("output", "fig"), showWarnings = FALSE)
+walk2(plots, fig_names, function(p, nm) {
+  out <- here("output", "fig", paste0("openended_", nm, ".pdf"))
+  ggsave(out, plot = p, width = 14, height = 6)
+  cat("  Saved:", out, "\n")
+})
+cat("\nDemographic heatmaps saved to output/fig/\n")
 
 ## ---- Save chi-sq summary ---------------------------------------------------
 write_csv(chi_results, here("output", "openended_chisq_summary.csv"))
