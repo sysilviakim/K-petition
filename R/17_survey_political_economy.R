@@ -116,8 +116,8 @@ m_beneficiary <- glm(
 save_xtable(
   summary(m_beneficiary)$coefficients,
   caption = "Beneficiary-Match and Choice Accuracy: Logistic Regression",
-  label = "tab:beneficiary_accuracy",
-  file = "beneficiary_accuracy.tex",
+  label = "tab:beneficiary_match_logit",
+  file = "beneficiary_match_logit.tex",
   include_rownames = TRUE
 )
 

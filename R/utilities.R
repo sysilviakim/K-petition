@@ -528,7 +528,9 @@ save_xtable <- function(x, caption, label, file,
     file = here::here("tab", file)
   )
   if (sanitize) {
-    args$sanitize.text.function <- identity
+    args$sanitize.text.function <- function(x) {
+      gsub("(?<!\\\\)_", "\\\\_", x, perl = TRUE)
+    }
   }
   do.call(print, args)
 }

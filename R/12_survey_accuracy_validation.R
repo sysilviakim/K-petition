@@ -228,6 +228,14 @@ pdf(here::here("fig", "choice_acc_eff.pdf"), width = 6, height = 5)
 print(p_acc_eff)
 dev.off()
 
+save_xtable(
+  acc_eff,
+  caption = "Choice Accuracy by Quartile of Perceived Effectiveness Gap",
+  label = "tab:beneficiary_accuracy",
+  file = "beneficiary_accuracy.tex",
+  digits = 3
+)
+
 ## LPM: what predicts choosing better? -----------------------------------------
 ## Common RHS formula
 acc_rhs <- paste(

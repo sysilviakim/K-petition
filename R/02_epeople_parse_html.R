@@ -54,7 +54,7 @@ for (yr in seq(2002, 2012)) {
 }
 
 # Loop over weeks ==============================================================
-week_list <- week_list_fxn(2013, 2024)
+week_list <- week_list_fxn(2013, 2025)
 
 for (wk in week_list) {
   wk <- as.Date(wk, origin = "1970-01-01")
@@ -117,7 +117,7 @@ week_list %>%
 # Does the total in annual tidy data match the total in the raw data? ==========
 ## First, for weeklies, create a full CSV
 load(here("data", "raw", "pub_petition_num_total.Rda"))
-for (yr in seq(2013, 2024)) {
+for (yr in seq(2013, 2025)) {
   pub_df <- week_list_fxn(yr, yr) %>%
     map_dfr(
       function(x) {
@@ -131,10 +131,11 @@ for (yr in seq(2013, 2024)) {
           }
       }
     )
-  if (pub_total[[paste0("year", yr)]] != nrow(pub_df)) {
+  expected <- pub_total[[paste0("year", yr)]]
+  if (!is.null(expected) && expected != nrow(pub_df)) {
     cat(
       "For year", yr, "the weekly total is", nrow(pub_df),
-      "but the raw data says", pub_total[[paste0("year", yr)]], "\n"
+      "but the raw data says", expected, "\n"
     )
     # For year 2013 the weekly total is 33524 but the raw data says 33085
     # For year 2014 the weekly total is 32908 but the raw data says 32508

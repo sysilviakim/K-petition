@@ -1,7 +1,7 @@
 source(here::here("R", "utilities.R"))
 
 # Load all data, wrangle, bind, and save =======================================
-petition_list <- seq(2002, 2023) %>%
+petition_list <- seq(2002, 2025) %>%
   set_names(., .) %>%
   map(
     ~ {
@@ -226,12 +226,12 @@ load(here::here("data", "raw", "pub_petition_num_total.Rda"))
 p2 <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
-  filter(year > 2011 & year < 2024) %>%
+  filter(year > 2011) %>%
   ggplot(aes(x = year, y = total)) +
   geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Number of Petitions") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_continuous(breaks = seq(2012, 2023, 1)) +
+  scale_x_continuous(breaks = seq(2012, 2024, 1)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -296,14 +296,14 @@ dev.off()
 
 ## I'd rather draw a version from 2012--2023
 p <- petition %>%
-  filter(year_petitioned > 2011 & year_petitioned < 2024) %>%
+  filter(year_petitioned > 2011 & year_petitioned < 2026) %>%
   ggplot(aes(x = year_petitioned, fill = area)) +
   geom_bar(position = "fill") +
   ylab("") +
   scale_fill_viridis_d() +
   theme_bw() +
   scale_y_continuous(labels = scales::percent) +
-  scale_x_continuous(breaks = seq(2012, 2023, 1))
+  scale_x_continuous(breaks = seq(2012, 2025, 1))
 pdf(
   here::here(
     "fig",
@@ -339,7 +339,7 @@ dev.off()
 ## Significant fluctuation of monthly patterns over years
 ## Likely some salient issue involved
 p <- petition %>%
-  filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
+  filter(year_petitioned > 2013 & year_petitioned < 2026) %>%
   ggplot(aes(x = month_petitioned)) +
   geom_bar(colour = ACCENT, fill = ACCENT) +
   facet_wrap(~year_petitioned, ncol = 5) +
@@ -358,7 +358,7 @@ dev.off()
 ## How about if split between areas? 2014--2023
 ## Hike in labor issues in Oct? Mar education makes sense, but ...
 p <- petition %>%
-  filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
+  filter(year_petitioned > 2013 & year_petitioned < 2026) %>%
   ggplot(aes(x = month_petitioned, fill = area, colour = area)) +
   geom_bar() +
   facet_wrap(~area, ncol = 5) +
@@ -397,7 +397,7 @@ dev.off()
 ## How about if split between years? 2014--2023
 ## Same inverse-U curve, except 2018 on Sundays??
 p <- petition %>%
-  filter(year_petitioned > 2013 & year_petitioned < 2024) %>%
+  filter(year_petitioned > 2013 & year_petitioned < 2026) %>%
   ggplot(aes(x = wday_petitioned)) +
   geom_bar(colour = ACCENT, fill = ACCENT) +
   facet_wrap(~year_petitioned, ncol = 5) +
