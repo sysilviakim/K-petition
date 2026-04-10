@@ -125,7 +125,7 @@ summary(m_gamma)
 ## Save regression table
 ## key vars: populist, female
 save_xtable(
-  summary(m_gamma),
+  summary(m_gamma)$coefficients,
   caption = paste(
     "OLS Regression of Respondent Direction",
     "Parameter ($\\\\gamma$) on Demographics"
@@ -195,6 +195,17 @@ save_xtable(
 ## If yes, perceived quality may partly reflect topic preference
 theta_df <- stats_summ$theta
 theta_df$category_en <- category_en[theta_df$category]
+theta_df$category_en_model <- factor(
+  theta_df$category_en,
+  levels = c(
+    "Delivery",
+    "Real Estate",
+    "Private Education",
+    "Pension",
+    "Low Birth Rate",
+    "E-scooter"
+  )
+)
 
 p_category <- ggplot(
   theta_df,
@@ -204,8 +215,7 @@ p_category <- ggplot(
   )
 ) +
   geom_point(size = 3) +
-  xlim(-3, 3) +
-  ylim(-3, 3) +
+  coord_cartesian(xlim = c(-3, 3), ylim = c(-3, 3)) +
   xlab("Theta 1D (Clarity/Manner)") +
   ylab("Theta 2D (Logic/Validity)") +
   scale_color_viridis_d(name = "Topic Category") +
@@ -218,13 +228,13 @@ dev.off()
 
 ## ANOVA: does category predict theta position?
 m_cat_t1 <- aov(
-  theta1_median ~ category,
+  theta1_median ~ category_en_model,
   data = theta_df
 )
 summary(m_cat_t1)
 
 m_cat_t2 <- aov(
-  theta2_median ~ category,
+  theta2_median ~ category_en_model,
   data = theta_df
 )
 summary(m_cat_t2)
@@ -234,12 +244,12 @@ summarise_aov <- function(m, label) {
   s <- summary(m)[[1]]
   data.frame(
     Outcome = label,
-    F = round(s["category", "F value"], 3),
-    df1 = s["category", "Df"],
+    F = round(s["category_en_model", "F value"], 3),
+    df1 = s["category_en_model", "Df"],
     df2 = s["Residuals", "Df"],
-    p = round(s["category", "Pr(>F)"], 4),
+    p = round(s["category_en_model", "Pr(>F)"], 4),
     Eta_sq = round(
-      s["category", "Sum Sq"] /
+      s["category_en_model", "Sum Sq"] /
         sum(s[, "Sum Sq"]),
       3
     ),
@@ -271,7 +281,7 @@ m_quality_only <- lm(
 m_quality_cat <- lm(
   theta1_median ~ clarity_specificity +
     logic_consistency + tone_manner +
-    validity_feasibility + category,
+    validity_feasibility + category_en_model,
   data = theta_df
 )
 
@@ -285,7 +295,7 @@ m_quality_only_t2 <- lm(
 m_quality_cat_t2 <- lm(
   theta2_median ~ clarity_specificity +
     logic_consistency + tone_manner +
-    validity_feasibility + category,
+    validity_feasibility + category_en_model,
   data = theta_df
 )
 

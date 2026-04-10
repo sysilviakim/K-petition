@@ -45,9 +45,6 @@ if (requireNamespace("wordcloud2", quietly = TRUE)) {
   library(wordcloud2)
   library(htmlwidgets)
 }
-if (requireNamespace("ldatuning", quietly = TRUE)) {
-  library(ldatuning)
-}
 if (requireNamespace("textmineR", quietly = TRUE)) {
   library(textmineR)
 }
@@ -63,8 +60,15 @@ extract_pt_content <- function(x, date = NULL) {
   sec_content <- sec_titles <- title_text <- area <- attachment <- status <-
     date_implemented <- date_answered <- date_petitioned <- branch <- NULL
 
-  out <- x$source %>%
-    read_html()
+  ## Guard: fail fast if source is a URL (not raw HTML) to avoid network hang
+  src <- x$source
+  if (!grepl("^\\s*<", src)) {
+    stop(paste0(
+      "x$source does not look like HTML (first 80 chars: ",
+      substr(src, 1, 80), ")"
+    ))
+  }
+  out <- read_html(src)
 
   ## First, need to preserve <br> tags as \n
   xml_find_all(out, ".//br") %>% xml_add_sibling("text", "\n")
@@ -126,9 +130,13 @@ extract_pt_content <- function(x, date = NULL) {
 
   misc <- out %>%
     html_nodes("div") %>%
-    ## This is to avoid grabbing the entire page
-    html_text() %>%
-    trimws()
+    html_text()
+
+  ## Pre-filter by raw length before trimws: R's trimws() is O(n²) on large
+  ## multibyte (Korean UTF-8) strings and hangs on multi-MB div content.
+  ## Metadata strings (dates, branch names) are always short; skip large ones.
+  misc <- misc[nchar(misc) < 2000]
+  misc <- trimws(misc)
 
   ## Keep only nodes with short text of under 200 characters
   misc <- misc[nchar(misc) < 200]
@@ -337,8 +345,7 @@ theta_post_viz <- function(stats_summ,
 
   p <- p +
     geom_point() +
-    xlim(-3, 3) +
-    ylim(-3, 3) +
+    coord_cartesian(xlim = c(-3, 3), ylim = c(-3, 3)) +
     xlab("Theta 1D") +
     ylab("Theta 2D") +
     theme_minimal() +
@@ -510,10 +517,162 @@ count_ones <- function(x) {
   nchar(gsub("0", "", x))
 }
 
+label_table_text <- function(x) {
+  if (is.na(x)) {
+    return(x)
+  }
+
+  x <- as.character(x)
+
+  if (grepl(":", x, fixed = TRUE)) {
+    parts <- strsplit(x, ":", fixed = TRUE)[[1]]
+    parts <- vapply(parts, label_table_text, character(1))
+    return(paste(parts, collapse = " x "))
+  }
+
+  exact_map <- c(
+    "(Intercept)" = "Constant",
+    "comparison" = "Comparison",
+    "outcome" = "Outcome",
+    "model" = "Model",
+    "term" = "Term",
+    "F" = "F statistic",
+    "t" = "t statistic",
+    "df" = "Degrees of freedom",
+    "df1" = "Numerator df",
+    "df2" = "Denominator df",
+    "p" = "p-value",
+    "estimate" = "Estimate",
+    "t value" = "t statistic",
+    "Pr(>|t|)" = "p-value",
+    "quality_diff" = "Quality gap",
+    "eff_diff" = "Effectiveness gap",
+    "beneficiary" = "Beneficiary-targeted petition",
+    "female" = "Female",
+    "seoul" = "Seoul resident",
+    "married" = "Married",
+    "has_young_child" = "Has young child",
+    "median_incomeAbove Median" = "Above-median income",
+    "subj_class3Middle" = "Subjective class: middle",
+    "subj_class3Upper" = "Subjective class: upper",
+    "ideo3moderate" = "Ideology: moderate",
+    "ideo3conservative" = "Ideology: conservative",
+    "ppp" = "PPP supporter",
+    "voted_yoon_2022" = "Voted for Yoon in 2022",
+    "voted_lee_2025" = "Voted for Lee in 2025",
+    "populist" = "Populist attitude",
+    "anti_elitist" = "Anti-elitist attitude",
+    "instit_trust_high" = "High institutional trust",
+    "log_time" = "Log response time",
+    "clarity_specificity1" = "Clarity and specificity",
+    "logic_consistency1" = "Logic and consistency",
+    "tone_manner1" = "Tone and manner",
+    "validity_feasibility1" = "Validity and feasibility",
+    "mean_eff" = "Mean effectiveness",
+    "pair_typeMixed" = "Mixed pair",
+    "pair_typeSubstance" = "Substance pair",
+    "eff_gap_bin" = "Effectiveness gap bin",
+    "Adj. R2" = "Adjusted R-squared",
+    "Adj_R2" = "Adjusted R-squared",
+    "N_predictors" = "Predictors",
+    "Eta_sq" = "Eta squared",
+    "Mean_1" = "Mean 1",
+    "Mean_2" = "Mean 2",
+    "KS_D" = "KS statistic",
+    "KS_p" = "KS p-value",
+    "welfare_type" = "Petition type",
+    "cor_theta1" = "Corr. with Theta 1",
+    "cor_theta2" = "Corr. with Theta 2",
+    "n_items" = "Items",
+    "std.error" = "Std. Error",
+    "p.value" = "p-value",
+    "R2" = "R-squared"
+  )
+
+  if (x %in% names(exact_map)) {
+    return(unname(exact_map[[x]]))
+  }
+
+  if (grepl("^age_group", x)) {
+    return(paste("Age", sub("^age_group", "", x)))
+  }
+
+  if (grepl("^edu4", x)) {
+    edu_map <- c(
+      "Some college" = "Some college",
+      "College grad" = "College graduate",
+      "Postgrad" = "Postgraduate degree"
+    )
+    suffix <- sub("^edu4", "", x)
+    if (suffix %in% names(edu_map)) {
+      return(unname(edu_map[[suffix]]))
+    }
+  }
+
+  if (grepl("^category_en_model", x)) {
+    suffix <- sub("^category_en_model", "", x)
+    return(paste("Category:", suffix))
+  }
+
+  x
+}
+
+label_table_object <- function(x) {
+  if (inherits(x, "tbl_df")) {
+    x <- as.data.frame(x)
+  }
+
+  if (is.matrix(x)) {
+    if (!is.null(colnames(x))) {
+      colnames(x) <- vapply(
+        colnames(x),
+        label_table_text,
+        character(1)
+      )
+    }
+    if (!is.null(rownames(x))) {
+      rownames(x) <- vapply(
+        rownames(x),
+        label_table_text,
+        character(1)
+      )
+    }
+    return(x)
+  }
+
+  if (is.data.frame(x)) {
+    if (!is.null(colnames(x))) {
+      colnames(x) <- vapply(
+        colnames(x),
+        label_table_text,
+        character(1)
+      )
+    }
+    if (!is.null(rownames(x))) {
+      rownames(x) <- vapply(
+        rownames(x),
+        label_table_text,
+        character(1)
+      )
+    }
+    char_cols <- vapply(x, is.character, logical(1))
+    if (any(char_cols)) {
+      x[char_cols] <- lapply(
+        x[char_cols],
+        function(col) {
+          vapply(col, label_table_text, character(1))
+        }
+      )
+    }
+  }
+  x
+}
+
 save_xtable <- function(x, caption, label, file,
                         include_rownames = FALSE,
                         sanitize = FALSE,
                         digits = NULL) {
+  x <- label_table_object(x)
   xt <- xtable(
     x,
     caption = caption,

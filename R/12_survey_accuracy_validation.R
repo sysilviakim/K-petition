@@ -224,7 +224,7 @@ p_acc_eff <- ggplot(
   ylim(0, 1) +
   theme_minimal()
 
-pdf(here::here("fig", "choice_acc_eff.pdf"), width = 6, height = 5)
+pdf(here::here("fig", "choice_acc_eff.pdf"), width = 4, height = 3.5)
 print(p_acc_eff)
 dev.off()
 
@@ -346,7 +346,8 @@ dev.off()
 cor_expert_eff <- cor.test(
   eff_by_dim$quality_sum,
   eff_by_dim$mean_eff,
-  method = "spearman"
+  method = "spearman",
+  exact = FALSE
 )
 cor_expert_eff
 
@@ -399,6 +400,7 @@ dim_table <- bind_rows(
   broom::tidy(lm_dim_theta2) %>%
     mutate(outcome = "Theta 2D")
 ) %>%
+  filter(term != "(Intercept)") %>%
   select(outcome, term, estimate, std.error, p.value)
 
 save_xtable(

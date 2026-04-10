@@ -338,9 +338,11 @@ dev.off()
 
 
 ## find optimal topic number (requires ldatuning)
-if (exists("FindTopicsNumber")) {
+pkg_ldatuning <- "ldatuning"
+if (requireNamespace(pkg_ldatuning, quietly = TRUE)) {
+  find_topics_number <- getExportedValue(pkg_ldatuning, "FindTopicsNumber")
   topics_range <- seq(5, 40, by = 1)
-  topic_grid_search <- FindTopicsNumber(
+  topic_grid_search <- find_topics_number(
     petition.dfm,
     topics = topics_range,
     metrics = c("CaoJuan2009", "Arun2010", "Deveaud2014"),
