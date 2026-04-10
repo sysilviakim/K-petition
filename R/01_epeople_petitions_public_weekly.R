@@ -6,6 +6,52 @@ source(here::here("R", "utilities.R"))
 ## drivers/chromedriver-win64/chromedriver.exe --port=5554
 library(selenium)
 
+## Angular shell is ~4504 chars; rendered petition pages are >10 000 chars
+PAGE_CONTENT_THRESHOLD <- 10000L
+PAGE_WAIT_TIMEOUT_S    <- 15L
+PAGE_POLL_INTERVAL_S   <- 0.5
+
+## Poll get_page_source() until the SPA has rendered content or timeout
+wait_for_page_content <- function(
+    client,
+    threshold  = PAGE_CONTENT_THRESHOLD,
+    timeout_s  = PAGE_WAIT_TIMEOUT_S,
+    interval_s = PAGE_POLL_INTERVAL_S) {
+  deadline <- proc.time()[["elapsed"]] + timeout_s
+  repeat {
+    src <- client$get_page_source()
+    if (nchar(src) > threshold) return(src)
+    if (proc.time()[["elapsed"]] >= deadline) {
+      message(
+        "wait_for_page_content: timed out after ", timeout_s,
+        "s (", nchar(src), " chars)"
+      )
+      return(src)
+    }
+    Sys.sleep(interval_s)
+  }
+}
+
+## Poll until .left a list elements appear (listing page re-rendered)
+wait_for_list_elements <- function(
+    client,
+    timeout_s  = PAGE_WAIT_TIMEOUT_S,
+    interval_s = PAGE_POLL_INTERVAL_S) {
+  deadline <- proc.time()[["elapsed"]] + timeout_s
+  repeat {
+    elems <- client$find_elements("css selector", ".left a")
+    if (length(elems) > 0L) return(elems)
+    if (proc.time()[["elapsed"]] >= deadline) {
+      message(
+        "wait_for_list_elements: timed out after ", timeout_s,
+        "s — no .left a elements found"
+      )
+      return(elems)
+    }
+    Sys.sleep(interval_s)
+  }
+}
+
 client <- SeleniumSession$new(
   browser = "chrome", port = 5554L
 )
@@ -14,7 +60,7 @@ client$navigate(
   "https://www.epeople.go.kr/nep/prpsl/opnPrpl/opnpblPrpslList.npaid"
 )
 
-## Generate weeks within year, from 2013--2025
+## Generate weeks within year, from 2025--2025
 ## Otherwise, too many iterations for Selenium to handle in one go
 week_list <- week_list_fxn(2025, 2025)
 
@@ -35,11 +81,11 @@ for (wk in week_list) {
     )
   )
 
-  ## Search button. Not sure why it requires [[2]] and not [[1]]
+  ## Search button — wait for list to render instead of bare Sys.sleep
   client$execute_script(
     "document.querySelectorAll('.black')[1].click();"
   )
-  Sys.sleep(5)
+  wait_for_list_elements(client)
 
   ## Total page number ---------------------------------------------------------
   max_pages <- client$get_page_source() %>%
@@ -94,25 +140,31 @@ for (wk in week_list) {
       title <- petitions[[i]]$get_text()
       ## Scroll into center of viewport, then JS-click to bypass overlays
       client$execute_script(sprintf(
-        "document.querySelectorAll('.left a')[%d]
-          .scrollIntoView({block:'center'});", i - 1L
+        paste0(
+          "document.querySelectorAll('.left a')[%d]",
+          ".scrollIntoView({block:'center'});"
+        ),
+        i - 1L
       ))
       Sys.sleep(0.5)
       client$execute_script(sprintf(
-        "document.querySelectorAll('.left a')[%d].click();", i - 1L
+        "document.querySelectorAll('.left a')[%d].click();",
+        i - 1L
       ))
 
-      ## Scrape content: deal with elements later
+      ## Wait for SPA to render petition detail before capturing source
+      src <- wait_for_page_content(client)
+
       pub_petition_content[[p]][[i]] <- list(
         title     = title,
-        source    = client$get_page_source(),
+        source    = src,
         page_meta = tab
       )
-      Sys.sleep(5)
 
       ## Go back to the parent page -> this resets to recent 3 months
       client$back()
-      petitions <- client$find_elements("css selector", ".left a")
+      ## Wait for listing to re-render before re-finding petition links
+      petitions <- wait_for_list_elements(client)
 
       ## Save mid-process (10 petitions at maximum per page)
       if (i == length(petitions)) {
@@ -138,7 +190,8 @@ for (wk in week_list) {
         "document.querySelectorAll('img')[%d].click();",
         length(img_buttons) - 3L
       ))
-      Sys.sleep(5)
+      ## Wait for next page list to render
+      wait_for_list_elements(client)
     }
 
     cat("Page", p, "finished.\n")
