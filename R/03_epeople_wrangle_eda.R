@@ -1,7 +1,10 @@
 source(here::here("R", "utilities.R"))
 
 # Load all data, wrangle, bind, and save =======================================
-petition_list <- seq(2002, 2025) %>%
+## Freeze the descriptive corpus to the years used in the paper.
+paper_end_year <- 2024
+
+petition_list <- seq(2002, paper_end_year) %>%
   set_names(., .) %>%
   map(
     ~ {
@@ -207,11 +210,14 @@ answer_rate <- petition %>%
 ## Consider only 제안추진 / 제안실현 as an acceptance rate
 answer_rate <- answer_rate %>%
   ## Early years have too few petitions to make this meaningful
-  filter(year > 2011) %>%
-  filter(status %in% c("제안추진", "제안실현")) %>%
-  mutate(status = "제안추진/실현") %>%
+  mutate(year = as.numeric(year)) %>%
+  filter(year > 2011 & year <= paper_end_year) %>%
   group_by(year) %>%
-  summarise(perc = sum(perc))
+  summarise(
+    perc = sum(
+      if_else(status %in% c("제안추진", "제안실현"), perc, 0)
+    )
+  )
 
 ## Draw... actually with the number of petitions over the years
 p1 <- answer_rate %>%
@@ -219,6 +225,7 @@ p1 <- answer_rate %>%
   geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Percentage of Accepted Petitions") +
   theme_bw() +
+  scale_x_continuous(breaks = seq(2012, paper_end_year, 1)) +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -226,12 +233,12 @@ load(here::here("data", "raw", "pub_petition_num_total.Rda"))
 p2 <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
-  filter(year > 2011) %>%
+  filter(year > 2011 & year <= paper_end_year) %>%
   ggplot(aes(x = year, y = total)) +
   geom_col(colour = ACCENT, fill = ACCENT) +
   labs(x = "Year", y = "Number of Petitions") +
   scale_y_continuous(labels = scales::comma) +
-  scale_x_continuous(breaks = seq(2012, 2024, 1)) +
+  scale_x_continuous(breaks = seq(2012, paper_end_year, 1)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -294,16 +301,16 @@ dev.off()
 ## so I'm guessing this is a data generating process problem
 ## i.e., which departments are responsible for the petitions
 
-## I'd rather draw a version from 2012--2023
+## I'd rather draw a version from 2012--2024
 p <- petition %>%
-  filter(year_petitioned > 2011 & year_petitioned < 2026) %>%
+  filter(year_petitioned > 2011 & year_petitioned <= paper_end_year) %>%
   ggplot(aes(x = year_petitioned, fill = area)) +
   geom_bar(position = "fill") +
   ylab("") +
   scale_fill_viridis_d() +
   theme_bw() +
   scale_y_continuous(labels = scales::percent) +
-  scale_x_continuous(breaks = seq(2012, 2025, 1))
+  scale_x_continuous(breaks = seq(2012, paper_end_year, 1))
 pdf(
   here::here(
     "fig",
