@@ -31,7 +31,7 @@ theta_cols <- grep(
 pdf(here::here("fig", "mcmc_diagnostics.pdf"), width = 10, height = 8)
 par(mfrow = c(2, 2))
 for (col in theta_cols[1:4]) {
-  traceplot(post_out[, col], main = col)
+  traceplot(post_out[, col], main = label_parameter_text(col))
 }
 dev.off()
 

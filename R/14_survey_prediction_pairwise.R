@@ -330,6 +330,18 @@ imp_df <- data.frame(
     )
   )
 
+importance_theme <- theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 13),
+    axis.title.y = element_text(size = 13),
+    legend.position = "bottom",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 11),
+    strip.text = element_text(size = 12)
+  )
+
 p_importance <- ggplot(
   imp_df,
   aes(
@@ -341,9 +353,9 @@ p_importance <- ggplot(
   coord_flip() +
   xlab("") +
   ylab("Variable Importance (Gini)") +
+  scale_x_discrete(labels = label_table_text) +
   scale_fill_viridis_d(name = "Feature Type") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  importance_theme
 
 pdf(here::here("fig", "rf_variable_importance.pdf"), width = 7, height = 5)
 print(p_importance)
@@ -387,9 +399,9 @@ p_lasso <- ggplot(
   coord_flip() +
   xlab("") +
   ylab("LASSO Coefficient") +
+  scale_x_discrete(labels = label_table_text) +
   scale_fill_viridis_d(name = "Feature Type") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  importance_theme
 
 pdf(here::here("fig", "lasso_coefficients.pdf"), width = 7, height = 5)
 print(p_lasso)
@@ -491,9 +503,9 @@ p_perm <- ggplot(
   coord_flip() +
   xlab("") +
   ylab("Permutation Importance") +
+  scale_x_discrete(labels = label_table_text) +
   scale_fill_viridis_d(name = "Feature Type") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  importance_theme
 
 pdf(here::here("fig", "rf_permutation_importance.pdf"), width = 7, height = 5)
 print(p_perm)
@@ -542,9 +554,9 @@ p_compare <- ggplot(
   facet_wrap(~method) +
   xlab("") +
   ylab("Normalized Importance") +
+  scale_x_discrete(labels = label_table_text) +
   scale_fill_viridis_d(name = "Feature Type") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  importance_theme
 
 pdf(here::here("fig", "importance_comparison.pdf"), width = 12, height = 6)
 print(p_compare)

@@ -330,6 +330,18 @@ imp_nonwelfare <- fit_and_rank(pred_nw, "chose_item1",
 
 imp_combined <- bind_rows(imp_welfare, imp_nonwelfare)
 
+importance_theme <- theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 13),
+    axis.title.y = element_text(size = 13),
+    legend.position = "bottom",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 11),
+    strip.text = element_text(size = 12)
+  )
+
 p_imp_welfare <- ggplot(
   imp_combined %>%
     group_by(subset) %>%
@@ -342,9 +354,9 @@ p_imp_welfare <- ggplot(
   facet_wrap(~subset, scales = "free_y") +
   xlab("") +
   ylab("Permutation Importance") +
+  scale_x_discrete(labels = label_table_text) +
   scale_fill_viridis_d(name = "Feature Type") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  importance_theme
 
 pdf(here::here("fig", "importance_by_welfare.pdf"), width = 12, height = 6)
 print(p_imp_welfare)
