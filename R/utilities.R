@@ -518,6 +518,10 @@ count_ones <- function(x) {
 }
 
 label_table_text <- function(x) {
+  if (length(x) > 1) {
+    return(vapply(x, label_table_text, character(1)))
+  }
+
   if (is.na(x)) {
     return(x)
   }
@@ -545,13 +549,28 @@ label_table_text <- function(x) {
     "estimate" = "Estimate",
     "t value" = "t statistic",
     "Pr(>|t|)" = "p-value",
+    "diff_quality" = "Expert quality-score difference",
+    "diff_nchar" = "Character-count difference",
+    "diff_nword" = "Word-count difference",
+    "diff_nsent" = "Sentence-count difference",
+    "diff_avg_sent" = "Average sentence-length difference",
+    "diff_clarity" = "Clarity difference",
+    "diff_logic" = "Logic/consistency difference",
+    "diff_manner" = "Tone/manner difference",
+    "diff_validity" = "Validity/feasibility difference",
     "quality_diff" = "Quality gap",
     "eff_diff" = "Effectiveness gap",
+    "same_category" = "Same policy category",
     "beneficiary" = "Beneficiary-targeted petition",
     "female" = "Female",
+    "age_group" = "Age group",
+    "edu4" = "Education",
     "seoul" = "Seoul resident",
     "married" = "Married",
     "has_young_child" = "Has young child",
+    "median_income" = "Income group",
+    "subj_class3" = "Subjective class",
+    "ideo3" = "Ideology",
     "median_incomeAbove Median" = "Above-median income",
     "subj_class3Middle" = "Subjective class: middle",
     "subj_class3Upper" = "Subjective class: upper",
@@ -594,19 +613,66 @@ label_table_text <- function(x) {
   }
 
   if (grepl("^age_group", x)) {
-    return(paste("Age", sub("^age_group", "", x)))
+    suffix <- sub("^age_group", "", x)
+    if (!nzchar(suffix)) {
+      return("Age group")
+    }
+    suffix <- gsub("\\.", "-", suffix)
+    if (suffix == "60") {
+      suffix <- "60+"
+    }
+    return(paste("Age:", suffix))
   }
 
   if (grepl("^edu4", x)) {
+    suffix <- sub("^edu4", "", x)
+    if (!nzchar(suffix)) {
+      return("Education")
+    }
+    suffix <- gsub("\\.", " ", suffix)
     edu_map <- c(
       "Some college" = "Some college",
       "College grad" = "College graduate",
       "Postgrad" = "Postgraduate degree"
     )
-    suffix <- sub("^edu4", "", x)
     if (suffix %in% names(edu_map)) {
-      return(unname(edu_map[[suffix]]))
+      suffix <- unname(edu_map[[suffix]])
     }
+    return(paste("Education:", suffix))
+  }
+
+  if (grepl("^median_income", x)) {
+    suffix <- sub("^median_income", "", x)
+    if (!nzchar(suffix)) {
+      return("Income group")
+    }
+    suffix <- gsub("\\.", " ", suffix)
+    income_map <- c(
+      "Above Median" = "above median",
+      "Below Median" = "below median"
+    )
+    if (suffix %in% names(income_map)) {
+      suffix <- unname(income_map[[suffix]])
+    }
+    return(paste("Income:", suffix))
+  }
+
+  if (grepl("^subj_class3", x)) {
+    suffix <- sub("^subj_class3", "", x)
+    if (!nzchar(suffix)) {
+      return("Subjective class")
+    }
+    suffix <- gsub("\\.", " ", suffix)
+    return(paste("Subjective class:", tolower(suffix)))
+  }
+
+  if (grepl("^ideo3", x)) {
+    suffix <- sub("^ideo3", "", x)
+    if (!nzchar(suffix)) {
+      return("Ideology")
+    }
+    suffix <- gsub("\\.", " ", suffix)
+    return(paste("Ideology:", tolower(suffix)))
   }
 
   if (grepl("^category_en_model", x)) {
@@ -615,6 +681,31 @@ label_table_text <- function(x) {
   }
 
   x
+}
+
+label_parameter_text <- function(x) {
+  if (length(x) > 1) {
+    return(vapply(x, label_parameter_text, character(1)))
+  }
+
+  if (is.na(x)) {
+    return(x)
+  }
+
+  x <- as.character(x)
+
+  if (grepl("^theta[12]\\.item\\.", x)) {
+    dim_no <- sub("^theta([12])\\.item\\..*$", "\\1", x)
+    item_no <- sub("^theta[12]\\.item\\.", "", x)
+    return(sprintf("Dimension %s (Petition %s)", dim_no, item_no))
+  }
+
+  if (grepl("^theta[12]$", x)) {
+    dim_no <- sub("^theta", "", x)
+    return(sprintf("Dimension %s", dim_no))
+  }
+
+  label_table_text(x)
 }
 
 label_table_object <- function(x) {
