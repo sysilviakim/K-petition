@@ -1,0 +1,1223 @@
+NO,primary,primary_en,all_labels,regex,gender,age_group,edu3,marital,income,occupation,ideo3
+19,8,Positive / Supportive,8,8,Female,60+,HS or less,Single,200-400,Office worker,Conservative
+21,1,Lack of effectiveness,1|3,1,Male,60+,HS or less,Married (children),200-400,Self-employed,Conservative
+23,9,No opinion / Don't know,9,14,Female,60+,Grad+,Other,700-1000,Civil servant/Teacher,Progressive
+24,9,No opinion / Don't know,9,9,Female,20s,College,Single,200-400,Office worker,Progressive
+25,6,Readability / Communication issues,6,6,Male,40s,College,Married (children),700-1000,Office worker,Conservative
+26,12,Feasibility / Unrealistic proposals,6|12,12,Male,50s,College,Married (children),400-700,Technical,Progressive
+27,1,Lack of effectiveness,1,1,Male,40s,HS or less,Single,< 200,Unemployed/Retired,Conservative
+28,3,Transparency / Feedback deficiency,3,3,Female,60+,College,Married (children),400-700,Homemaker,Conservative
+29,2,Frivolous / Emotional petitions,1|2,9,Male,60+,College,Married (children),400-700,Office worker,Conservative
+30,1,Lack of effectiveness,1,1,Female,30s,College,Single,200-400,Office worker,Progressive
+31,9,No opinion / Don't know,9,11,Male,60+,HS or less,Married (children),200-400,Agriculture,Progressive
+32,2,Frivolous / Emotional petitions,2,2,Female,20s,HS or less,Single,200-400,Service/Sales,Progressive
+33,9,No opinion / Don't know,9,9,Male,30s,College,Single,200-400,Office worker,Conservative
+35,1,Lack of effectiveness,1|13,1,Male,60+,Grad+,Married (children),700-1000,Civil servant/Teacher,Progressive
+36,1,Lack of effectiveness,1,14,Male,60+,HS or less,Married (children),200-400,Self-employed,Conservative
+37,11,Need for more participation / Awareness,11,11,Male,50s,College,Married (children),700-1000,Office worker,Conservative
+38,6,Readability / Communication issues,5|6,5,Male,30s,College,Married (no children),400-700,Office worker,Conservative
+40,12,Feasibility / Unrealistic proposals,12,12,Male,50s,College,Married (children),400-700,Office worker,Moderate
+41,13,Civil servant burden / Institutional constraints,1|13,7,Male,60+,HS or less,Married (children),400-700,Service/Sales,Conservative
+42,11,Need for more participation / Awareness,11|13,13,Female,60+,College,Other,< 200,Freelancer,Conservative
+43,9,No opinion / Don't know,9,9,Female,40s,HS or less,Other,< 200,Unemployed/Retired,Moderate
+44,4,Slow processing / Bureaucratic delays,3|4,3,Female,60+,College,Married (children),400-700,Homemaker,Conservative
+45,5,Need for filtering / Guidelines,5,1,Female,20s,College,Single,700-1000,Student,Progressive
+46,1,Lack of effectiveness,1|4,4,Female,50s,College,Married (children),200-400,Freelancer,Progressive
+47,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+48,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,200-400,Service/Sales,Conservative
+50,3,Transparency / Feedback deficiency,3,3,Female,30s,College,Married (children),400-700,Office worker,Moderate
+51,9,No opinion / Don't know,9,11,Female,60+,College,Married (children),200-400,Self-employed,Progressive
+52,6,Readability / Communication issues,6|12,12,Male,50s,Grad+,Married (children),1000+,Self-employed,Progressive
+53,9,No opinion / Don't know,9,9,Male,30s,College,Married (children),400-700,Office worker,Progressive
+54,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),400-700,Unemployed/Retired,Moderate
+55,2,Frivolous / Emotional petitions,2|6|7,2,Female,60+,Grad+,Married (children),700-1000,Unemployed/Retired,Progressive
+56,6,Readability / Communication issues,6,6,Male,30s,College,Single,1000+,Agriculture,Conservative
+57,13,Civil servant burden / Institutional constraints,13,13,Male,40s,College,Married (children),200-400,Office worker,Conservative
+58,9,No opinion / Don't know,9,9,Male,40s,College,Married (children),700-1000,Office worker,Progressive
+59,1,Lack of effectiveness,1|13,1,Male,60+,Grad+,Married (children),400-700,Professional,Conservative
+60,5,Need for filtering / Guidelines,5,6,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+61,5,Need for filtering / Guidelines,5,14,Male,60+,HS or less,Married (children),200-400,Office worker,Progressive
+62,4,Slow processing / Bureaucratic delays,3|4,3,Male,50s,College,Married (no children),400-700,Office worker,Moderate
+63,7,Personal / Selfish petitions,1|7,7,Male,40s,College,Married (children),1000+,Office worker,Progressive
+64,9,No opinion / Don't know,9,9,Female,60+,College,Married (no children),200-400,Office worker,Conservative
+65,5,Need for filtering / Guidelines,5,14,Male,60+,Grad+,Married (children),400-700,Unemployed/Retired,Progressive
+66,13,Civil servant burden / Institutional constraints,13,6,Male,60+,College,Married (children),1000+,Professional,Moderate
+67,5,Need for filtering / Guidelines,5,2,Male,30s,College,Married (children),400-700,Office worker,Conservative
+68,1,Lack of effectiveness,1,1,Male,40s,College,Married (children),400-700,Professional,Conservative
+69,5,Need for filtering / Guidelines,5,5,Male,50s,College,Married (children),400-700,Office worker,Conservative
+70,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),400-700,Professional,Conservative
+72,5,Need for filtering / Guidelines,5,6,Female,30s,College,Single,700-1000,Office worker,Moderate
+73,12,Feasibility / Unrealistic proposals,12,12,Female,30s,College,Single,200-400,Office worker,Moderate
+74,12,Feasibility / Unrealistic proposals,12,12,Male,40s,Grad+,Married (children),400-700,Office worker,Moderate
+75,12,Feasibility / Unrealistic proposals,12,12,Male,30s,Grad+,Married (no children),200-400,Office worker,Progressive
+76,6,Readability / Communication issues,6,5,Male,30s,College,Single,200-400,Office worker,Moderate
+77,9,No opinion / Don't know,9,9,Male,40s,HS or less,Married (children),400-700,Office worker,Moderate
+78,9,No opinion / Don't know,9,9,Male,50s,College,Married (no children),1000+,Office worker,Progressive
+79,1,Lack of effectiveness,1,1,Male,60+,College,Married (children),200-400,Technical,Conservative
+80,4,Slow processing / Bureaucratic delays,4,4,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+81,4,Slow processing / Bureaucratic delays,4,4,Male,60+,College,Other,400-700,Office worker,Progressive
+85,2,Frivolous / Emotional petitions,2,2,Female,20s,Grad+,Single,200-400,Professional,Moderate
+86,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),400-700,Office worker,Progressive
+87,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Single,200-400,Office worker,Moderate
+88,9,No opinion / Don't know,9,9,Female,20s,College,Single,200-400,Service/Sales,Conservative
+89,1,Lack of effectiveness,1,13,Female,60+,HS or less,Other,200-400,Office worker,Progressive
+90,9,No opinion / Don't know,9,9,Male,20s,College,Single,< 200,Student,Moderate
+91,5,Need for filtering / Guidelines,5|11,8,Female,50s,College,Other,200-400,Office worker,Progressive
+92,1,Lack of effectiveness,1,12,Female,40s,College,Single,200-400,Office worker,Conservative
+93,7,Personal / Selfish petitions,7,14,Male,60+,College,Married (children),1000+,Office worker,Progressive
+94,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Single,200-400,Unemployed/Retired,Moderate
+95,10,Mob mentality / Opinion manipulation,10,2,Male,50s,College,Married (children),400-700,Self-employed,Progressive
+96,4,Slow processing / Bureaucratic delays,4|11,9,Male,60+,College,Married (children),400-700,Agriculture,Progressive
+97,5,Need for filtering / Guidelines,5,5,Female,30s,Grad+,Single,200-400,Civil servant/Teacher,Progressive
+98,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),400-700,Office worker,Moderate
+99,6,Readability / Communication issues,6,4,Male,50s,Grad+,Married (children),700-1000,Civil servant/Teacher,Conservative
+100,1,Lack of effectiveness,1|7,6,Male,50s,Grad+,Married (children),1000+,Professional,Progressive
+101,3,Transparency / Feedback deficiency,3|6,7,Female,40s,Grad+,Married (children),1000+,Office worker,Progressive
+102,2,Frivolous / Emotional petitions,2,3,Female,50s,College,Married (children),200-400,Self-employed,Progressive
+103,5,Need for filtering / Guidelines,2|5,2,Female,50s,College,Married (children),700-1000,Office worker,Conservative
+104,12,Feasibility / Unrealistic proposals,12,2,Male,50s,HS or less,Married (no children),200-400,Office worker,Progressive
+105,9,No opinion / Don't know,9,1,Female,30s,College,Single,1000+,Service/Sales,Conservative
+106,3,Transparency / Feedback deficiency,1|3,9,Female,20s,College,Single,400-700,Freelancer,Conservative
+107,14,Other,14,1,Male,50s,College,Married (children),400-700,Office worker,Progressive
+108,7,Personal / Selfish petitions,7,7,Female,40s,College,Single,200-400,Office worker,Moderate
+109,9,No opinion / Don't know,9,9,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Moderate
+110,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Married (children),700-1000,Office worker,Moderate
+111,2,Frivolous / Emotional petitions,2,14,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+112,7,Personal / Selfish petitions,7,7,Male,60+,College,Married (children),400-700,Unemployed/Retired,Moderate
+113,1,Lack of effectiveness,1|13,1,Male,60+,Grad+,Married (children),400-700,Self-employed,Conservative
+114,8,Positive / Supportive,8,9,Male,60+,Grad+,Married (no children),< 200,Professional,Conservative
+115,1,Lack of effectiveness,1,2,Female,30s,College,Single,200-400,Office worker,Conservative
+117,10,Mob mentality / Opinion manipulation,10,10,Male,60+,HS or less,Married (children),400-700,Unemployed/Retired,Progressive
+118,14,Other,14,14,Male,60+,College,Married (children),700-1000,Freelancer,Progressive
+119,8,Positive / Supportive,8,9,Female,60+,College,Married (children),400-700,Freelancer,Progressive
+120,13,Civil servant burden / Institutional constraints,13,13,Male,40s,College,Married (children),200-400,Office worker,Moderate
+121,12,Feasibility / Unrealistic proposals,12,1,Female,40s,College,Married (children),400-700,Civil servant/Teacher,Progressive
+122,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),400-700,Office worker,Conservative
+123,1,Lack of effectiveness,1,1,Male,50s,College,Married (children),200-400,Service/Sales,Conservative
+124,12,Feasibility / Unrealistic proposals,12,12,Female,40s,HS or less,Married (children),200-400,Other,Progressive
+126,3,Transparency / Feedback deficiency,1|3,1,Female,60+,HS or less,Other,700-1000,Unemployed/Retired,Moderate
+127,10,Mob mentality / Opinion manipulation,10,2,Female,50s,HS or less,Married (children),200-400,Homemaker,Progressive
+129,1,Lack of effectiveness,1,1,Male,20s,College,Single,400-700,Unemployed/Retired,Conservative
+130,3,Transparency / Feedback deficiency,3,3,Male,60+,College,Married (children),400-700,Office worker,Conservative
+131,2,Frivolous / Emotional petitions,2,2,Female,60+,HS or less,Married (children),200-400,Homemaker,Conservative
+132,1,Lack of effectiveness,1,1,Male,60+,Grad+,Married (children),700-1000,Professional,Conservative
+133,1,Lack of effectiveness,1|2|8,2,Female,50s,HS or less,Married (children),400-700,Office worker,Progressive
+134,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,400-700,Office worker,Progressive
+136,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Progressive
+137,12,Feasibility / Unrealistic proposals,12,12,Male,50s,College,Married (children),700-1000,Unemployed/Retired,Moderate
+139,10,Mob mentality / Opinion manipulation,10,14,Male,30s,College,Married (children),400-700,Office worker,Conservative
+140,7,Personal / Selfish petitions,7|8|11,8,Male,40s,College,Other,200-400,Office worker,Moderate
+142,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Other,200-400,Office worker,Progressive
+143,2,Frivolous / Emotional petitions,2,2,Female,60+,HS or less,Married (children),400-700,Homemaker,Moderate
+144,5,Need for filtering / Guidelines,5|8,5,Male,30s,College,Single,400-700,Office worker,Conservative
+145,4,Slow processing / Bureaucratic delays,4|8,13,Male,50s,HS or less,Single,200-400,Unemployed/Retired,Conservative
+146,13,Civil servant burden / Institutional constraints,1|13,13,Male,60+,College,Single,200-400,Self-employed,Conservative
+147,13,Civil servant burden / Institutional constraints,1|7|13,13,Male,50s,College,Married (no children),400-700,Self-employed,Conservative
+148,1,Lack of effectiveness,1,13,Male,40s,College,Married (children),700-1000,Office worker,Moderate
+149,7,Personal / Selfish petitions,7,7,Male,60+,College,Married (children),200-400,Freelancer,Conservative
+150,10,Mob mentality / Opinion manipulation,10,10,Male,20s,Grad+,Single,400-700,Student,Conservative
+151,12,Feasibility / Unrealistic proposals,12,12,Female,40s,College,Married (children),< 200,Homemaker,Progressive
+152,12,Feasibility / Unrealistic proposals,1|12,1,Male,50s,Grad+,Married (children),400-700,Office worker,Conservative
+153,2,Frivolous / Emotional petitions,2|10,2,Male,50s,Grad+,Other,400-700,Professional,Progressive
+154,4,Slow processing / Bureaucratic delays,4,4,Male,40s,College,Single,400-700,Office worker,Moderate
+155,5,Need for filtering / Guidelines,5|12,1,Male,40s,College,Married (children),200-400,Office worker,Conservative
+156,9,No opinion / Don't know,9,2,Male,40s,College,Married (children),400-700,Office worker,Moderate
+157,2,Frivolous / Emotional petitions,2|10,2,Male,50s,HS or less,Married (children),200-400,Office worker,Moderate
+158,9,No opinion / Don't know,9,9,Female,30s,College,Single,< 200,Freelancer,Progressive
+159,9,No opinion / Don't know,9,9,Male,40s,College,Married (children),400-700,Self-employed,Moderate
+160,12,Feasibility / Unrealistic proposals,12,12,Male,30s,College,Single,200-400,Unemployed/Retired,Progressive
+161,11,Need for more participation / Awareness,11,11,Female,60+,College,Married (children),< 200,Homemaker,Conservative
+163,1,Lack of effectiveness,1|2,1,Male,30s,College,Single,200-400,Freelancer,Progressive
+165,3,Transparency / Feedback deficiency,1|3,14,Male,60+,College,Married (children),400-700,Unemployed/Retired,Conservative
+166,2,Frivolous / Emotional petitions,2,2,Male,30s,Grad+,Single,< 200,Freelancer,Conservative
+167,1,Lack of effectiveness,1,1,Male,60+,College,Married (children),400-700,Technical,Conservative
+168,11,Need for more participation / Awareness,11,11,Male,40s,College,Single,700-1000,Office worker,Moderate
+169,8,Positive / Supportive,6|8|11,8,Male,50s,College,Married (children),400-700,Civil servant/Teacher,Moderate
+170,2,Frivolous / Emotional petitions,2|10,2,Female,20s,College,Single,< 200,Unemployed/Retired,Conservative
+171,3,Transparency / Feedback deficiency,3,6,Male,20s,College,Single,200-400,Student,Moderate
+172,11,Need for more participation / Awareness,11,11,Male,60+,Grad+,Single,200-400,Office worker,Progressive
+173,14,Other,14,6,Male,60+,College,Married (children),1000+,Office worker,Conservative
+174,9,No opinion / Don't know,9,9,Male,40s,Grad+,Married (children),< 200,Student,Conservative
+175,10,Mob mentality / Opinion manipulation,10,14,Male,60+,Grad+,Married (children),400-700,Unemployed/Retired,Moderate
+176,1,Lack of effectiveness,1|13,2,Male,40s,College,Married (children),400-700,Office worker,Progressive
+177,1,Lack of effectiveness,1,1,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+178,7,Personal / Selfish petitions,5|7,2,Male,40s,College,Single,200-400,Office worker,Moderate
+179,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),400-700,Office worker,Progressive
+180,13,Civil servant burden / Institutional constraints,10|13,13,Female,60+,College,Married (children),700-1000,Homemaker,Conservative
+181,4,Slow processing / Bureaucratic delays,4|13,2,Female,50s,College,Single,1000+,Office worker,Conservative
+182,12,Feasibility / Unrealistic proposals,2|12,12,Female,50s,College,Married (children),400-700,Service/Sales,Progressive
+183,3,Transparency / Feedback deficiency,3,3,Female,60+,College,Married (children),< 200,Freelancer,Moderate
+184,5,Need for filtering / Guidelines,5|8,5,Male,60+,College,Married (children),400-700,Technical,Progressive
+185,7,Personal / Selfish petitions,2|7,7,Male,60+,Grad+,Married (children),1000+,Office worker,Moderate
+186,3,Transparency / Feedback deficiency,3,3,Male,50s,College,Married (children),< 200,Self-employed,Moderate
+187,8,Positive / Supportive,1|8,14,Male,50s,HS or less,Married (children),400-700,Office worker,Progressive
+188,2,Frivolous / Emotional petitions,2|13,2,Male,50s,College,Married (children),1000+,Office worker,Moderate
+189,12,Feasibility / Unrealistic proposals,2|12,2,Male,40s,College,Single,200-400,Office worker,Progressive
+190,2,Frivolous / Emotional petitions,2|12,2,Female,50s,College,Single,400-700,Freelancer,Moderate
+191,6,Readability / Communication issues,6,14,Male,50s,HS or less,Single,< 200,Service/Sales,Conservative
+192,5,Need for filtering / Guidelines,5|6|7,2,Female,20s,College,Single,200-400,Student,Progressive
+193,1,Lack of effectiveness,1|4|5,1,Male,30s,College,Single,200-400,Service/Sales,Progressive
+194,8,Positive / Supportive,3|8,10,Female,50s,College,Other,< 200,Office worker,Progressive
+195,12,Feasibility / Unrealistic proposals,1|12,1,Male,60+,College,Married (children),200-400,Unemployed/Retired,Progressive
+198,5,Need for filtering / Guidelines,5|6,2,Female,30s,College,Single,< 200,Freelancer,Conservative
+199,3,Transparency / Feedback deficiency,3|4,3,Male,60+,College,Other,400-700,Technical,Progressive
+203,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Single,1000+,Office worker,Progressive
+204,2,Frivolous / Emotional petitions,2|10,2,Male,30s,College,Other,400-700,Office worker,Conservative
+205,1,Lack of effectiveness,1,1,Female,40s,College,Single,400-700,Office worker,Progressive
+206,7,Personal / Selfish petitions,7|11,8,Male,40s,College,Married (children),400-700,Office worker,Progressive
+208,7,Personal / Selfish petitions,7,7,Female,40s,College,Married (children),1000+,Office worker,Conservative
+209,10,Mob mentality / Opinion manipulation,10,10,Male,60+,Grad+,Married (no children),700-1000,Office worker,Progressive
+210,2,Frivolous / Emotional petitions,2|10,2,Female,50s,College,Married (children),700-1000,Homemaker,Moderate
+211,3,Transparency / Feedback deficiency,3|6,3,Female,40s,College,Single,200-400,Office worker,Progressive
+212,4,Slow processing / Bureaucratic delays,4,3,Female,40s,College,Married (children),400-700,Office worker,Progressive
+213,1,Lack of effectiveness,1|13,1,Female,40s,HS or less,Married (children),400-700,Office worker,Moderate
+215,6,Readability / Communication issues,6,4,Male,50s,College,Married (children),400-700,Office worker,Progressive
+216,12,Feasibility / Unrealistic proposals,12,1,Female,20s,College,Single,200-400,Office worker,Moderate
+217,6,Readability / Communication issues,6,6,Female,30s,College,Married (children),700-1000,Office worker,Moderate
+218,1,Lack of effectiveness,1|2,2,Female,20s,College,Single,400-700,Office worker,Conservative
+219,12,Feasibility / Unrealistic proposals,12,2,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+220,2,Frivolous / Emotional petitions,2|6,2,Male,40s,College,Married (children),400-700,Office worker,Conservative
+222,7,Personal / Selfish petitions,7|11,2,Female,60+,HS or less,Married (children),< 200,Homemaker,Moderate
+223,1,Lack of effectiveness,1|12,12,Male,40s,College,Married (children),400-700,Office worker,Moderate
+224,13,Civil servant burden / Institutional constraints,1|13,13,Male,50s,College,Married (children),400-700,Office worker,Progressive
+226,1,Lack of effectiveness,1|10,7,Male,60+,Grad+,Married (children),400-700,Professional,Conservative
+227,8,Positive / Supportive,8,8,Male,50s,College,Married (children),400-700,Self-employed,Progressive
+228,2,Frivolous / Emotional petitions,2,7,Female,20s,College,Married (no children),400-700,Unemployed/Retired,Progressive
+230,8,Positive / Supportive,8,8,Male,60+,College,Married (children),400-700,Office worker,Progressive
+231,13,Civil servant burden / Institutional constraints,13,13,Male,60+,College,Married (children),400-700,Technical,Progressive
+232,3,Transparency / Feedback deficiency,3,3,Female,40s,College,Married (children),400-700,Office worker,Moderate
+233,1,Lack of effectiveness,1,14,Male,50s,Grad+,Married (children),700-1000,Office worker,Progressive
+234,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Student,Moderate
+235,6,Readability / Communication issues,6,14,Male,30s,College,Married (children),1000+,Agriculture,Conservative
+236,9,No opinion / Don't know,9,9,Male,30s,College,Married (children),400-700,Office worker,Progressive
+237,7,Personal / Selfish petitions,7,2,Male,40s,Grad+,Married (children),700-1000,Office worker,Progressive
+238,5,Need for filtering / Guidelines,2|5,2,Male,50s,College,Married (children),400-700,Technical,Progressive
+239,1,Lack of effectiveness,1,1,Female,50s,College,Married (children),< 200,Office worker,Progressive
+240,11,Need for more participation / Awareness,11,1,Male,50s,College,Married (no children),200-400,Office worker,Conservative
+241,4,Slow processing / Bureaucratic delays,4,4,Male,50s,Grad+,Married (no children),700-1000,Office worker,Conservative
+242,2,Frivolous / Emotional petitions,2|10,2,Female,30s,College,Single,200-400,Office worker,Moderate
+243,6,Readability / Communication issues,6,2,Male,40s,College,Married (children),400-700,Professional,Conservative
+244,11,Need for more participation / Awareness,11,11,Male,40s,College,Married (children),200-400,Freelancer,Progressive
+245,3,Transparency / Feedback deficiency,3|4,3,Male,50s,College,Single,200-400,Office worker,Progressive
+246,11,Need for more participation / Awareness,11,3,Male,50s,College,Single,400-700,Office worker,Progressive
+247,6,Readability / Communication issues,6,14,Female,30s,College,Single,200-400,Office worker,Progressive
+248,9,No opinion / Don't know,9,9,Male,30s,College,Married (children),400-700,Office worker,Progressive
+249,3,Transparency / Feedback deficiency,3,3,Male,50s,College,Married (no children),400-700,Office worker,Progressive
+250,1,Lack of effectiveness,1|12,1,Female,40s,College,Single,400-700,Office worker,Progressive
+251,1,Lack of effectiveness,1|7,12,Female,40s,HS or less,Married (children),400-700,Office worker,Moderate
+252,10,Mob mentality / Opinion manipulation,10,7,Male,50s,Grad+,Single,700-1000,Office worker,Progressive
+253,11,Need for more participation / Awareness,8|11,8,Female,50s,College,Other,200-400,Service/Sales,Conservative
+254,5,Need for filtering / Guidelines,5|13,2,Female,30s,Grad+,Single,200-400,Office worker,Progressive
+255,9,No opinion / Don't know,9,9,Male,50s,Grad+,Married (children),700-1000,Office worker,Progressive
+256,7,Personal / Selfish petitions,6|7,2,Female,20s,College,Single,400-700,Office worker,Moderate
+257,1,Lack of effectiveness,1,1,Male,20s,College,Single,200-400,Office worker,Conservative
+258,3,Transparency / Feedback deficiency,3,14,Female,50s,College,Other,200-400,Service/Sales,Conservative
+259,7,Personal / Selfish petitions,7,7,Male,60+,College,Married (children),200-400,Unemployed/Retired,Progressive
+260,9,No opinion / Don't know,9,9,Male,30s,Grad+,Other,200-400,Office worker,Conservative
+261,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),200-400,Office worker,Moderate
+262,1,Lack of effectiveness,1,1,Female,20s,College,Single,700-1000,Office worker,Progressive
+263,9,No opinion / Don't know,9,14,Female,20s,College,Single,700-1000,Office worker,Moderate
+264,9,No opinion / Don't know,9,9,Male,20s,College,Single,200-400,Office worker,Progressive
+265,2,Frivolous / Emotional petitions,2|7,2,Female,30s,College,Single,1000+,Professional,Conservative
+266,2,Frivolous / Emotional petitions,1|2,2,Female,30s,College,Married (no children),400-700,Office worker,Conservative
+267,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Single,200-400,Office worker,Moderate
+268,2,Frivolous / Emotional petitions,2|7,2,Male,30s,College,Married (no children),700-1000,Office worker,Conservative
+269,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),400-700,Self-employed,Progressive
+270,11,Need for more participation / Awareness,11,11,Female,40s,College,Single,200-400,Office worker,Progressive
+271,9,No opinion / Don't know,9,3,Female,40s,HS or less,Other,400-700,Office worker,Moderate
+272,3,Transparency / Feedback deficiency,3|7|13,2,Female,30s,HS or less,Single,200-400,Office worker,Moderate
+273,13,Civil servant burden / Institutional constraints,1|3|11|13,1,Male,50s,College,Married (children),400-700,Freelancer,Progressive
+274,7,Personal / Selfish petitions,1|7,7,Female,30s,College,Married (no children),1000+,Office worker,Conservative
+275,7,Personal / Selfish petitions,2|7,7,Male,20s,College,Single,400-700,Unemployed/Retired,Conservative
+276,6,Readability / Communication issues,6,11,Male,50s,College,Married (children),400-700,Office worker,Progressive
+278,3,Transparency / Feedback deficiency,3,3,Female,50s,College,Single,200-400,Office worker,Moderate
+279,7,Personal / Selfish petitions,1|7,14,Female,40s,College,Married (no children),400-700,Civil servant/Teacher,Progressive
+280,1,Lack of effectiveness,1,1,Female,20s,College,Single,400-700,Student,Conservative
+282,1,Lack of effectiveness,1|3,1,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+283,9,No opinion / Don't know,9,9,Female,20s,HS or less,Single,200-400,Office worker,Conservative
+284,12,Feasibility / Unrealistic proposals,12,12,Female,40s,HS or less,Single,200-400,Office worker,Progressive
+285,6,Readability / Communication issues,6,6,Male,40s,College,Married (children),400-700,Office worker,Conservative
+286,9,No opinion / Don't know,9,9,Female,40s,College,Other,1000+,Office worker,Moderate
+287,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Single,400-700,Office worker,Conservative
+290,1,Lack of effectiveness,1|4,1,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+291,2,Frivolous / Emotional petitions,2|5,2,Female,50s,HS or less,Married (children),400-700,Civil servant/Teacher,Conservative
+292,9,No opinion / Don't know,9,9,Male,40s,College,Single,200-400,Office worker,Conservative
+293,1,Lack of effectiveness,1|3,1,Male,40s,College,Married (children),400-700,Office worker,Conservative
+295,12,Feasibility / Unrealistic proposals,12,1,Female,50s,College,Married (children),400-700,Office worker,Conservative
+296,1,Lack of effectiveness,1,1,Male,20s,College,Single,400-700,Office worker,Progressive
+298,8,Positive / Supportive,4|8,14,Male,40s,HS or less,Other,200-400,Office worker,Moderate
+299,2,Frivolous / Emotional petitions,2|4,2,Male,50s,College,Married (children),200-400,Freelancer,Progressive
+301,7,Personal / Selfish petitions,2|7,7,Female,20s,College,Single,< 200,Unemployed/Retired,Conservative
+303,1,Lack of effectiveness,1,1,Male,30s,Grad+,Married (children),400-700,Office worker,Conservative
+304,1,Lack of effectiveness,1,1,Male,30s,College,Married (children),400-700,Office worker,Progressive
+309,11,Need for more participation / Awareness,11,14,Male,30s,College,Married (no children),400-700,Self-employed,Progressive
+310,11,Need for more participation / Awareness,11,11,Male,40s,Grad+,Married (children),400-700,Office worker,Conservative
+311,9,No opinion / Don't know,9,9,Female,50s,HS or less,Married (children),1000+,Office worker,Progressive
+314,6,Readability / Communication issues,6,6,Male,50s,Grad+,Married (children),700-1000,Office worker,Progressive
+315,1,Lack of effectiveness,1,2,Male,20s,College,Single,< 200,Unemployed/Retired,Conservative
+316,3,Transparency / Feedback deficiency,3|11,11,Female,30s,College,Married (children),200-400,Office worker,Conservative
+317,3,Transparency / Feedback deficiency,3,1,Female,40s,Grad+,Single,700-1000,Professional,Conservative
+319,1,Lack of effectiveness,1,1,Male,50s,College,Married (children),400-700,Office worker,Moderate
+320,11,Need for more participation / Awareness,11,11,Male,60+,College,Married (children),400-700,Technical,Moderate
+321,7,Personal / Selfish petitions,1|7,7,Male,40s,HS or less,Single,< 200,Unemployed/Retired,Conservative
+323,7,Personal / Selfish petitions,7|10,2,Male,40s,College,Married (no children),700-1000,Office worker,Conservative
+324,3,Transparency / Feedback deficiency,3|10,10,Male,60+,College,Married (children),400-700,Office worker,Conservative
+325,4,Slow processing / Bureaucratic delays,4,6,Male,30s,College,Single,400-700,Office worker,Conservative
+326,7,Personal / Selfish petitions,7|12,12,Male,30s,College,Married (children),400-700,Office worker,Conservative
+327,9,No opinion / Don't know,9,9,Male,50s,College,Single,1000+,Freelancer,Progressive
+329,9,No opinion / Don't know,9,9,Female,30s,College,Single,200-400,Service/Sales,Progressive
+330,14,Other,14,9,Male,40s,College,Married (children),700-1000,Office worker,Progressive
+332,9,No opinion / Don't know,9,9,Female,20s,Grad+,Single,< 200,Student,Progressive
+333,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+334,1,Lack of effectiveness,1,1,Female,30s,College,Single,200-400,Office worker,Moderate
+335,12,Feasibility / Unrealistic proposals,12,12,Female,30s,College,Single,1000+,Office worker,Moderate
+336,3,Transparency / Feedback deficiency,3,3,Male,60+,College,Married (children),1000+,Office worker,Progressive
+337,14,Other,14,14,Male,40s,HS or less,Single,200-400,Office worker,Progressive
+338,2,Frivolous / Emotional petitions,2|6,2,Male,30s,College,Single,200-400,Professional,Progressive
+339,1,Lack of effectiveness,1,14,Female,20s,College,Single,700-1000,Office worker,Conservative
+340,7,Personal / Selfish petitions,7,7,Male,40s,College,Single,200-400,Self-employed,Conservative
+341,1,Lack of effectiveness,1,14,Male,50s,College,Married (children),200-400,Self-employed,Progressive
+342,13,Civil servant burden / Institutional constraints,13,14,Male,40s,College,Other,400-700,Office worker,Progressive
+343,7,Personal / Selfish petitions,7,14,Female,60+,HS or less,Other,< 200,Unemployed/Retired,Moderate
+344,4,Slow processing / Bureaucratic delays,4|13,14,Male,60+,Grad+,Married (children),400-700,Civil servant/Teacher,Conservative
+345,9,No opinion / Don't know,9,9,Female,30s,College,Married (no children),1000+,Office worker,Conservative
+346,3,Transparency / Feedback deficiency,3,3,Male,40s,College,Single,200-400,Unemployed/Retired,Progressive
+347,12,Feasibility / Unrealistic proposals,7|12,1,Female,20s,College,Single,400-700,Student,Progressive
+348,10,Mob mentality / Opinion manipulation,10,14,Male,40s,HS or less,Single,400-700,Self-employed,Conservative
+349,1,Lack of effectiveness,1,14,Male,20s,College,Single,200-400,Student,Conservative
+350,2,Frivolous / Emotional petitions,2,14,Female,40s,College,Single,200-400,Office worker,Progressive
+351,9,No opinion / Don't know,9,9,Male,50s,College,Married (no children),700-1000,Self-employed,Progressive
+352,7,Personal / Selfish petitions,5|7|10,1,Female,60+,College,Single,400-700,Office worker,Conservative
+353,6,Readability / Communication issues,6,6,Male,60+,Grad+,Married (children),400-700,Self-employed,Progressive
+354,12,Feasibility / Unrealistic proposals,12,6,Male,40s,College,Married (children),400-700,Freelancer,Conservative
+356,7,Personal / Selfish petitions,2|5|7,9,Male,50s,College,Married (no children),200-400,Office worker,Progressive
+357,3,Transparency / Feedback deficiency,3,2,Male,30s,College,Single,400-700,Office worker,Conservative
+358,14,Other,14,14,Female,40s,College,Single,200-400,Office worker,Progressive
+359,9,No opinion / Don't know,9,1,Male,60+,College,Married (children),400-700,Self-employed,Progressive
+360,11,Need for more participation / Awareness,6|11,9,Female,60+,HS or less,Other,700-1000,Self-employed,Moderate
+361,1,Lack of effectiveness,1|8|10,11,Male,50s,College,Married (children),200-400,Self-employed,Conservative
+362,7,Personal / Selfish petitions,7,14,Female,40s,College,Single,200-400,Office worker,Progressive
+363,12,Feasibility / Unrealistic proposals,12,14,Male,40s,Grad+,Married (no children),1000+,Office worker,Progressive
+364,14,Other,14,1,Male,60+,College,Married (children),700-1000,Office worker,Conservative
+365,1,Lack of effectiveness,1,1,Male,60+,College,Married (children),700-1000,Unemployed/Retired,Conservative
+366,11,Need for more participation / Awareness,11,5,Female,50s,College,Married (no children),200-400,Office worker,Moderate
+367,12,Feasibility / Unrealistic proposals,1|12,12,Male,30s,College,Single,< 200,Service/Sales,Moderate
+368,2,Frivolous / Emotional petitions,2|4,2,Female,30s,HS or less,Married (children),700-1000,Office worker,Progressive
+369,9,No opinion / Don't know,9,9,Male,50s,College,Single,200-400,Homemaker,Conservative
+370,5,Need for filtering / Guidelines,5,5,Male,60+,Grad+,Married (children),200-400,Office worker,Moderate
+371,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Married (no children),1000+,Service/Sales,Conservative
+372,8,Positive / Supportive,8|11|13,8,Male,50s,Grad+,Married (children),1000+,Office worker,Progressive
+373,5,Need for filtering / Guidelines,2|5,1,Male,30s,College,Single,200-400,Civil servant/Teacher,Progressive
+374,2,Frivolous / Emotional petitions,2|6,14,Male,60+,College,Married (children),700-1000,Unemployed/Retired,Moderate
+375,1,Lack of effectiveness,1,1,Female,30s,College,Single,400-700,Professional,Progressive
+376,2,Frivolous / Emotional petitions,2|5,8,Male,30s,HS or less,Married (children),400-700,Office worker,Moderate
+377,2,Frivolous / Emotional petitions,2|7,2,Female,40s,College,Married (children),400-700,Office worker,Progressive
+378,6,Readability / Communication issues,5|6,14,Male,30s,College,Single,400-700,Professional,Conservative
+379,9,No opinion / Don't know,9,9,Male,60+,Grad+,Married (children),400-700,Office worker,Moderate
+381,7,Personal / Selfish petitions,2|7,14,Female,20s,College,Single,700-1000,Student,Moderate
+382,9,No opinion / Don't know,9,9,Male,30s,College,Married (no children),400-700,Office worker,Moderate
+383,4,Slow processing / Bureaucratic delays,4,14,Male,40s,College,Other,400-700,Office worker,Progressive
+385,2,Frivolous / Emotional petitions,2|7,2,Male,40s,College,Married (children),400-700,Office worker,Moderate
+386,2,Frivolous / Emotional petitions,2|7,2,Male,50s,College,Married (children),400-700,Technical,Progressive
+387,6,Readability / Communication issues,6|12,14,Female,30s,College,Married (no children),700-1000,Office worker,Progressive
+389,6,Readability / Communication issues,6,14,Female,40s,College,Married (children),200-400,Office worker,Conservative
+390,11,Need for more participation / Awareness,11,14,Male,40s,College,Married (children),200-400,Office worker,Moderate
+391,11,Need for more participation / Awareness,8|11,11,Male,60+,College,Married (children),400-700,Unemployed/Retired,Progressive
+392,6,Readability / Communication issues,6|12,1,Male,40s,Grad+,Married (children),200-400,Office worker,Conservative
+393,7,Personal / Selfish petitions,7,14,Male,60+,College,Married (children),1000+,Office worker,Progressive
+394,2,Frivolous / Emotional petitions,2|13,2,Female,40s,College,Single,200-400,Office worker,Moderate
+396,6,Readability / Communication issues,6,2,Male,50s,College,Other,1000+,Office worker,Progressive
+397,1,Lack of effectiveness,1,14,Female,50s,College,Married (children),400-700,Office worker,Progressive
+398,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,400-700,Office worker,Moderate
+399,9,No opinion / Don't know,9,9,Male,60+,Grad+,Married (children),1000+,Technical,Conservative
+400,2,Frivolous / Emotional petitions,2|5,5,Female,20s,Grad+,Single,200-400,Professional,Conservative
+401,9,No opinion / Don't know,9,9,Male,20s,College,Single,200-400,Student,Progressive
+402,5,Need for filtering / Guidelines,5|10,10,Male,30s,Grad+,Single,200-400,Office worker,Moderate
+403,6,Readability / Communication issues,6|13,13,Male,20s,College,Single,400-700,Office worker,Progressive
+405,12,Feasibility / Unrealistic proposals,12,12,Female,30s,College,Married (children),400-700,Professional,Progressive
+406,3,Transparency / Feedback deficiency,1|3,3,Female,30s,College,Single,400-700,Service/Sales,Progressive
+408,9,No opinion / Don't know,9,9,Female,60+,HS or less,Married (children),200-400,Homemaker,Conservative
+409,7,Personal / Selfish petitions,7,7,Male,50s,College,Married (children),1000+,Office worker,Progressive
+410,11,Need for more participation / Awareness,11,11,Male,60+,College,Married (children),400-700,Unemployed/Retired,Moderate
+411,13,Civil servant burden / Institutional constraints,5|13,2,Male,40s,College,Married (children),400-700,Office worker,Progressive
+412,6,Readability / Communication issues,1|6,1,Male,50s,College,Married (no children),400-700,Self-employed,Moderate
+413,3,Transparency / Feedback deficiency,1|3,14,Male,60+,College,Married (children),400-700,Office worker,Progressive
+414,5,Need for filtering / Guidelines,5,14,Male,60+,College,Married (children),400-700,Civil servant/Teacher,Moderate
+416,2,Frivolous / Emotional petitions,2|6,2,Male,40s,Grad+,Single,400-700,Office worker,Conservative
+417,11,Need for more participation / Awareness,11,14,Male,50s,College,Married (children),400-700,Office worker,Progressive
+418,3,Transparency / Feedback deficiency,1|3,1,Male,50s,Grad+,Married (children),700-1000,Office worker,Progressive
+419,1,Lack of effectiveness,1,14,Female,40s,HS or less,Married (children),700-1000,Office worker,Conservative
+420,2,Frivolous / Emotional petitions,2,5,Male,40s,Grad+,Married (children),700-1000,Civil servant/Teacher,Conservative
+421,13,Civil servant burden / Institutional constraints,13,13,Female,20s,College,Married (no children),400-700,Office worker,Conservative
+422,1,Lack of effectiveness,1,1,Female,50s,College,Married (children),400-700,Office worker,Progressive
+423,4,Slow processing / Bureaucratic delays,4,4,Female,20s,College,Married (children),200-400,Service/Sales,Conservative
+424,7,Personal / Selfish petitions,2|7,7,Female,50s,College,Married (children),200-400,Homemaker,Conservative
+425,14,Other,14,14,Female,40s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+426,12,Feasibility / Unrealistic proposals,12,14,Male,50s,College,Married (children),400-700,Technical,Moderate
+427,1,Lack of effectiveness,1,1,Female,30s,College,Single,1000+,Office worker,Progressive
+428,6,Readability / Communication issues,6,6,Female,50s,College,Married (children),400-700,Homemaker,Moderate
+429,9,No opinion / Don't know,9,9,Male,30s,Grad+,Single,200-400,Office worker,Moderate
+431,3,Transparency / Feedback deficiency,3|11,3,Female,20s,College,Single,400-700,Service/Sales,Moderate
+432,9,No opinion / Don't know,9,9,Female,60+,College,Single,400-700,Office worker,Moderate
+433,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,< 200,Student,Conservative
+434,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (no children),200-400,Technical,Conservative
+435,2,Frivolous / Emotional petitions,2,2,Female,40s,HS or less,Married (no children),700-1000,Office worker,Moderate
+436,3,Transparency / Feedback deficiency,3,3,Male,20s,College,Single,200-400,Student,Moderate
+437,7,Personal / Selfish petitions,5|7,14,Female,60+,College,Other,400-700,Homemaker,Conservative
+439,14,Other,14,13,Male,60+,College,Married (children),400-700,Office worker,Conservative
+440,14,Other,14,14,Male,20s,College,Single,200-400,Office worker,Moderate
+441,12,Feasibility / Unrealistic proposals,12,12,Female,40s,Grad+,Single,200-400,Professional,Moderate
+442,8,Positive / Supportive,8,4,Male,50s,College,Married (no children),200-400,Office worker,Progressive
+443,10,Mob mentality / Opinion manipulation,10,14,Female,50s,HS or less,Married (children),400-700,Office worker,Progressive
+444,5,Need for filtering / Guidelines,2|5,2,Female,30s,College,Single,400-700,Office worker,Progressive
+445,11,Need for more participation / Awareness,11,14,Female,20s,College,Single,400-700,Office worker,Moderate
+446,3,Transparency / Feedback deficiency,3|8,14,Male,60+,HS or less,Single,< 200,Technical,Moderate
+447,1,Lack of effectiveness,1|2,1,Male,60+,Grad+,Married (children),400-700,Unemployed/Retired,Progressive
+448,12,Feasibility / Unrealistic proposals,10|12,10,Male,30s,College,Married (no children),200-400,Office worker,Conservative
+449,9,No opinion / Don't know,9,9,Female,40s,College,Other,200-400,Office worker,Conservative
+450,11,Need for more participation / Awareness,11,8,Female,40s,HS or less,Single,200-400,Service/Sales,Moderate
+451,2,Frivolous / Emotional petitions,1|2,2,Female,30s,College,Single,1000+,Office worker,Progressive
+452,14,Other,14,14,Female,50s,College,Married (children),400-700,Office worker,Conservative
+453,2,Frivolous / Emotional petitions,2,2,Male,50s,HS or less,Married (children),200-400,Office worker,Progressive
+454,2,Frivolous / Emotional petitions,2,2,Female,50s,HS or less,Married (no children),400-700,Service/Sales,Conservative
+455,9,No opinion / Don't know,9,14,Female,20s,College,Single,1000+,Office worker,Progressive
+456,13,Civil servant burden / Institutional constraints,3|11|13,1,Male,30s,Grad+,Single,400-700,Office worker,Progressive
+457,2,Frivolous / Emotional petitions,2,9,Male,30s,HS or less,Single,400-700,Office worker,Moderate
+460,6,Readability / Communication issues,6,6,Male,50s,Grad+,Married (children),400-700,Office worker,Conservative
+462,6,Readability / Communication issues,6,14,Male,40s,College,Married (children),400-700,Civil servant/Teacher,Conservative
+463,2,Frivolous / Emotional petitions,2,14,Female,30s,College,Single,200-400,Office worker,Conservative
+464,2,Frivolous / Emotional petitions,2,2,Female,50s,College,Married (children),400-700,Office worker,Progressive
+465,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),200-400,Office worker,Progressive
+466,12,Feasibility / Unrealistic proposals,12,14,Male,30s,College,Single,200-400,Self-employed,Progressive
+467,7,Personal / Selfish petitions,7,14,Male,60+,HS or less,Other,700-1000,Self-employed,Progressive
+468,1,Lack of effectiveness,1,14,Male,50s,College,Married (children),400-700,Self-employed,Progressive
+469,4,Slow processing / Bureaucratic delays,3|4,4,Male,60+,College,Married (children),400-700,Office worker,Progressive
+470,4,Slow processing / Bureaucratic delays,2|4,4,Male,60+,College,Married (children),1000+,Office worker,Progressive
+471,9,No opinion / Don't know,9,9,Male,20s,College,Single,< 200,Student,Conservative
+472,9,No opinion / Don't know,9,14,Female,40s,College,Single,200-400,Office worker,Progressive
+474,5,Need for filtering / Guidelines,2|5,14,Male,30s,College,Married (children),400-700,Office worker,Conservative
+475,8,Positive / Supportive,8,14,Male,60+,HS or less,Married (children),200-400,Office worker,Progressive
+476,2,Frivolous / Emotional petitions,2|7|12,2,Female,40s,College,Single,400-700,Office worker,Moderate
+477,2,Frivolous / Emotional petitions,2|5|13,2,Male,40s,College,Married (children),700-1000,Office worker,Conservative
+478,3,Transparency / Feedback deficiency,3,14,Female,60+,HS or less,Married (children),400-700,Professional,Moderate
+479,1,Lack of effectiveness,1,14,Female,20s,College,Single,400-700,Office worker,Moderate
+480,1,Lack of effectiveness,1|12,2,Female,60+,College,Other,< 200,Office worker,Progressive
+481,9,No opinion / Don't know,9,9,Male,50s,Grad+,Married (children),200-400,Service/Sales,Conservative
+482,8,Positive / Supportive,8,8,Female,50s,HS or less,Married (children),1000+,Professional,Conservative
+483,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),700-1000,Office worker,Progressive
+484,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Single,400-700,Self-employed,Progressive
+486,1,Lack of effectiveness,1|13,1,Female,30s,Grad+,Single,< 200,Professional,Conservative
+487,11,Need for more participation / Awareness,11|13,1,Male,60+,College,Married (children),400-700,Office worker,Conservative
+488,6,Readability / Communication issues,6,7,Male,30s,College,Married (children),400-700,Office worker,Conservative
+489,4,Slow processing / Bureaucratic delays,4,4,Female,50s,College,Married (children),400-700,Homemaker,Conservative
+490,9,No opinion / Don't know,9,9,Male,40s,College,Other,400-700,Office worker,Progressive
+491,8,Positive / Supportive,8|12,8,Male,50s,College,Married (children),400-700,Office worker,Progressive
+492,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,1000+,Office worker,Progressive
+493,7,Personal / Selfish petitions,7,7,Male,40s,College,Married (children),400-700,Office worker,Moderate
+494,12,Feasibility / Unrealistic proposals,12,1,Female,60+,Grad+,Married (children),400-700,Unemployed/Retired,Progressive
+495,9,No opinion / Don't know,9,11,Female,60+,HS or less,Married (children),200-400,Freelancer,Conservative
+496,6,Readability / Communication issues,6|12,1,Male,50s,Grad+,Married (children),1000+,Office worker,Progressive
+498,12,Feasibility / Unrealistic proposals,12,12,Male,40s,Grad+,Married (children),1000+,Self-employed,Conservative
+499,9,No opinion / Don't know,9,9,Female,50s,Grad+,Married (children),400-700,Civil servant/Teacher,Progressive
+500,2,Frivolous / Emotional petitions,2,14,Female,30s,College,Single,200-400,Office worker,Moderate
+501,1,Lack of effectiveness,1|3,1,Male,60+,College,Other,200-400,Office worker,Progressive
+502,14,Other,14,14,Male,40s,College,Married (children),400-700,Office worker,Moderate
+503,12,Feasibility / Unrealistic proposals,12,14,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+504,7,Personal / Selfish petitions,5|7,14,Female,30s,College,Single,200-400,Office worker,Progressive
+505,1,Lack of effectiveness,1,13,Male,30s,College,Single,400-700,Office worker,Moderate
+506,9,No opinion / Don't know,9,14,Male,60+,College,Married (children),700-1000,Office worker,Moderate
+508,12,Feasibility / Unrealistic proposals,12,14,Male,40s,College,Married (children),700-1000,Office worker,Moderate
+509,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Conservative
+510,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Married (no children),700-1000,Office worker,Progressive
+511,3,Transparency / Feedback deficiency,3,3,Male,40s,College,Married (children),400-700,Office worker,Moderate
+512,9,No opinion / Don't know,9,9,Male,50s,HS or less,Married (children),200-400,Office worker,Moderate
+513,3,Transparency / Feedback deficiency,3,6,Male,40s,College,Married (children),400-700,Office worker,Moderate
+514,5,Need for filtering / Guidelines,5|7,9,Male,40s,College,Married (children),700-1000,Office worker,Moderate
+515,14,Other,14,1,Female,60+,HS or less,Other,200-400,Homemaker,Progressive
+518,6,Readability / Communication issues,6,14,Female,40s,College,Married (children),700-1000,Office worker,Conservative
+519,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),1000+,Office worker,Moderate
+520,1,Lack of effectiveness,1,14,Male,40s,College,Married (children),700-1000,Professional,Moderate
+521,9,No opinion / Don't know,9,9,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Moderate
+522,4,Slow processing / Bureaucratic delays,4,9,Male,50s,Grad+,Married (children),1000+,Office worker,Progressive
+524,9,No opinion / Don't know,9,9,Male,50s,College,Other,200-400,Office worker,Progressive
+525,13,Civil servant burden / Institutional constraints,7|8|13,8,Female,40s,College,Single,200-400,Office worker,Progressive
+526,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),400-700,Self-employed,Conservative
+527,12,Feasibility / Unrealistic proposals,5|12,14,Male,30s,College,Single,400-700,Technical,Moderate
+528,14,Other,14,2,Male,50s,College,Married (children),1000+,Office worker,Moderate
+529,5,Need for filtering / Guidelines,2|5,2,Female,50s,College,Single,200-400,Office worker,Conservative
+530,4,Slow processing / Bureaucratic delays,4,4,Female,60+,College,Married (children),1000+,Freelancer,Moderate
+531,6,Readability / Communication issues,6,6,Male,40s,College,Married (children),400-700,Office worker,Conservative
+532,7,Personal / Selfish petitions,2|7,2,Female,30s,College,Single,200-400,Office worker,Moderate
+533,12,Feasibility / Unrealistic proposals,7|12,1,Female,30s,HS or less,Married (children),400-700,Office worker,Conservative
+534,9,No opinion / Don't know,9,14,Male,60+,Grad+,Married (children),700-1000,Professional,Moderate
+535,1,Lack of effectiveness,1,14,Male,50s,College,Married (children),400-700,Office worker,Progressive
+536,9,No opinion / Don't know,9,9,Male,50s,College,Single,200-400,Freelancer,Conservative
+537,2,Frivolous / Emotional petitions,1|2,2,Male,30s,College,Married (children),700-1000,Office worker,Moderate
+538,3,Transparency / Feedback deficiency,3,14,Male,30s,College,Single,1000+,Office worker,Conservative
+539,9,No opinion / Don't know,9,9,Male,50s,College,Married (no children),700-1000,Professional,Conservative
+540,2,Frivolous / Emotional petitions,2|5|6,2,Male,40s,Grad+,Married (children),1000+,Professional,Progressive
+541,2,Frivolous / Emotional petitions,2,2,Male,40s,Grad+,Married (children),700-1000,Office worker,Moderate
+543,7,Personal / Selfish petitions,7|8,14,Male,60+,HS or less,Married (children),700-1000,Office worker,Conservative
+544,6,Readability / Communication issues,6|7|12,7,Male,30s,Grad+,Single,400-700,Professional,Progressive
+545,11,Need for more participation / Awareness,11,11,Female,60+,College,Married (children),700-1000,Service/Sales,Progressive
+546,5,Need for filtering / Guidelines,5,14,Male,40s,Grad+,Single,200-400,Office worker,Progressive
+547,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),400-700,Office worker,Progressive
+548,6,Readability / Communication issues,6,13,Male,40s,College,Married (children),1000+,Office worker,Progressive
+549,1,Lack of effectiveness,1,14,Male,50s,College,Married (children),400-700,Office worker,Progressive
+550,6,Readability / Communication issues,6,14,Male,40s,College,Married (children),700-1000,Office worker,Progressive
+552,4,Slow processing / Bureaucratic delays,4,14,Female,20s,College,Single,200-400,Office worker,Progressive
+553,2,Frivolous / Emotional petitions,2|5,2,Female,40s,College,Married (no children),700-1000,Office worker,Conservative
+554,7,Personal / Selfish petitions,3|7,7,Female,20s,College,Single,200-400,Office worker,Progressive
+555,3,Transparency / Feedback deficiency,3,3,Female,60+,College,Single,1000+,Self-employed,Conservative
+556,6,Readability / Communication issues,6,14,Female,30s,College,Single,200-400,Office worker,Moderate
+557,2,Frivolous / Emotional petitions,2,14,Male,20s,College,Married (no children),200-400,Office worker,Progressive
+558,2,Frivolous / Emotional petitions,2|13,2,Male,30s,Grad+,Single,400-700,Office worker,Progressive
+559,2,Frivolous / Emotional petitions,2|5|13,1,Female,30s,College,Married (no children),400-700,Office worker,Progressive
+560,13,Civil servant burden / Institutional constraints,13,4,Male,40s,College,Single,200-400,Office worker,Progressive
+561,12,Feasibility / Unrealistic proposals,12,1,Female,30s,College,Single,400-700,Office worker,Conservative
+563,9,No opinion / Don't know,9,9,Female,50s,Grad+,Married (children),1000+,Office worker,Progressive
+564,14,Other,14,14,Female,40s,College,Married (no children),700-1000,Office worker,Progressive
+565,1,Lack of effectiveness,1|13,2,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+566,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),1000+,Civil servant/Teacher,Conservative
+569,1,Lack of effectiveness,1|7,7,Female,60+,Grad+,Married (children),400-700,Civil servant/Teacher,Progressive
+571,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Other,200-400,Office worker,Progressive
+572,2,Frivolous / Emotional petitions,2,14,Male,40s,College,Married (children),200-400,Office worker,Conservative
+573,2,Frivolous / Emotional petitions,2|7,2,Female,30s,College,Married (no children),700-1000,Office worker,Moderate
+575,2,Frivolous / Emotional petitions,2,2,Female,20s,Grad+,Single,< 200,Student,Progressive
+576,5,Need for filtering / Guidelines,4|5,12,Male,60+,College,Married (children),400-700,Self-employed,Conservative
+577,11,Need for more participation / Awareness,11,11,Female,60+,HS or less,Married (children),< 200,Service/Sales,Progressive
+578,9,No opinion / Don't know,9,9,Female,60+,College,Married (children),400-700,Homemaker,Progressive
+579,12,Feasibility / Unrealistic proposals,12,14,Female,60+,College,Married (children),1000+,Office worker,Moderate
+580,8,Positive / Supportive,8,14,Male,40s,Grad+,Married (children),700-1000,Office worker,Progressive
+581,2,Frivolous / Emotional petitions,1|2,8,Male,30s,HS or less,Married (children),700-1000,Office worker,Conservative
+582,12,Feasibility / Unrealistic proposals,2|12,12,Male,40s,College,Other,200-400,Service/Sales,Progressive
+584,1,Lack of effectiveness,1|3,8,Male,30s,College,Married (no children),1000+,Office worker,Conservative
+585,2,Frivolous / Emotional petitions,2|7,2,Female,20s,College,Single,200-400,Office worker,Progressive
+586,10,Mob mentality / Opinion manipulation,10,14,Male,50s,College,Married (children),400-700,Professional,Progressive
+587,9,No opinion / Don't know,9,9,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+588,1,Lack of effectiveness,1|4,1,Male,40s,College,Married (children),400-700,Office worker,Moderate
+589,2,Frivolous / Emotional petitions,2|7|13,2,Female,60+,College,Married (children),400-700,Self-employed,Conservative
+590,2,Frivolous / Emotional petitions,2|12,2,Female,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+592,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+593,1,Lack of effectiveness,1,1,Male,50s,Grad+,Married (children),1000+,Office worker,Conservative
+594,1,Lack of effectiveness,1|13,7,Male,40s,Grad+,Married (children),1000+,Office worker,Moderate
+595,1,Lack of effectiveness,1|6,1,Male,40s,Grad+,Single,200-400,Self-employed,Moderate
+596,13,Civil servant burden / Institutional constraints,13,12,Male,30s,College,Single,200-400,Office worker,Conservative
+597,7,Personal / Selfish petitions,7,7,Female,50s,College,Married (children),1000+,Professional,Conservative
+598,2,Frivolous / Emotional petitions,2,2,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+599,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),1000+,Self-employed,Progressive
+600,1,Lack of effectiveness,1,8,Female,30s,Grad+,Married (no children),400-700,Office worker,Progressive
+601,7,Personal / Selfish petitions,7,7,Male,60+,College,Married (children),< 200,Unemployed/Retired,Moderate
+603,7,Personal / Selfish petitions,7,14,Female,20s,College,Single,< 200,Student,Conservative
+604,2,Frivolous / Emotional petitions,2,14,Male,20s,College,Single,< 200,Unemployed/Retired,Moderate
+605,2,Frivolous / Emotional petitions,2,14,Male,60+,College,Married (children),400-700,Other,Conservative
+606,2,Frivolous / Emotional petitions,2|4,2,Male,30s,College,Married (children),400-700,Office worker,Conservative
+607,1,Lack of effectiveness,1|4,1,Female,60+,College,Married (children),200-400,Other,Conservative
+608,7,Personal / Selfish petitions,7,7,Female,40s,Grad+,Married (children),1000+,Professional,Conservative
+609,7,Personal / Selfish petitions,7,14,Male,40s,College,Married (children),400-700,Technical,Progressive
+610,2,Frivolous / Emotional petitions,2|4,2,Male,60+,HS or less,Single,< 200,Service/Sales,Conservative
+611,2,Frivolous / Emotional petitions,2|6|7,2,Female,20s,College,Single,< 200,Unemployed/Retired,Moderate
+612,1,Lack of effectiveness,1|13,3,Male,60+,Grad+,Married (children),400-700,Freelancer,Moderate
+613,5,Need for filtering / Guidelines,5|13,6,Male,30s,College,Married (children),400-700,Office worker,Progressive
+614,5,Need for filtering / Guidelines,5,14,Male,60+,College,Other,1000+,Office worker,Conservative
+615,1,Lack of effectiveness,1|3|5|10,1,Female,60+,College,Married (children),200-400,Office worker,Progressive
+616,11,Need for more participation / Awareness,11,11,Male,60+,College,Married (children),700-1000,Office worker,Conservative
+617,8,Positive / Supportive,8,9,Female,20s,College,Single,700-1000,Office worker,Conservative
+619,7,Personal / Selfish petitions,7,14,Male,40s,College,Single,200-400,Self-employed,Moderate
+620,7,Personal / Selfish petitions,1|7,7,Female,20s,College,Single,200-400,Office worker,Progressive
+621,2,Frivolous / Emotional petitions,2,2,Female,60+,College,Married (children),200-400,Homemaker,Conservative
+622,12,Feasibility / Unrealistic proposals,12,1,Female,50s,HS or less,Other,200-400,Office worker,Conservative
+623,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),400-700,Office worker,Progressive
+624,13,Civil servant burden / Institutional constraints,13,13,Male,40s,College,Married (children),1000+,Civil servant/Teacher,Moderate
+625,1,Lack of effectiveness,1|12,12,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+626,7,Personal / Selfish petitions,7,6,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+627,13,Civil servant burden / Institutional constraints,1|13,1,Male,60+,College,Other,200-400,Service/Sales,Conservative
+628,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),400-700,Office worker,Moderate
+629,9,No opinion / Don't know,9,14,Female,30s,College,Married (children),200-400,Homemaker,Conservative
+632,12,Feasibility / Unrealistic proposals,12,14,Male,20s,College,Single,200-400,Student,Progressive
+633,1,Lack of effectiveness,1|3,1,Female,30s,Grad+,Married (no children),700-1000,Office worker,Conservative
+634,7,Personal / Selfish petitions,1|7,14,Female,30s,College,Married (children),700-1000,Office worker,Conservative
+635,4,Slow processing / Bureaucratic delays,4,4,Male,40s,College,Married (children),400-700,Technical,Progressive
+636,3,Transparency / Feedback deficiency,3,3,Male,30s,College,Single,200-400,Office worker,Progressive
+638,11,Need for more participation / Awareness,11,11,Male,60+,Grad+,Married (children),200-400,Unemployed/Retired,Moderate
+639,12,Feasibility / Unrealistic proposals,12,12,Female,60+,College,Married (children),200-400,Homemaker,Progressive
+640,1,Lack of effectiveness,1|13,1,Male,60+,Grad+,Married (children),1000+,Professional,Progressive
+641,12,Feasibility / Unrealistic proposals,12,12,Female,20s,College,Single,700-1000,Office worker,Progressive
+642,9,No opinion / Don't know,9,9,Female,30s,College,Single,400-700,Office worker,Moderate
+643,1,Lack of effectiveness,1,1,Male,40s,Grad+,Married (children),200-400,Office worker,Moderate
+644,3,Transparency / Feedback deficiency,3,14,Male,50s,College,Married (children),400-700,Office worker,Conservative
+645,8,Positive / Supportive,3|4|8,3,Female,60+,College,Single,200-400,Service/Sales,Conservative
+646,13,Civil servant burden / Institutional constraints,13,14,Female,60+,Grad+,Married (children),1000+,Homemaker,Conservative
+647,3,Transparency / Feedback deficiency,3|11,8,Male,30s,College,Married (children),400-700,Office worker,Moderate
+648,2,Frivolous / Emotional petitions,2,2,Male,50s,College,Married (no children),1000+,Office worker,Moderate
+649,9,No opinion / Don't know,9,9,Female,50s,Grad+,Married (children),700-1000,Office worker,Progressive
+650,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),400-700,Office worker,Progressive
+651,1,Lack of effectiveness,1|13,2,Female,60+,College,Married (children),700-1000,Professional,Progressive
+652,1,Lack of effectiveness,1|12,1,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+653,5,Need for filtering / Guidelines,5,5,Male,40s,College,Single,400-700,Service/Sales,Progressive
+654,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),200-400,Unemployed/Retired,Conservative
+656,1,Lack of effectiveness,1|10,10,Male,60+,Grad+,Married (children),700-1000,Professional,Conservative
+657,2,Frivolous / Emotional petitions,2|5,8,Female,30s,College,Single,200-400,Office worker,Progressive
+658,12,Feasibility / Unrealistic proposals,12,12,Female,20s,College,Single,< 200,Student,Moderate
+659,7,Personal / Selfish petitions,7|13,7,Male,50s,College,Married (children),400-700,Office worker,Conservative
+660,6,Readability / Communication issues,5|6,3,Male,40s,College,Single,< 200,Unemployed/Retired,Moderate
+661,3,Transparency / Feedback deficiency,1|3,14,Female,60+,HS or less,Married (children),< 200,Office worker,Progressive
+662,2,Frivolous / Emotional petitions,2,2,Male,30s,Grad+,Married (children),700-1000,Professional,Moderate
+663,7,Personal / Selfish petitions,7,7,Female,30s,Grad+,Single,200-400,Office worker,Conservative
+664,2,Frivolous / Emotional petitions,2|6,2,Male,60+,Grad+,Married (children),700-1000,Freelancer,Progressive
+665,9,No opinion / Don't know,9,9,Female,30s,College,Married (children),700-1000,Office worker,Progressive
+666,1,Lack of effectiveness,1|3|4,1,Male,50s,Grad+,Married (children),200-400,Office worker,Moderate
+667,7,Personal / Selfish petitions,7|13,2,Male,40s,Grad+,Married (children),700-1000,Office worker,Progressive
+668,11,Need for more participation / Awareness,11,14,Male,30s,Grad+,Married (no children),400-700,Office worker,Conservative
+669,5,Need for filtering / Guidelines,5|6,7,Male,40s,Grad+,Married (children),400-700,Office worker,Progressive
+670,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Single,200-400,Office worker,Progressive
+671,2,Frivolous / Emotional petitions,2|13,2,Male,30s,College,Single,200-400,Civil servant/Teacher,Conservative
+672,12,Feasibility / Unrealistic proposals,12,12,Female,50s,HS or less,Married (children),700-1000,Homemaker,Moderate
+674,14,Other,14,7,Male,50s,College,Married (children),1000+,Office worker,Progressive
+676,2,Frivolous / Emotional petitions,2|13,2,Male,30s,College,Single,400-700,Office worker,Conservative
+677,2,Frivolous / Emotional petitions,2,6,Male,40s,College,Married (children),200-400,Office worker,Progressive
+679,7,Personal / Selfish petitions,7,7,Male,40s,College,Married (no children),200-400,Professional,Progressive
+680,2,Frivolous / Emotional petitions,2,7,Male,50s,College,Married (children),400-700,Professional,Moderate
+681,12,Feasibility / Unrealistic proposals,12,12,Male,50s,College,Single,200-400,Freelancer,Moderate
+682,9,No opinion / Don't know,9,9,Male,30s,College,Single,400-700,Office worker,Conservative
+683,6,Readability / Communication issues,6,12,Male,60+,HS or less,Married (children),400-700,Unemployed/Retired,Progressive
+684,6,Readability / Communication issues,6|11,6,Male,60+,College,Married (children),400-700,Office worker,Moderate
+685,14,Other,14,10,Female,60+,College,Married (children),200-400,Self-employed,Conservative
+686,2,Frivolous / Emotional petitions,2|6,14,Female,30s,College,Married (children),200-400,Office worker,Progressive
+687,1,Lack of effectiveness,1,14,Male,30s,College,Married (children),700-1000,Freelancer,Moderate
+688,1,Lack of effectiveness,1,14,Female,40s,Grad+,Married (children),1000+,Professional,Conservative
+689,12,Feasibility / Unrealistic proposals,12,12,Female,20s,College,Single,1000+,Office worker,Conservative
+690,2,Frivolous / Emotional petitions,2|6,2,Male,20s,College,Single,400-700,Student,Moderate
+691,11,Need for more participation / Awareness,11,11,Male,20s,College,Single,< 200,Unemployed/Retired,Conservative
+692,1,Lack of effectiveness,1|2,14,Male,30s,College,Single,700-1000,Professional,Progressive
+693,2,Frivolous / Emotional petitions,2,2,Male,30s,Grad+,Married (no children),700-1000,Office worker,Conservative
+694,7,Personal / Selfish petitions,7|10,13,Female,50s,Grad+,Married (no children),400-700,Office worker,Moderate
+695,5,Need for filtering / Guidelines,2|5,2,Male,60+,College,Married (children),200-400,Office worker,Progressive
+697,1,Lack of effectiveness,1,14,Male,50s,Grad+,Married (children),200-400,Office worker,Moderate
+698,5,Need for filtering / Guidelines,5,2,Male,60+,HS or less,Married (children),700-1000,Self-employed,Conservative
+699,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Single,400-700,Office worker,Conservative
+700,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Married (no children),400-700,Homemaker,Moderate
+701,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),400-700,Office worker,Progressive
+702,4,Slow processing / Bureaucratic delays,1|4|8,9,Female,40s,Grad+,Married (children),1000+,Professional,Conservative
+703,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,400-700,Office worker,Moderate
+704,6,Readability / Communication issues,2|5|6,5,Male,30s,College,Married (no children),200-400,Office worker,Moderate
+705,12,Feasibility / Unrealistic proposals,12,11,Male,60+,College,Married (children),400-700,Unemployed/Retired,Moderate
+706,3,Transparency / Feedback deficiency,3,14,Female,20s,College,Single,200-400,Office worker,Conservative
+708,9,No opinion / Don't know,9,9,Female,30s,College,Single,< 200,Office worker,Moderate
+710,12,Feasibility / Unrealistic proposals,12,14,Male,50s,College,Married (children),200-400,Freelancer,Progressive
+711,4,Slow processing / Bureaucratic delays,4|13,13,Male,60+,College,Other,200-400,Office worker,Progressive
+712,7,Personal / Selfish petitions,7|10|13,2,Male,30s,College,Single,1000+,Professional,Conservative
+713,2,Frivolous / Emotional petitions,2|12,1,Female,50s,College,Other,200-400,Office worker,Moderate
+714,5,Need for filtering / Guidelines,5,14,Male,60+,College,Married (children),700-1000,Office worker,Conservative
+715,10,Mob mentality / Opinion manipulation,7|10,7,Male,60+,College,Married (children),1000+,Office worker,Conservative
+716,10,Mob mentality / Opinion manipulation,5|10|11,1,Male,50s,College,Married (children),700-1000,Office worker,Conservative
+718,1,Lack of effectiveness,1,1,Male,60+,College,Married (children),1000+,Self-employed,Progressive
+719,10,Mob mentality / Opinion manipulation,10,14,Female,20s,College,Single,700-1000,Unemployed/Retired,Conservative
+720,2,Frivolous / Emotional petitions,2,2,Female,50s,HS or less,Other,200-400,Office worker,Conservative
+721,7,Personal / Selfish petitions,2|7,2,Male,30s,College,Single,700-1000,Freelancer,Conservative
+722,6,Readability / Communication issues,2|6,14,Male,60+,Grad+,Married (children),1000+,Civil servant/Teacher,Moderate
+723,1,Lack of effectiveness,1,14,Female,40s,College,Married (children),700-1000,Homemaker,Conservative
+724,1,Lack of effectiveness,1|3,1,Female,30s,College,Married (children),200-400,Homemaker,Progressive
+725,10,Mob mentality / Opinion manipulation,1|3|10,10,Male,20s,College,Single,< 200,Unemployed/Retired,Conservative
+726,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),400-700,Office worker,Progressive
+728,6,Readability / Communication issues,6,6,Female,40s,Grad+,Single,200-400,Office worker,Progressive
+729,1,Lack of effectiveness,1|2,2,Female,30s,College,Single,400-700,Self-employed,Conservative
+731,5,Need for filtering / Guidelines,5,2,Male,40s,College,Married (children),700-1000,Office worker,Moderate
+732,1,Lack of effectiveness,1,1,Male,60+,Grad+,Married (children),700-1000,Office worker,Conservative
+733,2,Frivolous / Emotional petitions,2,2,Female,50s,Grad+,Married (children),400-700,Office worker,Conservative
+734,8,Positive / Supportive,8,14,Male,50s,College,Single,700-1000,Office worker,Conservative
+735,12,Feasibility / Unrealistic proposals,2|12,14,Female,50s,College,Married (no children),400-700,Office worker,Moderate
+736,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),700-1000,Civil servant/Teacher,Conservative
+738,2,Frivolous / Emotional petitions,2|13,2,Female,30s,College,Single,200-400,Office worker,Moderate
+739,7,Personal / Selfish petitions,7,13,Male,40s,HS or less,Married (children),400-700,Self-employed,Conservative
+740,7,Personal / Selfish petitions,2|7,14,Female,50s,College,Married (children),200-400,Office worker,Progressive
+742,6,Readability / Communication issues,6,2,Female,20s,College,Single,1000+,Office worker,Progressive
+744,11,Need for more participation / Awareness,5|11,14,Female,20s,College,Single,1000+,Service/Sales,Progressive
+746,7,Personal / Selfish petitions,7,1,Male,50s,College,Married (no children),400-700,Office worker,Progressive
+747,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Married (children),400-700,Homemaker,Moderate
+748,1,Lack of effectiveness,1,12,Male,30s,College,Married (children),200-400,Office worker,Moderate
+752,1,Lack of effectiveness,1,1,Male,50s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+753,4,Slow processing / Bureaucratic delays,1|4,14,Male,30s,HS or less,Single,400-700,Service/Sales,Moderate
+754,14,Other,14,8,Female,50s,College,Married (children),200-400,Office worker,Moderate
+755,9,No opinion / Don't know,9,9,Male,30s,College,Married (children),200-400,Office worker,Conservative
+756,3,Transparency / Feedback deficiency,3,11,Female,50s,HS or less,Married (children),1000+,Self-employed,Conservative
+757,4,Slow processing / Bureaucratic delays,3|4,3,Male,40s,College,Single,700-1000,Office worker,Conservative
+758,7,Personal / Selfish petitions,7,14,Female,40s,College,Other,200-400,Service/Sales,Moderate
+760,6,Readability / Communication issues,6,11,Male,40s,College,Married (children),200-400,Office worker,Progressive
+761,4,Slow processing / Bureaucratic delays,1|4,1,Female,60+,College,Married (children),400-700,Homemaker,Progressive
+762,14,Other,14,14,Female,50s,College,Married (children),200-400,Homemaker,Progressive
+763,2,Frivolous / Emotional petitions,2|12,2,Male,40s,College,Single,200-400,Office worker,Progressive
+764,2,Frivolous / Emotional petitions,2|12,8,Male,20s,College,Single,400-700,Unemployed/Retired,Moderate
+765,7,Personal / Selfish petitions,7,7,Male,60+,College,Married (children),1000+,Other,Conservative
+766,2,Frivolous / Emotional petitions,2,2,Female,40s,Grad+,Single,400-700,Office worker,Conservative
+767,5,Need for filtering / Guidelines,5,14,Female,20s,College,Single,< 200,Office worker,Progressive
+768,6,Readability / Communication issues,6,14,Female,60+,Grad+,Married (children),1000+,Civil servant/Teacher,Conservative
+769,2,Frivolous / Emotional petitions,2|5,2,Male,40s,Grad+,Married (children),400-700,Office worker,Progressive
+770,2,Frivolous / Emotional petitions,2,2,Female,20s,HS or less,Married (no children),400-700,Office worker,Conservative
+771,7,Personal / Selfish petitions,5|7,7,Female,40s,HS or less,Married (children),400-700,Office worker,Moderate
+772,1,Lack of effectiveness,1,1,Male,40s,College,Married (no children),400-700,Office worker,Progressive
+773,9,No opinion / Don't know,9,9,Female,30s,Grad+,Married (no children),1000+,Office worker,Moderate
+774,7,Personal / Selfish petitions,7,14,Male,30s,College,Married (children),700-1000,Office worker,Moderate
+775,9,No opinion / Don't know,9,9,Male,60+,HS or less,Married (children),400-700,Unemployed/Retired,Progressive
+778,7,Personal / Selfish petitions,5|7,7,Male,30s,Grad+,Single,400-700,Professional,Progressive
+779,4,Slow processing / Bureaucratic delays,4,4,Male,50s,College,Single,200-400,Office worker,Conservative
+780,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),400-700,Office worker,Conservative
+781,7,Personal / Selfish petitions,7,7,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+782,7,Personal / Selfish petitions,7,2,Female,30s,College,Single,200-400,Office worker,Conservative
+783,6,Readability / Communication issues,6|12,12,Male,30s,HS or less,Single,200-400,Self-employed,Progressive
+784,1,Lack of effectiveness,1,1,Male,40s,College,Married (children),400-700,Self-employed,Moderate
+785,7,Personal / Selfish petitions,6|7|13,13,Male,40s,College,Single,< 200,Unemployed/Retired,Moderate
+786,13,Civil servant burden / Institutional constraints,1|11|13,13,Male,60+,Grad+,Married (children),700-1000,Self-employed,Progressive
+787,13,Civil servant burden / Institutional constraints,13,14,Male,60+,Grad+,Married (children),1000+,Professional,Conservative
+788,11,Need for more participation / Awareness,11,11,Female,40s,Grad+,Married (children),700-1000,Office worker,Progressive
+789,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,< 200,Office worker,Progressive
+790,9,No opinion / Don't know,9,9,Male,60+,College,Married (children),1000+,Office worker,Moderate
+792,7,Personal / Selfish petitions,1|7|10,6,Male,50s,College,Married (children),400-700,Professional,Conservative
+794,6,Readability / Communication issues,6,1,Male,30s,College,Married (no children),400-700,Office worker,Moderate
+795,2,Frivolous / Emotional petitions,2,2,Male,50s,College,Married (children),700-1000,Civil servant/Teacher,Conservative
+796,9,No opinion / Don't know,9,9,Male,30s,College,Married (children),200-400,Office worker,Moderate
+798,5,Need for filtering / Guidelines,5|6|11,3,Male,60+,College,Married (children),700-1000,Self-employed,Progressive
+799,9,No opinion / Don't know,9,6,Female,50s,HS or less,Married (children),200-400,Office worker,Conservative
+800,11,Need for more participation / Awareness,11,11,Female,20s,Grad+,Single,700-1000,Office worker,Conservative
+801,6,Readability / Communication issues,6,1,Male,60+,HS or less,Married (children),400-700,Office worker,Progressive
+802,1,Lack of effectiveness,1|13,13,Male,30s,College,Single,200-400,Office worker,Progressive
+803,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+804,1,Lack of effectiveness,1,14,Female,50s,College,Married (children),700-1000,Office worker,Conservative
+805,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),400-700,Agriculture,Progressive
+806,8,Positive / Supportive,8,14,Male,60+,College,Married (children),400-700,Office worker,Moderate
+807,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Single,400-700,Office worker,Moderate
+808,1,Lack of effectiveness,1|13,13,Female,40s,College,Married (children),700-1000,Civil servant/Teacher,Progressive
+809,8,Positive / Supportive,8,2,Female,40s,College,Married (no children),400-700,Office worker,Moderate
+810,7,Personal / Selfish petitions,7,7,Male,40s,College,Single,200-400,Office worker,Moderate
+811,6,Readability / Communication issues,6|7,7,Male,30s,College,Married (no children),400-700,Office worker,Progressive
+813,10,Mob mentality / Opinion manipulation,10,10,Male,60+,Grad+,Married (children),400-700,Office worker,Conservative
+814,2,Frivolous / Emotional petitions,2,6,Female,40s,HS or less,Married (children),700-1000,Homemaker,Progressive
+815,9,No opinion / Don't know,9,9,Female,60+,Grad+,Married (children),200-400,Office worker,Moderate
+816,12,Feasibility / Unrealistic proposals,7|12,12,Male,40s,College,Single,400-700,Office worker,Conservative
+817,2,Frivolous / Emotional petitions,2|12,2,Female,20s,College,Single,700-1000,Office worker,Conservative
+818,6,Readability / Communication issues,6|11,1,Male,40s,College,Single,400-700,Office worker,Moderate
+819,9,No opinion / Don't know,9,9,Female,60+,HS or less,Married (children),200-400,Homemaker,Moderate
+820,9,No opinion / Don't know,9,9,Male,60+,Grad+,Married (children),700-1000,Freelancer,Progressive
+821,2,Frivolous / Emotional petitions,2|5|10,14,Male,60+,College,Married (children),400-700,Self-employed,Progressive
+822,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),700-1000,Professional,Conservative
+823,7,Personal / Selfish petitions,7|13,7,Male,50s,HS or less,Married (no children),1000+,Office worker,Progressive
+824,11,Need for more participation / Awareness,11,11,Female,60+,HS or less,Married (children),< 200,Unemployed/Retired,Conservative
+825,12,Feasibility / Unrealistic proposals,1|12,14,Male,40s,Grad+,Married (children),1000+,Office worker,Progressive
+827,7,Personal / Selfish petitions,7,7,Female,20s,College,Single,200-400,Office worker,Moderate
+828,2,Frivolous / Emotional petitions,2,14,Female,30s,College,Single,400-700,Freelancer,Progressive
+829,2,Frivolous / Emotional petitions,2,14,Male,20s,College,Single,200-400,Professional,Moderate
+830,1,Lack of effectiveness,1,14,Female,30s,Grad+,Married (no children),400-700,Office worker,Conservative
+831,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+832,8,Positive / Supportive,8,14,Male,60+,College,Married (children),400-700,Self-employed,Conservative
+833,9,No opinion / Don't know,9,9,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Conservative
+834,5,Need for filtering / Guidelines,5,14,Male,30s,College,Married (children),1000+,Office worker,Conservative
+835,6,Readability / Communication issues,1|6,6,Female,50s,College,Married (children),700-1000,Homemaker,Progressive
+837,6,Readability / Communication issues,6,6,Male,40s,Grad+,Married (children),400-700,Office worker,Progressive
+838,1,Lack of effectiveness,1,1,Male,50s,College,Married (children),700-1000,Office worker,Conservative
+839,6,Readability / Communication issues,6,14,Female,60+,Grad+,Married (children),700-1000,Unemployed/Retired,Conservative
+840,7,Personal / Selfish petitions,6|7,7,Female,30s,Grad+,Married (no children),400-700,Office worker,Conservative
+841,14,Other,14,14,Female,40s,Grad+,Single,200-400,Office worker,Progressive
+842,6,Readability / Communication issues,6|11,14,Male,50s,Grad+,Married (children),400-700,Service/Sales,Conservative
+843,7,Personal / Selfish petitions,6|7,14,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+844,9,No opinion / Don't know,9,14,Male,40s,HS or less,Married (children),400-700,Office worker,Progressive
+845,1,Lack of effectiveness,1,14,Male,60+,HS or less,Other,< 200,Unemployed/Retired,Conservative
+846,10,Mob mentality / Opinion manipulation,10,1,Male,50s,College,Married (children),1000+,Office worker,Moderate
+847,13,Civil servant burden / Institutional constraints,13,13,Male,50s,HS or less,Single,400-700,Self-employed,Conservative
+848,12,Feasibility / Unrealistic proposals,6|12,12,Female,40s,College,Married (no children),200-400,Office worker,Moderate
+849,1,Lack of effectiveness,1,14,Male,60+,College,Married (children),400-700,Freelancer,Moderate
+850,9,No opinion / Don't know,9,3,Male,50s,Grad+,Married (children),700-1000,Professional,Conservative
+851,8,Positive / Supportive,8,14,Male,60+,College,Other,200-400,Service/Sales,Progressive
+853,11,Need for more participation / Awareness,11,11,Male,60+,HS or less,Married (children),200-400,Unemployed/Retired,Progressive
+854,8,Positive / Supportive,8,8,Male,50s,HS or less,Single,< 200,Freelancer,Progressive
+855,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),400-700,Office worker,Conservative
+856,1,Lack of effectiveness,1,1,Male,60+,College,Married (children),200-400,Professional,Moderate
+858,11,Need for more participation / Awareness,11,11,Male,20s,College,Single,200-400,Student,Conservative
+859,2,Frivolous / Emotional petitions,2,2,Female,60+,College,Married (children),400-700,Office worker,Conservative
+860,7,Personal / Selfish petitions,7|10,1,Male,30s,Grad+,Married (no children),400-700,Office worker,Moderate
+861,12,Feasibility / Unrealistic proposals,12,14,Male,50s,College,Married (children),200-400,Unemployed/Retired,Progressive
+862,9,No opinion / Don't know,9,9,Male,50s,College,Married (children),1000+,Office worker,Conservative
+863,5,Need for filtering / Guidelines,5|7,8,Female,50s,College,Married (children),400-700,Unemployed/Retired,Progressive
+864,1,Lack of effectiveness,1,1,Male,40s,HS or less,Married (children),200-400,Office worker,Moderate
+865,7,Personal / Selfish petitions,2|7,7,Female,20s,College,Single,200-400,Office worker,Moderate
+866,2,Frivolous / Emotional petitions,2,14,Male,20s,Grad+,Single,200-400,Office worker,Conservative
+867,7,Personal / Selfish petitions,7,14,Male,30s,College,Married (children),400-700,Office worker,Progressive
+868,7,Personal / Selfish petitions,7,2,Female,40s,College,Single,200-400,Office worker,Conservative
+869,3,Transparency / Feedback deficiency,3,3,Male,50s,College,Married (children),200-400,Office worker,Conservative
+871,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Single,< 200,Self-employed,Progressive
+873,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Single,200-400,Office worker,Conservative
+874,14,Other,14,14,Female,60+,College,Married (no children),< 200,Homemaker,Moderate
+877,2,Frivolous / Emotional petitions,2|5,2,Female,40s,College,Married (children),400-700,Homemaker,Progressive
+878,2,Frivolous / Emotional petitions,2|6,14,Male,30s,College,Single,200-400,Office worker,Moderate
+879,9,No opinion / Don't know,9,9,Female,60+,HS or less,Married (children),400-700,Homemaker,Moderate
+880,7,Personal / Selfish petitions,7,14,Female,40s,College,Married (children),700-1000,Office worker,Conservative
+881,9,No opinion / Don't know,9,9,Male,50s,College,Single,< 200,Unemployed/Retired,Moderate
+883,7,Personal / Selfish petitions,7|13,13,Female,30s,College,Married (children),400-700,Office worker,Moderate
+884,7,Personal / Selfish petitions,7,7,Female,30s,College,Married (children),< 200,Homemaker,Progressive
+885,7,Personal / Selfish petitions,3|7,7,Male,20s,College,Single,200-400,Civil servant/Teacher,Progressive
+886,7,Personal / Selfish petitions,7,14,Male,30s,Grad+,Single,400-700,Office worker,Conservative
+887,14,Other,14,14,Female,60+,Grad+,Other,400-700,Homemaker,Conservative
+888,14,Other,14,14,Female,60+,HS or less,Married (children),1000+,Homemaker,Conservative
+890,12,Feasibility / Unrealistic proposals,3|12,12,Female,40s,College,Single,< 200,Self-employed,Moderate
+891,4,Slow processing / Bureaucratic delays,4,14,Male,30s,College,Single,200-400,Office worker,Progressive
+893,10,Mob mentality / Opinion manipulation,10,14,Female,60+,Grad+,Married (children),200-400,Homemaker,Progressive
+894,1,Lack of effectiveness,1,1,Female,60+,HS or less,Married (children),200-400,Homemaker,Conservative
+895,7,Personal / Selfish petitions,7,7,Female,60+,College,Married (children),400-700,Civil servant/Teacher,Conservative
+897,10,Mob mentality / Opinion manipulation,10,14,Female,50s,College,Married (children),400-700,Homemaker,Conservative
+898,9,No opinion / Don't know,9,9,Female,30s,College,Single,1000+,Office worker,Moderate
+899,1,Lack of effectiveness,1,1,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+900,5,Need for filtering / Guidelines,5|13,8,Male,40s,College,Single,400-700,Office worker,Moderate
+901,7,Personal / Selfish petitions,7|12,7,Male,40s,College,Married (children),400-700,Office worker,Conservative
+902,1,Lack of effectiveness,1,1,Female,40s,College,Married (children),700-1000,Office worker,Conservative
+903,6,Readability / Communication issues,6,14,Male,40s,College,Married (children),400-700,Office worker,Conservative
+904,9,No opinion / Don't know,9,9,Male,20s,College,Single,200-400,Student,Progressive
+906,7,Personal / Selfish petitions,7,7,Female,60+,HS or less,Other,< 200,Unemployed/Retired,Conservative
+907,2,Frivolous / Emotional petitions,2,2,Male,40s,College,Married (children),700-1000,Office worker,Conservative
+908,2,Frivolous / Emotional petitions,2|5,2,Female,40s,HS or less,Single,200-400,Office worker,Conservative
+909,14,Other,14,14,Male,40s,College,Married (children),400-700,Office worker,Conservative
+910,2,Frivolous / Emotional petitions,1|2,2,Female,30s,Grad+,Married (no children),200-400,Freelancer,Conservative
+912,3,Transparency / Feedback deficiency,1|3,14,Male,50s,College,Married (children),400-700,Technical,Progressive
+913,11,Need for more participation / Awareness,11,14,Female,30s,College,Single,200-400,Office worker,Progressive
+914,7,Personal / Selfish petitions,7|10,7,Female,60+,College,Married (children),700-1000,Unemployed/Retired,Conservative
+915,11,Need for more participation / Awareness,11,11,Male,20s,College,Single,400-700,Professional,Progressive
+916,1,Lack of effectiveness,1,14,Female,50s,Grad+,Single,400-700,Unemployed/Retired,Progressive
+917,6,Readability / Communication issues,6,2,Female,40s,College,Married (no children),700-1000,Office worker,Progressive
+918,2,Frivolous / Emotional petitions,2,2,Female,30s,HS or less,Single,200-400,Office worker,Moderate
+920,9,No opinion / Don't know,9,9,Female,20s,Grad+,Single,400-700,Office worker,Conservative
+922,7,Personal / Selfish petitions,7,7,Male,40s,College,Married (children),700-1000,Office worker,Progressive
+923,7,Personal / Selfish petitions,7,7,Female,50s,College,Married (children),700-1000,Homemaker,Conservative
+924,3,Transparency / Feedback deficiency,3,14,Male,50s,Grad+,Married (no children),400-700,Professional,Moderate
+927,6,Readability / Communication issues,5|6,2,Male,40s,College,Married (children),400-700,Office worker,Moderate
+928,7,Personal / Selfish petitions,7,7,Female,60+,Grad+,Married (children),1000+,Self-employed,Conservative
+929,2,Frivolous / Emotional petitions,1|2,2,Female,50s,College,Single,200-400,Unemployed/Retired,Progressive
+930,2,Frivolous / Emotional petitions,2,14,Male,20s,College,Single,1000+,Office worker,Moderate
+931,6,Readability / Communication issues,6,6,Male,40s,College,Married (no children),1000+,Office worker,Moderate
+933,7,Personal / Selfish petitions,7,14,Male,50s,College,Married (children),400-700,Office worker,Moderate
+934,12,Feasibility / Unrealistic proposals,12,1,Female,40s,College,Married (no children),400-700,Office worker,Progressive
+935,9,No opinion / Don't know,9,9,Male,30s,College,Single,200-400,Office worker,Conservative
+936,6,Readability / Communication issues,2|6,14,Male,40s,College,Married (children),400-700,Office worker,Conservative
+937,1,Lack of effectiveness,1|13,14,Male,50s,HS or less,Married (children),400-700,Self-employed,Progressive
+938,10,Mob mentality / Opinion manipulation,10,10,Female,60+,College,Married (children),200-400,Homemaker,Conservative
+939,8,Positive / Supportive,8,14,Male,60+,College,Married (children),400-700,Self-employed,Conservative
+940,2,Frivolous / Emotional petitions,1|2,2,Female,20s,College,Single,400-700,Office worker,Progressive
+941,4,Slow processing / Bureaucratic delays,4,4,Male,50s,College,Married (children),400-700,Office worker,Conservative
+943,2,Frivolous / Emotional petitions,1|2|7,14,Male,20s,Grad+,Single,< 200,Unemployed/Retired,Progressive
+945,9,No opinion / Don't know,9,9,Male,40s,College,Married (children),200-400,Service/Sales,Progressive
+946,10,Mob mentality / Opinion manipulation,2|10,2,Male,50s,College,Married (children),700-1000,Office worker,Progressive
+949,2,Frivolous / Emotional petitions,1|2,2,Female,40s,Grad+,Married (children),700-1000,Professional,Conservative
+951,10,Mob mentality / Opinion manipulation,2|10,2,Male,20s,College,Single,400-700,Office worker,Progressive
+953,9,No opinion / Don't know,9,9,Male,40s,HS or less,Single,200-400,Other,Moderate
+954,14,Other,14,14,Female,40s,Grad+,Single,400-700,Office worker,Moderate
+955,2,Frivolous / Emotional petitions,2|7|12,2,Male,30s,Grad+,Single,200-400,Technical,Moderate
+958,8,Positive / Supportive,8,8,Female,40s,College,Married (children),400-700,Professional,Conservative
+959,6,Readability / Communication issues,6|12,2,Male,50s,Grad+,Married (children),1000+,Professional,Progressive
+960,2,Frivolous / Emotional petitions,1|2,2,Female,30s,College,Single,200-400,Professional,Progressive
+961,8,Positive / Supportive,8,9,Male,40s,HS or less,Single,< 200,Unemployed/Retired,Progressive
+962,1,Lack of effectiveness,1|4,1,Female,60+,HS or less,Married (children),700-1000,Office worker,Conservative
+965,7,Personal / Selfish petitions,7|13,7,Male,40s,College,Married (no children),400-700,Office worker,Progressive
+967,2,Frivolous / Emotional petitions,2|6,2,Female,20s,College,Single,200-400,Office worker,Conservative
+968,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),400-700,Office worker,Moderate
+971,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Married (children),700-1000,Service/Sales,Conservative
+972,7,Personal / Selfish petitions,7,7,Male,50s,College,Married (children),700-1000,Office worker,Conservative
+973,13,Civil servant burden / Institutional constraints,1|12|13,13,Male,50s,College,Married (no children),700-1000,Office worker,Moderate
+975,2,Frivolous / Emotional petitions,2|5,2,Male,30s,College,Single,< 200,Student,Conservative
+976,12,Feasibility / Unrealistic proposals,12,1,Male,60+,HS or less,Married (children),1000+,Self-employed,Progressive
+977,7,Personal / Selfish petitions,7,7,Female,50s,HS or less,Married (children),400-700,Office worker,Conservative
+979,6,Readability / Communication issues,6,6,Male,30s,College,Married (children),400-700,Office worker,Moderate
+980,13,Civil servant burden / Institutional constraints,13,7,Female,60+,Grad+,Married (no children),400-700,Professional,Moderate
+981,3,Transparency / Feedback deficiency,3,1,Female,40s,HS or less,Other,200-400,Office worker,Progressive
+983,6,Readability / Communication issues,6,14,Male,40s,College,Married (children),700-1000,Office worker,Progressive
+987,2,Frivolous / Emotional petitions,2,2,Male,30s,Grad+,Married (children),400-700,Professional,Conservative
+991,1,Lack of effectiveness,1|12,1,Female,50s,HS or less,Married (children),700-1000,Freelancer,Progressive
+992,13,Civil servant burden / Institutional constraints,3|13,8,Male,60+,College,Married (children),700-1000,Office worker,Conservative
+993,5,Need for filtering / Guidelines,5|6,5,Male,30s,Grad+,Single,200-400,Freelancer,Moderate
+994,4,Slow processing / Bureaucratic delays,2|4,4,Male,30s,College,Married (no children),200-400,Service/Sales,Progressive
+995,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,< 200,Student,Progressive
+996,6,Readability / Communication issues,6,6,Female,20s,College,Single,200-400,Office worker,Conservative
+998,11,Need for more participation / Awareness,11,14,Male,30s,College,Married (children),400-700,Office worker,Progressive
+999,5,Need for filtering / Guidelines,5,14,Female,30s,HS or less,Married (no children),400-700,Office worker,Moderate
+1000,11,Need for more participation / Awareness,11,14,Female,30s,College,Married (no children),400-700,Office worker,Conservative
+1002,3,Transparency / Feedback deficiency,3,14,Female,40s,College,Married (children),400-700,Civil servant/Teacher,Progressive
+1003,14,Other,14,14,Female,50s,College,Married (children),< 200,Service/Sales,Conservative
+1004,3,Transparency / Feedback deficiency,3,14,Female,40s,College,Married (children),700-1000,Professional,Moderate
+1006,1,Lack of effectiveness,1,1,Male,20s,College,Single,200-400,Office worker,Conservative
+1010,6,Readability / Communication issues,6,6,Male,30s,College,Married (children),400-700,Office worker,Progressive
+1011,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,400-700,Office worker,Conservative
+1012,5,Need for filtering / Guidelines,5,5,Female,40s,HS or less,Other,400-700,Office worker,Moderate
+1015,2,Frivolous / Emotional petitions,2|11,2,Female,40s,College,Married (no children),400-700,Office worker,Conservative
+1016,1,Lack of effectiveness,1,14,Male,20s,College,Single,200-400,Office worker,Progressive
+1017,2,Frivolous / Emotional petitions,2|10,2,Female,40s,College,Single,400-700,Self-employed,Moderate
+1018,12,Feasibility / Unrealistic proposals,12,12,Male,20s,College,Single,200-400,Office worker,Conservative
+1019,2,Frivolous / Emotional petitions,2,14,Female,50s,Grad+,Married (children),700-1000,Homemaker,Conservative
+1023,3,Transparency / Feedback deficiency,3|13,3,Female,60+,HS or less,Other,400-700,Service/Sales,Conservative
+1026,8,Positive / Supportive,7|8,8,Female,60+,HS or less,Married (children),400-700,Office worker,Conservative
+1027,9,No opinion / Don't know,9,9,Female,50s,Grad+,Single,200-400,Professional,Progressive
+1030,10,Mob mentality / Opinion manipulation,10,14,Male,30s,College,Single,200-400,Professional,Conservative
+1032,2,Frivolous / Emotional petitions,2|5,14,Female,30s,College,Single,400-700,Office worker,Moderate
+1035,14,Other,14,14,Female,40s,College,Married (children),400-700,Professional,Moderate
+1036,9,No opinion / Don't know,9,14,Female,60+,HS or less,Other,200-400,Office worker,Moderate
+1037,2,Frivolous / Emotional petitions,2|13,2,Female,40s,College,Single,700-1000,Office worker,Moderate
+1043,1,Lack of effectiveness,1,14,Female,60+,College,Single,200-400,Other,Progressive
+1045,14,Other,14,6,Male,50s,College,Other,400-700,Self-employed,Conservative
+1046,1,Lack of effectiveness,1|2|12,2,Female,20s,College,Single,1000+,Student,Conservative
+1047,5,Need for filtering / Guidelines,5,5,Male,30s,College,Single,200-400,Office worker,Moderate
+1048,7,Personal / Selfish petitions,7,14,Male,20s,College,Single,200-400,Office worker,Moderate
+1051,11,Need for more participation / Awareness,11,14,Male,50s,College,Married (children),400-700,Office worker,Conservative
+1052,7,Personal / Selfish petitions,7,5,Female,60+,College,Married (children),400-700,Freelancer,Progressive
+1054,12,Feasibility / Unrealistic proposals,12,8,Female,60+,Grad+,Other,200-400,Homemaker,Progressive
+1055,3,Transparency / Feedback deficiency,3,1,Female,40s,College,Married (no children),400-700,Office worker,Conservative
+1056,2,Frivolous / Emotional petitions,2,2,Female,60+,College,Married (children),200-400,Homemaker,Conservative
+1057,9,No opinion / Don't know,9,9,Male,40s,College,Married (children),400-700,Office worker,Moderate
+1058,2,Frivolous / Emotional petitions,2,14,Female,40s,College,Married (children),700-1000,Office worker,Conservative
+1063,1,Lack of effectiveness,1,12,Female,60+,College,Other,400-700,Service/Sales,Progressive
+1064,1,Lack of effectiveness,1|2|13,2,Male,30s,College,Married (children),400-700,Office worker,Moderate
+1068,9,No opinion / Don't know,9,9,Male,30s,College,Single,200-400,Office worker,Conservative
+1069,12,Feasibility / Unrealistic proposals,12,8,Female,60+,HS or less,Married (children),200-400,Homemaker,Moderate
+1070,1,Lack of effectiveness,1,1,Female,60+,HS or less,Other,< 200,Homemaker,Progressive
+1071,1,Lack of effectiveness,1,14,Male,30s,College,Single,200-400,Office worker,Conservative
+1073,3,Transparency / Feedback deficiency,3,8,Male,30s,College,Married (children),400-700,Office worker,Moderate
+1074,1,Lack of effectiveness,1,14,Male,40s,College,Single,400-700,Office worker,Progressive
+1075,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),400-700,Office worker,Conservative
+1076,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,200-400,Unemployed/Retired,Progressive
+1081,1,Lack of effectiveness,1,14,Male,30s,College,Single,< 200,Unemployed/Retired,Conservative
+1084,1,Lack of effectiveness,1|2|3|13,2,Male,30s,College,Single,200-400,Technical,Moderate
+1085,9,No opinion / Don't know,9,9,Female,60+,College,Married (children),200-400,Office worker,Conservative
+1088,7,Personal / Selfish petitions,7|12,1,Male,20s,College,Single,400-700,Unemployed/Retired,Conservative
+1094,6,Readability / Communication issues,6,14,Male,30s,College,Married (children),1000+,Office worker,Moderate
+1098,14,Other,14,14,Male,30s,College,Single,400-700,Other,Moderate
+1100,1,Lack of effectiveness,1,1,Male,30s,College,Married (children),200-400,Office worker,Moderate
+1101,9,No opinion / Don't know,9,14,Female,20s,College,Single,200-400,Office worker,Conservative
+1102,2,Frivolous / Emotional petitions,2|12,2,Male,30s,College,Married (children),400-700,Office worker,Moderate
+1103,1,Lack of effectiveness,1|2,2,Female,50s,HS or less,Married (children),400-700,Office worker,Progressive
+1106,9,No opinion / Don't know,9,9,Female,60+,College,Single,< 200,Other,Progressive
+1110,12,Feasibility / Unrealistic proposals,12,1,Male,30s,College,Married (children),700-1000,Office worker,Progressive
+1111,1,Lack of effectiveness,1,14,Female,50s,College,Married (children),400-700,Office worker,Progressive
+1112,5,Need for filtering / Guidelines,5|13,2,Female,60+,HS or less,Married (children),400-700,Unemployed/Retired,Conservative
+1113,4,Slow processing / Bureaucratic delays,4,4,Female,30s,College,Single,200-400,Office worker,Conservative
+1114,5,Need for filtering / Guidelines,5|6,5,Male,30s,College,Single,700-1000,Freelancer,Moderate
+1116,1,Lack of effectiveness,1,1,Male,30s,Grad+,Single,200-400,Office worker,Progressive
+1119,14,Other,14,14,Male,30s,College,Single,400-700,Unemployed/Retired,Moderate
+1121,7,Personal / Selfish petitions,7,7,Female,60+,Grad+,Married (children),400-700,Technical,Progressive
+1123,8,Positive / Supportive,8,14,Male,30s,College,Married (no children),400-700,Office worker,Conservative
+1124,2,Frivolous / Emotional petitions,2|5,14,Female,60+,College,Married (children),200-400,Office worker,Conservative
+1126,2,Frivolous / Emotional petitions,2,2,Male,30s,College,Married (children),400-700,Office worker,Conservative
+1127,9,No opinion / Don't know,9,9,Female,50s,Grad+,Married (children),700-1000,Self-employed,Moderate
+1132,13,Civil servant burden / Institutional constraints,13,1,Female,50s,College,Married (children),400-700,Civil servant/Teacher,Conservative
+1137,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,< 200,Student,Progressive
+1140,11,Need for more participation / Awareness,11,14,Female,30s,College,Single,< 200,Unemployed/Retired,Progressive
+1145,3,Transparency / Feedback deficiency,3,3,Female,40s,HS or less,Married (children),1000+,Office worker,Moderate
+1146,2,Frivolous / Emotional petitions,2,14,Female,50s,HS or less,Married (children),1000+,Office worker,Conservative
+1151,8,Positive / Supportive,8,8,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+1152,7,Personal / Selfish petitions,7,7,Male,30s,Grad+,Married (no children),400-700,Civil servant/Teacher,Conservative
+1153,4,Slow processing / Bureaucratic delays,4,9,Female,60+,HS or less,Other,200-400,Self-employed,Conservative
+1154,2,Frivolous / Emotional petitions,2|3,2,Female,60+,College,Single,700-1000,Self-employed,Progressive
+1156,1,Lack of effectiveness,1,1,Female,60+,Grad+,Married (children),700-1000,Unemployed/Retired,Conservative
+1158,7,Personal / Selfish petitions,7,14,Female,30s,College,Married (no children),700-1000,Office worker,Moderate
+1160,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,200-400,Service/Sales,Conservative
+1161,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Single,200-400,Office worker,Moderate
+1163,1,Lack of effectiveness,1,14,Female,50s,HS or less,Married (children),200-400,Homemaker,Progressive
+1165,14,Other,14,14,Male,20s,College,Single,400-700,Student,Progressive
+1166,6,Readability / Communication issues,6,6,Male,30s,College,Single,200-400,Office worker,Conservative
+1167,6,Readability / Communication issues,1|6,1,Female,40s,College,Married (children),700-1000,Homemaker,Progressive
+1172,1,Lack of effectiveness,1|7,7,Female,40s,Grad+,Single,< 200,Freelancer,Moderate
+1173,1,Lack of effectiveness,1,2,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+1174,8,Positive / Supportive,8,14,Female,50s,HS or less,Married (children),< 200,Office worker,Progressive
+1175,1,Lack of effectiveness,1,14,Female,60+,College,Married (children),700-1000,Self-employed,Progressive
+1177,5,Need for filtering / Guidelines,5,5,Female,30s,College,Single,200-400,Office worker,Conservative
+1178,12,Feasibility / Unrealistic proposals,12,12,Male,30s,College,Single,200-400,Freelancer,Progressive
+1179,7,Personal / Selfish petitions,7,14,Male,30s,Grad+,Single,400-700,Service/Sales,Conservative
+1182,2,Frivolous / Emotional petitions,2|5,2,Female,20s,College,Single,200-400,Office worker,Progressive
+1186,6,Readability / Communication issues,6,5,Female,40s,College,Married (children),400-700,Office worker,Progressive
+1187,6,Readability / Communication issues,6,6,Female,30s,College,Single,200-400,Office worker,Progressive
+1188,1,Lack of effectiveness,1,14,Female,30s,College,Single,< 200,Unemployed/Retired,Conservative
+1191,6,Readability / Communication issues,6,6,Male,20s,College,Single,200-400,Service/Sales,Moderate
+1193,6,Readability / Communication issues,6,6,Female,30s,Grad+,Married (no children),< 200,Homemaker,Progressive
+1194,3,Transparency / Feedback deficiency,3,14,Female,50s,College,Married (no children),1000+,Office worker,Progressive
+1195,10,Mob mentality / Opinion manipulation,10,14,Male,30s,College,Single,200-400,Freelancer,Moderate
+1196,1,Lack of effectiveness,1,5,Female,60+,College,Other,< 200,Unemployed/Retired,Conservative
+1199,7,Personal / Selfish petitions,7,7,Female,50s,College,Married (no children),700-1000,Homemaker,Progressive
+1201,10,Mob mentality / Opinion manipulation,10,14,Female,50s,HS or less,Other,< 200,Office worker,Conservative
+1206,4,Slow processing / Bureaucratic delays,3|4,14,Female,50s,HS or less,Married (children),200-400,Homemaker,Moderate
+1207,2,Frivolous / Emotional petitions,2|5,2,Female,50s,College,Married (children),400-700,Homemaker,Progressive
+1208,2,Frivolous / Emotional petitions,2|5,2,Female,40s,College,Married (children),400-700,Office worker,Conservative
+1213,10,Mob mentality / Opinion manipulation,1|10,2,Female,60+,College,Other,700-1000,Homemaker,Progressive
+1214,7,Personal / Selfish petitions,2|7|13,2,Female,20s,College,Single,200-400,Student,Progressive
+1219,2,Frivolous / Emotional petitions,2|12,2,Male,20s,College,Single,< 200,Civil servant/Teacher,Progressive
+1220,9,No opinion / Don't know,9,9,Male,30s,College,Single,200-400,Office worker,Conservative
+1222,7,Personal / Selfish petitions,7,7,Female,60+,HS or less,Married (children),< 200,Homemaker,Progressive
+1227,11,Need for more participation / Awareness,11,14,Female,40s,HS or less,Married (children),400-700,Freelancer,Moderate
+1229,1,Lack of effectiveness,1,1,Female,60+,College,Married (children),700-1000,Office worker,Progressive
+1230,1,Lack of effectiveness,1,1,Female,20s,College,Single,1000+,Office worker,Conservative
+1231,5,Need for filtering / Guidelines,5|6,6,Female,20s,College,Single,1000+,Unemployed/Retired,Progressive
+1232,13,Civil servant burden / Institutional constraints,1|8|13,1,Female,50s,College,Other,400-700,Civil servant/Teacher,Moderate
+1234,4,Slow processing / Bureaucratic delays,4|13,4,Female,50s,College,Single,< 200,Freelancer,Moderate
+1235,2,Frivolous / Emotional petitions,2|5,2,Female,20s,College,Single,400-700,Student,Moderate
+1236,1,Lack of effectiveness,1|2,14,Female,20s,HS or less,Married (children),400-700,Office worker,Progressive
+1240,1,Lack of effectiveness,1,1,Female,40s,Grad+,Single,400-700,Professional,Conservative
+1242,9,No opinion / Don't know,9,9,Male,30s,Grad+,Single,< 200,Office worker,Conservative
+1243,3,Transparency / Feedback deficiency,3|5,3,Female,30s,College,Single,200-400,Office worker,Conservative
+1247,7,Personal / Selfish petitions,1|7,1,Female,20s,College,Single,< 200,Student,Progressive
+1248,2,Frivolous / Emotional petitions,2|5|10,2,Male,20s,College,Single,< 200,Office worker,Conservative
+1250,2,Frivolous / Emotional petitions,2|6,2,Female,40s,Grad+,Single,1000+,Office worker,Conservative
+1251,1,Lack of effectiveness,1|3,14,Female,60+,College,Single,200-400,Office worker,Conservative
+1255,6,Readability / Communication issues,6,14,Male,20s,College,Single,< 200,Student,Moderate
+1256,12,Feasibility / Unrealistic proposals,12,14,Female,20s,College,Single,< 200,Unemployed/Retired,Progressive
+1258,6,Readability / Communication issues,6,7,Female,50s,College,Other,400-700,Homemaker,Progressive
+1261,1,Lack of effectiveness,1,1,Female,60+,College,Other,200-400,Homemaker,Moderate
+1264,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Progressive
+1265,12,Feasibility / Unrealistic proposals,12,1,Female,30s,College,Single,< 200,Unemployed/Retired,Moderate
+1266,1,Lack of effectiveness,1,14,Male,30s,College,Single,200-400,Office worker,Conservative
+1267,7,Personal / Selfish petitions,7,7,Female,30s,College,Married (no children),700-1000,Office worker,Conservative
+1268,9,No opinion / Don't know,9,9,Female,60+,College,Other,200-400,Service/Sales,Conservative
+1269,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),700-1000,Office worker,Conservative
+1272,8,Positive / Supportive,8,14,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+1273,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,400-700,Unemployed/Retired,Moderate
+1274,8,Positive / Supportive,8,8,Female,60+,HS or less,Other,< 200,Unemployed/Retired,Conservative
+1276,3,Transparency / Feedback deficiency,3,14,Female,30s,College,Single,200-400,Unemployed/Retired,Progressive
+1278,9,No opinion / Don't know,9,9,Male,30s,HS or less,Single,200-400,Office worker,Conservative
+1283,2,Frivolous / Emotional petitions,2|8,14,Female,60+,College,Married (children),400-700,Self-employed,Progressive
+1285,2,Frivolous / Emotional petitions,2,14,Female,40s,College,Married (children),700-1000,Office worker,Progressive
+1294,1,Lack of effectiveness,1,14,Female,60+,College,Married (children),< 200,Homemaker,Conservative
+1298,9,No opinion / Don't know,9,14,Male,20s,College,Single,200-400,Office worker,Moderate
+1299,6,Readability / Communication issues,6,14,Female,60+,HS or less,Married (children),200-400,Office worker,Progressive
+1301,9,No opinion / Don't know,9,9,Female,30s,College,Single,200-400,Office worker,Moderate
+1302,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,< 200,Unemployed/Retired,Moderate
+1304,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),400-700,Office worker,Progressive
+1306,2,Frivolous / Emotional petitions,2,2,Male,30s,HS or less,Single,< 200,Service/Sales,Progressive
+1307,5,Need for filtering / Guidelines,5|13,14,Male,20s,College,Single,200-400,Office worker,Progressive
+1308,1,Lack of effectiveness,1|13,1,Female,50s,College,Single,400-700,Freelancer,Conservative
+1309,2,Frivolous / Emotional petitions,2,2,Male,30s,Grad+,Single,200-400,Office worker,Conservative
+1312,1,Lack of effectiveness,1|3,1,Female,30s,College,Single,200-400,Unemployed/Retired,Conservative
+1314,3,Transparency / Feedback deficiency,3,3,Female,60+,HS or less,Other,400-700,Self-employed,Conservative
+1315,8,Positive / Supportive,8,13,Female,60+,College,Married (children),700-1000,Homemaker,Conservative
+1316,1,Lack of effectiveness,1,14,Female,30s,College,Married (children),200-400,Homemaker,Conservative
+1325,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Married (children),700-1000,Homemaker,Progressive
+1326,3,Transparency / Feedback deficiency,3,3,Female,60+,College,Married (children),400-700,Homemaker,Conservative
+1328,11,Need for more participation / Awareness,11,14,Female,60+,College,Other,1000+,Homemaker,Conservative
+1329,5,Need for filtering / Guidelines,5,2,Female,30s,College,Married (children),700-1000,Professional,Moderate
+1330,3,Transparency / Feedback deficiency,3|13,14,Female,30s,College,Single,400-700,Office worker,Progressive
+1331,2,Frivolous / Emotional petitions,2|6,2,Female,40s,College,Married (children),400-700,Office worker,Conservative
+1332,9,No opinion / Don't know,9,9,Female,60+,College,Married (children),700-1000,Office worker,Conservative
+1333,4,Slow processing / Bureaucratic delays,4,14,Male,30s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+1335,10,Mob mentality / Opinion manipulation,10,10,Female,20s,College,Single,400-700,Office worker,Conservative
+1336,9,No opinion / Don't know,9,14,Female,50s,College,Married (children),400-700,Service/Sales,Progressive
+1338,5,Need for filtering / Guidelines,2|5,2,Female,20s,College,Single,1000+,Student,Moderate
+1342,14,Other,14,14,Male,20s,College,Single,200-400,Student,Conservative
+1350,9,No opinion / Don't know,9,9,Female,40s,College,Married (children),200-400,Homemaker,Conservative
+1353,9,No opinion / Don't know,9,9,Male,20s,College,Single,200-400,Office worker,Conservative
+1354,12,Feasibility / Unrealistic proposals,12,1,Female,30s,Grad+,Married (children),700-1000,Civil servant/Teacher,Conservative
+1355,1,Lack of effectiveness,1,1,Female,20s,College,Single,400-700,Unemployed/Retired,Moderate
+1357,14,Other,14,14,Male,20s,College,Single,200-400,Office worker,Moderate
+1358,14,Other,14,14,Female,40s,College,Single,700-1000,Professional,Progressive
+1363,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Married (no children),400-700,Student,Progressive
+1366,6,Readability / Communication issues,5|6|12,14,Female,40s,College,Single,400-700,Office worker,Conservative
+1368,7,Personal / Selfish petitions,7|12,1,Female,40s,HS or less,Single,< 200,Unemployed/Retired,Conservative
+1369,9,No opinion / Don't know,9,9,Female,60+,HS or less,Married (children),400-700,Homemaker,Moderate
+1372,6,Readability / Communication issues,6,14,Female,30s,College,Single,700-1000,Technical,Moderate
+1379,9,No opinion / Don't know,9,9,Female,20s,College,Single,200-400,Office worker,Conservative
+1384,14,Other,14,14,Female,60+,HS or less,Other,< 200,Unemployed/Retired,Conservative
+1386,3,Transparency / Feedback deficiency,3,3,Female,20s,College,Single,400-700,Unemployed/Retired,Moderate
+1387,1,Lack of effectiveness,1|6,14,Female,40s,College,Single,200-400,Other,Moderate
+1389,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Moderate
+1390,2,Frivolous / Emotional petitions,1|2,2,Female,40s,Grad+,Single,200-400,Office worker,Conservative
+1391,4,Slow processing / Bureaucratic delays,4,4,Female,30s,Grad+,Married (children),400-700,Homemaker,Conservative
+1395,5,Need for filtering / Guidelines,5|12,5,Female,20s,College,Single,700-1000,Unemployed/Retired,Moderate
+1400,12,Feasibility / Unrealistic proposals,11|12,1,Female,30s,College,Single,< 200,Office worker,Progressive
+1403,2,Frivolous / Emotional petitions,1|2|4,2,Female,60+,HS or less,Married (children),700-1000,Homemaker,Moderate
+1404,1,Lack of effectiveness,1|10,2,Female,40s,HS or less,Single,< 200,Unemployed/Retired,Progressive
+1406,14,Other,14,14,Female,20s,College,Single,200-400,Office worker,Conservative
+1408,14,Other,14,8,Female,60+,College,Married (children),200-400,Homemaker,Moderate
+1410,6,Readability / Communication issues,6,14,Female,60+,College,Married (children),200-400,Service/Sales,Conservative
+1412,6,Readability / Communication issues,5|6,2,Male,20s,College,Single,200-400,Unemployed/Retired,Progressive
+1413,9,No opinion / Don't know,9,9,Female,60+,HS or less,Married (children),< 200,Other,Conservative
+1415,14,Other,14,1,Female,60+,Grad+,Married (children),400-700,Office worker,Progressive
+1417,7,Personal / Selfish petitions,5|7,14,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Progressive
+1419,5,Need for filtering / Guidelines,1|5,12,Female,50s,College,Married (children),400-700,Homemaker,Progressive
+1420,13,Civil servant burden / Institutional constraints,2|13,2,Female,30s,College,Single,400-700,Office worker,Moderate
+1421,9,No opinion / Don't know,9,9,Female,20s,College,Single,200-400,Professional,Moderate
+1423,11,Need for more participation / Awareness,11,11,Female,20s,College,Single,200-400,Office worker,Moderate
+1424,10,Mob mentality / Opinion manipulation,2|10,14,Female,60+,College,Married (children),700-1000,Freelancer,Conservative
+1425,2,Frivolous / Emotional petitions,2,14,Female,40s,College,Married (children),400-700,Other,Progressive
+1426,9,No opinion / Don't know,9,9,Male,20s,College,Single,< 200,Other,Conservative
+1429,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),200-400,Unemployed/Retired,Moderate
+1430,1,Lack of effectiveness,1,1,Female,40s,College,Married (children),700-1000,Office worker,Conservative
+1431,1,Lack of effectiveness,1,2,Female,30s,Grad+,Single,700-1000,Professional,Progressive
+1432,1,Lack of effectiveness,1|10,1,Male,20s,College,Single,400-700,Student,Moderate
+1434,12,Feasibility / Unrealistic proposals,12,12,Female,30s,Grad+,Single,1000+,Professional,Progressive
+1438,2,Frivolous / Emotional petitions,2,2,Male,20s,Grad+,Single,400-700,Office worker,Conservative
+1440,3,Transparency / Feedback deficiency,3,14,Male,20s,College,Single,400-700,Student,Conservative
+1441,1,Lack of effectiveness,1,1,Female,30s,College,Single,1000+,Office worker,Moderate
+1443,2,Frivolous / Emotional petitions,2,14,Female,20s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+1446,12,Feasibility / Unrealistic proposals,12,12,Female,60+,HS or less,Married (children),200-400,Homemaker,Conservative
+1447,12,Feasibility / Unrealistic proposals,5|12,12,Female,20s,College,Single,700-1000,Student,Progressive
+1448,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,700-1000,Student,Progressive
+1452,9,No opinion / Don't know,9,9,Female,50s,HS or less,Other,200-400,Service/Sales,Progressive
+1453,1,Lack of effectiveness,1|2,2,Female,30s,College,Single,200-400,Office worker,Progressive
+1463,3,Transparency / Feedback deficiency,1|3,3,Female,60+,HS or less,Other,400-700,Office worker,Progressive
+1467,14,Other,14,4,Female,60+,College,Married (children),400-700,Homemaker,Progressive
+1468,4,Slow processing / Bureaucratic delays,1|4,14,Female,60+,College,Married (children),400-700,Office worker,Conservative
+1472,2,Frivolous / Emotional petitions,2,2,Male,20s,Grad+,Single,< 200,Student,Progressive
+1479,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Single,< 200,Unemployed/Retired,Conservative
+1483,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),200-400,Office worker,Conservative
+1484,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),700-1000,Homemaker,Moderate
+1487,7,Personal / Selfish petitions,7,14,Female,60+,College,Married (children),1000+,Technical,Conservative
+1490,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Progressive
+1491,9,No opinion / Don't know,9,9,Female,60+,College,Married (children),1000+,Unemployed/Retired,Conservative
+1494,2,Frivolous / Emotional petitions,2,2,Female,60+,HS or less,Married (children),200-400,Homemaker,Conservative
+1495,2,Frivolous / Emotional petitions,2,7,Male,20s,Grad+,Single,1000+,Student,Conservative
+1496,9,No opinion / Don't know,9,9,Female,60+,College,Married (children),1000+,Homemaker,Conservative
+1507,5,Need for filtering / Guidelines,5,14,Female,40s,College,Married (no children),< 200,Unemployed/Retired,Moderate
+1509,11,Need for more participation / Awareness,11,14,Female,50s,College,Other,200-400,Self-employed,Moderate
+1511,3,Transparency / Feedback deficiency,3,3,Female,40s,Grad+,Single,200-400,Professional,Progressive
+1514,6,Readability / Communication issues,6,14,Female,50s,College,Married (children),400-700,Homemaker,Progressive
+1518,6,Readability / Communication issues,6,14,Female,60+,HS or less,Married (children),400-700,Self-employed,Conservative
+1523,7,Personal / Selfish petitions,5|7,7,Female,40s,College,Single,< 200,Freelancer,Conservative
+1527,2,Frivolous / Emotional petitions,2,2,Female,50s,HS or less,Single,200-400,Freelancer,Progressive
+1529,6,Readability / Communication issues,6,2,Female,30s,Grad+,Married (no children),1000+,Professional,Moderate
+1531,1,Lack of effectiveness,1,2,Female,60+,HS or less,Married (children),< 200,Homemaker,Progressive
+1532,2,Frivolous / Emotional petitions,2|6,2,Male,20s,College,Single,400-700,Office worker,Conservative
+1537,8,Positive / Supportive,8,14,Female,60+,HS or less,Other,200-400,Service/Sales,Conservative
+1538,14,Other,14,3,Female,60+,College,Married (children),400-700,Homemaker,Conservative
+1540,11,Need for more participation / Awareness,11,11,Female,50s,College,Other,200-400,Office worker,Conservative
+1541,14,Other,14,14,Female,50s,Grad+,Married (children),1000+,Civil servant/Teacher,Progressive
+1542,1,Lack of effectiveness,1|3,14,Female,60+,College,Married (children),700-1000,Freelancer,Conservative
+1549,9,No opinion / Don't know,9,9,Female,20s,College,Single,400-700,Student,Progressive
+1556,8,Positive / Supportive,8,14,Female,50s,HS or less,Single,400-700,Office worker,Progressive
+1557,1,Lack of effectiveness,1|7,14,Female,30s,College,Single,200-400,Office worker,Moderate
+1559,6,Readability / Communication issues,6,6,Male,20s,College,Single,< 200,Student,Moderate
+1562,6,Readability / Communication issues,6,6,Male,20s,College,Single,1000+,Office worker,Progressive
+1567,2,Frivolous / Emotional petitions,2,14,Female,20s,College,Single,400-700,Student,Progressive
+1569,7,Personal / Selfish petitions,5|7,7,Female,40s,College,Married (children),400-700,Office worker,Conservative
+1571,1,Lack of effectiveness,1,1,Female,40s,College,Single,400-700,Office worker,Conservative
+1572,4,Slow processing / Bureaucratic delays,4,4,Female,40s,College,Single,200-400,Service/Sales,Conservative
+1577,7,Personal / Selfish petitions,1|7,2,Female,30s,College,Other,200-400,Office worker,Conservative
+1579,11,Need for more participation / Awareness,11,14,Female,40s,HS or less,Married (children),200-400,Self-employed,Moderate
+1582,1,Lack of effectiveness,1|7,14,Female,50s,College,Single,400-700,Self-employed,Conservative
+1583,1,Lack of effectiveness,1|2|5|7,2,Female,30s,Grad+,Single,400-700,Office worker,Conservative
+1585,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,700-1000,Office worker,Moderate
+1587,1,Lack of effectiveness,1|8,1,Female,50s,HS or less,Other,200-400,Office worker,Moderate
+1589,2,Frivolous / Emotional petitions,1|2|3,2,Female,40s,HS or less,Married (children),400-700,Homemaker,Progressive
+1593,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Single,400-700,Office worker,Progressive
+1595,12,Feasibility / Unrealistic proposals,4|12,12,Female,20s,Grad+,Single,400-700,Unemployed/Retired,Conservative
+1599,6,Readability / Communication issues,6,14,Female,20s,College,Single,400-700,Service/Sales,Conservative
+1600,12,Feasibility / Unrealistic proposals,12,2,Male,20s,College,Single,< 200,Freelancer,Conservative
+1601,7,Personal / Selfish petitions,1|7,7,Female,30s,College,Married (no children),700-1000,Office worker,Moderate
+1607,2,Frivolous / Emotional petitions,2,2,Female,40s,College,Married (children),1000+,Office worker,Progressive
+1608,6,Readability / Communication issues,6,14,Female,20s,College,Single,200-400,Student,Conservative
+1610,9,No opinion / Don't know,9,9,Female,40s,College,Single,400-700,Self-employed,Conservative
+1614,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Married (children),700-1000,Professional,Moderate
+1616,14,Other,14,2,Male,20s,College,Single,200-400,Student,Moderate
+1618,3,Transparency / Feedback deficiency,3,6,Male,20s,College,Single,400-700,Service/Sales,Moderate
+1623,1,Lack of effectiveness,1|12,1,Male,20s,College,Single,200-400,Office worker,Conservative
+1628,11,Need for more participation / Awareness,11,14,Female,50s,HS or less,Married (children),1000+,Self-employed,Conservative
+1632,2,Frivolous / Emotional petitions,2,2,Female,50s,Grad+,Single,700-1000,Office worker,Moderate
+1634,5,Need for filtering / Guidelines,5,1,Male,20s,College,Single,700-1000,Student,Progressive
+1643,1,Lack of effectiveness,1,14,Female,40s,College,Married (children),200-400,Professional,Conservative
+1644,1,Lack of effectiveness,1|10,10,Male,20s,College,Single,200-400,Service/Sales,Moderate
+1647,14,Other,14,2,Female,40s,College,Married (children),700-1000,Freelancer,Moderate
+1654,1,Lack of effectiveness,1,14,Female,50s,HS or less,Other,200-400,Office worker,Progressive
+1658,6,Readability / Communication issues,6,6,Female,50s,College,Married (children),400-700,Homemaker,Progressive
+1661,4,Slow processing / Bureaucratic delays,4,4,Female,20s,College,Single,< 200,Student,Moderate
+1662,2,Frivolous / Emotional petitions,2|5|12,1,Female,50s,College,Married (children),400-700,Freelancer,Progressive
+1664,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,200-400,Student,Conservative
+1665,9,No opinion / Don't know,9,9,Male,20s,College,Single,400-700,Student,Progressive
+1666,1,Lack of effectiveness,1,2,Female,50s,HS or less,Married (children),< 200,Office worker,Conservative
+1668,2,Frivolous / Emotional petitions,2,14,Female,20s,College,Single,200-400,Office worker,Moderate
+1672,6,Readability / Communication issues,6,2,Female,20s,College,Single,1000+,Office worker,Conservative
+1674,7,Personal / Selfish petitions,7,7,Female,30s,College,Single,< 200,Freelancer,Moderate
+1676,12,Feasibility / Unrealistic proposals,12,12,Female,20s,College,Single,1000+,Student,Moderate
+1677,1,Lack of effectiveness,1|3,14,Female,50s,HS or less,Married (children),200-400,Office worker,Moderate
+1678,2,Frivolous / Emotional petitions,2|5|6,5,Female,20s,College,Single,700-1000,Student,Progressive
+1680,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,400-700,Student,Conservative
+1681,9,No opinion / Don't know,9,9,Female,50s,College,Married (no children),200-400,Homemaker,Progressive
+1684,1,Lack of effectiveness,1|7,2,Female,30s,College,Married (no children),700-1000,Professional,Conservative
+1685,4,Slow processing / Bureaucratic delays,4,4,Female,20s,College,Single,400-700,Office worker,Conservative
+1686,12,Feasibility / Unrealistic proposals,12,12,Female,50s,College,Married (children),700-1000,Civil servant/Teacher,Conservative
+1688,12,Feasibility / Unrealistic proposals,12,14,Female,50s,College,Married (children),1000+,Office worker,Progressive
+1693,1,Lack of effectiveness,1|3|4,6,Female,30s,College,Married (children),200-400,Homemaker,Progressive
+1695,9,No opinion / Don't know,9,9,Female,50s,HS or less,Married (children),700-1000,Homemaker,Progressive
+1696,2,Frivolous / Emotional petitions,2,2,Female,50s,HS or less,Other,200-400,Office worker,Moderate
+1697,6,Readability / Communication issues,6,14,Male,20s,College,Single,400-700,Unemployed/Retired,Moderate
+1698,2,Frivolous / Emotional petitions,2|5|12,2,Female,20s,HS or less,Married (no children),200-400,Homemaker,Progressive
+1699,1,Lack of effectiveness,1|3,1,Female,30s,College,Single,400-700,Service/Sales,Progressive
+1704,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),700-1000,Office worker,Progressive
+1708,6,Readability / Communication issues,6,14,Female,20s,College,Single,200-400,Office worker,Moderate
+1712,5,Need for filtering / Guidelines,2|3|5,2,Female,30s,College,Married (children),400-700,Office worker,Moderate
+1713,4,Slow processing / Bureaucratic delays,4,4,Male,20s,College,Single,< 200,Unemployed/Retired,Moderate
+1715,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,200-400,Student,Progressive
+1718,1,Lack of effectiveness,1|12,14,Female,50s,College,Married (children),400-700,Self-employed,Moderate
+1719,5,Need for filtering / Guidelines,5,5,Male,20s,HS or less,Single,200-400,Office worker,Moderate
+1721,5,Need for filtering / Guidelines,1|5,8,Female,30s,College,Married (no children),< 200,Student,Progressive
+1725,13,Civil servant burden / Institutional constraints,8|13,9,Female,50s,Grad+,Married (children),400-700,Office worker,Progressive
+1729,7,Personal / Selfish petitions,7,7,Female,50s,College,Married (no children),< 200,Unemployed/Retired,Progressive
+1730,1,Lack of effectiveness,1|13,2,Female,20s,College,Single,200-400,Unemployed/Retired,Progressive
+1731,7,Personal / Selfish petitions,7|13,13,Female,50s,College,Married (no children),200-400,Homemaker,Moderate
+1735,7,Personal / Selfish petitions,5|6|7,2,Female,30s,College,Married (children),700-1000,Office worker,Conservative
+1736,8,Positive / Supportive,8,14,Female,50s,College,Married (children),1000+,Professional,Conservative
+1741,6,Readability / Communication issues,5|6,5,Female,20s,College,Single,200-400,Unemployed/Retired,Progressive
+1743,1,Lack of effectiveness,1,1,Male,20s,College,Single,700-1000,Professional,Progressive
+1744,5,Need for filtering / Guidelines,2|5,2,Female,50s,College,Married (no children),200-400,Self-employed,Moderate
+1748,12,Feasibility / Unrealistic proposals,12,14,Female,30s,College,Single,400-700,Office worker,Moderate
+1750,5,Need for filtering / Guidelines,5|6|11,11,Female,50s,College,Single,400-700,Professional,Progressive
+1751,9,No opinion / Don't know,9,9,Female,50s,College,Married (children),400-700,Self-employed,Progressive
+1752,5,Need for filtering / Guidelines,5,14,Male,20s,College,Single,400-700,Student,Conservative
+1754,3,Transparency / Feedback deficiency,3,14,Female,50s,HS or less,Married (children),1000+,Office worker,Conservative
+1760,9,No opinion / Don't know,9,9,Female,30s,College,Married (children),200-400,Homemaker,Progressive
+1761,12,Feasibility / Unrealistic proposals,12|13,3,Male,20s,College,Single,200-400,Unemployed/Retired,Progressive
+1764,2,Frivolous / Emotional petitions,2,2,Female,30s,College,Married (children),700-1000,Homemaker,Progressive
+1771,6,Readability / Communication issues,6,14,Male,20s,College,Single,< 200,Service/Sales,Conservative
+1781,12,Feasibility / Unrealistic proposals,12,1,Male,20s,College,Single,< 200,Student,Progressive
+1783,6,Readability / Communication issues,6,14,Male,20s,Grad+,Single,< 200,Office worker,Moderate
+1784,12,Feasibility / Unrealistic proposals,12,14,Female,20s,College,Single,200-400,Student,Progressive
+1793,13,Civil servant burden / Institutional constraints,13,3,Male,20s,College,Single,200-400,Student,Moderate
+1794,9,No opinion / Don't know,9,14,Male,20s,College,Single,400-700,Student,Conservative
+1795,5,Need for filtering / Guidelines,5,5,Male,20s,College,Single,400-700,Student,Moderate
+1798,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Married (no children),400-700,Office worker,Conservative
+1801,1,Lack of effectiveness,1,1,Male,20s,College,Single,1000+,Freelancer,Conservative
+1803,9,No opinion / Don't know,9,9,Female,20s,College,Single,1000+,Office worker,Conservative
+1804,9,No opinion / Don't know,9,14,Female,20s,College,Single,200-400,Office worker,Conservative
+1811,9,No opinion / Don't know,9,9,Female,20s,College,Single,< 200,Student,Progressive
+1814,2,Frivolous / Emotional petitions,2|5|6,2,Male,20s,College,Single,400-700,Student,Conservative
+1818,1,Lack of effectiveness,1,14,Male,20s,HS or less,Single,200-400,Self-employed,Moderate
+1820,9,No opinion / Don't know,9,11,Male,20s,HS or less,Single,200-400,Office worker,Moderate
+1825,2,Frivolous / Emotional petitions,2|10,2,Male,20s,College,Single,200-400,Unemployed/Retired,Conservative
+1832,1,Lack of effectiveness,1,1,Male,20s,HS or less,Single,400-700,Office worker,Progressive
+1835,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,200-400,Service/Sales,Moderate
+1837,12,Feasibility / Unrealistic proposals,12,14,Male,20s,HS or less,Single,400-700,Technical,Conservative
+1841,11,Need for more participation / Awareness,11,1,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Conservative
+1847,2,Frivolous / Emotional petitions,2|7,7,Female,20s,Grad+,Married (no children),400-700,Professional,Conservative
+1851,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Progressive
+1855,6,Readability / Communication issues,6,6,Female,20s,College,Single,200-400,Unemployed/Retired,Moderate
+1857,1,Lack of effectiveness,1,1,Male,20s,College,Single,200-400,Freelancer,Conservative
+1861,2,Frivolous / Emotional petitions,2|6,2,Female,20s,College,Single,< 200,Service/Sales,Conservative
+1862,12,Feasibility / Unrealistic proposals,12,2,Male,20s,HS or less,Married (no children),200-400,Civil servant/Teacher,Conservative
+1863,2,Frivolous / Emotional petitions,2|12,2,Female,20s,College,Single,400-700,Office worker,Conservative
+1866,1,Lack of effectiveness,1,1,Male,20s,College,Single,200-400,Service/Sales,Conservative
+1868,12,Feasibility / Unrealistic proposals,2|12,1,Male,20s,College,Single,200-400,Professional,Moderate
+1869,14,Other,14,2,Female,20s,HS or less,Single,< 200,Office worker,Progressive
+1870,9,No opinion / Don't know,9,9,Male,20s,College,Single,< 200,Office worker,Progressive
+1873,3,Transparency / Feedback deficiency,3,3,Female,20s,Grad+,Single,1000+,Student,Conservative
+1875,2,Frivolous / Emotional petitions,2|13,14,Male,20s,College,Single,400-700,Unemployed/Retired,Conservative
+1897,10,Mob mentality / Opinion manipulation,10,2,Male,20s,College,Single,200-400,Student,Progressive
+1900,9,No opinion / Don't know,9,9,Male,20s,HS or less,Single,< 200,Unemployed/Retired,Moderate
+1907,10,Mob mentality / Opinion manipulation,10,2,Female,20s,College,Single,200-400,Student,Conservative
+1909,12,Feasibility / Unrealistic proposals,12,1,Male,20s,College,Married (children),1000+,Office worker,Conservative
+1915,3,Transparency / Feedback deficiency,3,14,Male,20s,HS or less,Single,200-400,Professional,Conservative
+1917,1,Lack of effectiveness,1|3,1,Female,20s,College,Single,200-400,Office worker,Progressive
+1929,6,Readability / Communication issues,6,5,Male,20s,College,Single,200-400,Service/Sales,Conservative
+1938,1,Lack of effectiveness,1|2,2,Female,20s,HS or less,Single,200-400,Freelancer,Conservative
+1939,9,No opinion / Don't know,9,9,Male,20s,College,Single,200-400,Agriculture,Conservative
+1940,5,Need for filtering / Guidelines,5,12,Female,20s,College,Single,700-1000,Student,Conservative
+1941,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,700-1000,Student,Moderate
+1942,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Progressive
+1946,2,Frivolous / Emotional petitions,2|5,2,Male,20s,College,Single,400-700,Freelancer,Conservative
+1949,2,Frivolous / Emotional petitions,2,2,Female,20s,College,Single,200-400,Office worker,Progressive
+1950,8,Positive / Supportive,8,8,Male,20s,College,Single,200-400,Office worker,Conservative
+1952,7,Personal / Selfish petitions,2|7|10,7,Male,20s,College,Single,200-400,Student,Conservative
+1954,1,Lack of effectiveness,1,14,Female,20s,College,Married (children),400-700,Professional,Moderate
+1957,1,Lack of effectiveness,1,9,Male,20s,College,Single,200-400,Unemployed/Retired,Conservative
+1973,4,Slow processing / Bureaucratic delays,4,4,Male,20s,College,Single,200-400,Office worker,Conservative
+1985,2,Frivolous / Emotional petitions,2|6,2,Male,20s,College,Single,400-700,Unemployed/Retired,Progressive
+1995,5,Need for filtering / Guidelines,2|5,2,Male,20s,College,Single,200-400,Professional,Moderate
+2016,2,Frivolous / Emotional petitions,2,2,Male,20s,College,Single,< 200,Unemployed/Retired,Moderate
+2018,8,Positive / Supportive,8,14,Female,30s,College,Single,400-700,Freelancer,Progressive
+2030,13,Civil servant burden / Institutional constraints,13,3,Male,20s,HS or less,Single,< 200,Freelancer,Conservative

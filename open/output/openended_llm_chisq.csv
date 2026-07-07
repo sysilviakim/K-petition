@@ -1,0 +1,8 @@
+variable,chi_sq,cramers_v,p_value,sig
+Gender,27.49,0.164,0.0054,**
+Age Group,111.9,0.166,2e-4,***
+Education,30.56,0.123,0.1094,
+Marital Status,57.62,0.137,0.0062,**
+Income,53.73,0.115,0.1498,
+Occupation,134.34,0.11,0.1996,
+Political Ideology,28.27,0.118,0.1582,
