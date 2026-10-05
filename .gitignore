@@ -64,3 +64,4 @@ paper/*.tex
 /data/raw/assembly/*.pdf
 /data/raw/assembly/*.hwp
 /data/tidy/*.csv
+BK_api_key.txt
