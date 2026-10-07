@@ -1,0 +1,15 @@
+[현황 및 문제점]
+
+{{current_issues}}
+
+
+
+[개선방안]
+
+{{improvement_plan}}
+
+
+
+[기대효과]
+
+{{expected_effect}}
