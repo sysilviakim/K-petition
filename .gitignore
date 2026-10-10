@@ -66,3 +66,4 @@ paper/*.tex
 /data/tidy/*.csv
 BK_api_key.txt
 /data/llm/runs/
+!/data/tidy/evaluated_data_2024_rescored.csv
