@@ -159,11 +159,19 @@ demo_table <- df %>%
     Gender = ifelse(
       female == 1, "Female", "Male"
     ),
-    `Age Range` = as.character(age_group),
-    Education = as.character(edu4),
-    Income = as.character(median_income),
+    `Age group` = as.character(age_group),
+    Education = recode(
+      as.character(edu4),
+      "College grad" = "College graduate",
+      "Postgrad" = "Postgraduate"
+    ),
+    Income = recode(
+      as.character(median_income),
+      "Above Median" = "Above median",
+      "Below Median" = "Below median"
+    ),
     Party = as.character(pid3),
-    Ideology = as.character(ideo3)
+    Ideology = str_to_sentence(as.character(ideo3))
   ) %>%
   pivot_longer(
     everything(),
@@ -173,14 +181,14 @@ demo_table <- df %>%
   count(Variable, Category) %>%
   group_by(Variable) %>%
   mutate(
-    Pct = round(n / sum(n) * 100, 1)
+    Percent = round(n / sum(n) * 100, 1)
   ) %>%
   ungroup() %>%
   arrange(
     factor(
       Variable,
       levels = c(
-        "Gender", "Age Range",
+        "Gender", "Age group",
         "Education", "Income",
         "Party", "Ideology"
       )
