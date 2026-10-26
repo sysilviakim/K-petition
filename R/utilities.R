@@ -785,6 +785,102 @@ save_xtable <- function(x, caption, label, file,
   do.call(print, args)
 }
 
+## Coefficient plot for an OLS fit (or a coefficient matrix with columns
+## Estimate and Std. Error, rownames = terms). Terms are grouped into the
+## nested blocks used in the gamma regressions (M1-M4).
+gamma_coef_plot <- function(fit, level = 0.95) {
+  coefs <- if (inherits(fit, "lm")) {
+    summary(fit)$coefficients
+  } else {
+    fit
+  }
+  z <- qnorm(1 - (1 - level) / 2)
+  block_of <- function(term) {
+    case_when(
+      grepl("^(female|age_group|edu4|seoul|married|has_young)", term) ~
+        "Demographics",
+      grepl("^(median_income|subj_class3)", term) ~ "Socioeconomic",
+      grepl("^(ideo3|ppp|voted_)", term) ~ "Political",
+      TRUE ~ "Attitudes"
+    )
+  }
+  blocks <- c("Demographics", "Socioeconomic", "Political", "Attitudes")
+  coef_df <- coefs %>%
+    as.data.frame() %>%
+    rownames_to_column("term") %>%
+    filter(term != "(Intercept)") %>%
+    transmute(
+      row = term,
+      label = label_table_text(term),
+      estimate = Estimate,
+      lower = Estimate - z * `Std. Error`,
+      upper = Estimate + z * `Std. Error`,
+      block = factor(block_of(term), levels = blocks),
+      significant = sign(lower) == sign(upper)
+    )
+
+  ## One column: a bold header row above each block, coefficients
+  ## indented beneath it, and a blank spacer row between blocks.
+  rows <- map_dfr(seq_along(blocks), function(i) {
+    b <- blocks[i]
+    header <- tibble(row = paste0("header_", b), label = b, kind = "header")
+    body <- coef_df %>%
+      filter(block == b) %>%
+      transmute(row, label, estimate, lower, upper, significant) %>%
+      mutate(kind = "term")
+    spacer <- if (i < length(blocks)) {
+      tibble(row = paste0("spacer_", i), label = "", kind = "spacer")
+    } else {
+      NULL
+    }
+    bind_rows(header, body, spacer)
+  }) %>%
+    mutate(row = factor(row, levels = rev(row)))
+
+  ## plotmath labels: bold headers, indented terms
+  axis_labels <- vapply(
+    seq_len(nrow(rows)),
+    function(i) {
+      switch(rows$kind[i],
+        header = sprintf('bold("%s")', rows$label[i]),
+        term = sprintf('"      %s"', rows$label[i]),
+        spacer = '""'
+      )
+    },
+    character(1)
+  )
+  names(axis_labels) <- as.character(rows$row)
+
+  ggplot(
+    rows %>% filter(kind == "term"),
+    aes(x = estimate, y = row, color = significant)
+  ) +
+    geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+    geom_errorbar(
+      aes(xmin = lower, xmax = upper),
+      width = 0, linewidth = 0.6
+    ) +
+    geom_point(size = 2.2) +
+    scale_y_discrete(
+      limits = levels(rows$row),
+      labels = function(x) parse(text = axis_labels[x])
+    ) +
+    scale_color_manual(
+      values = c(`TRUE` = "#21908C", `FALSE` = "grey60"),
+      guide = "none"
+    ) +
+    labs(
+      x = sprintf("OLS coefficient (%d%% CI)", round(level * 100)),
+      y = NULL
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.y = element_text(hjust = 0),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.y = element_blank()
+    )
+}
+
 save_theta_quality_plots <- function(
   stats_summ, prefix
 ) {

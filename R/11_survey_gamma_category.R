@@ -136,6 +136,12 @@ save_xtable(
   sanitize = TRUE
 )
 
+## Coefficient plot (same model as the table)
+p_gamma_coef <- gamma_coef_plot(m_gamma)
+pdf(here::here("fig", "gamma_coefficients.pdf"), width = 7, height = 6)
+print(p_gamma_coef)
+dev.off()
+
 ## Nested models (M1-M3; M4 = m_gamma above) -----------------------------------
 m_gamma_m1 <- lm(
   median ~ female + age_group + edu4 +
