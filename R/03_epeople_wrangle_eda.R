@@ -230,6 +230,11 @@ p1 <- answer_rate %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 load(here::here("data", "raw", "pub_petition_num_total.Rda"))
+## Use the annual 2024 CSV assembled from 53 weekly snapshots.
+## Its 13,188 rows replace the stored scrape total of 989 in this plot.
+pub_total[["year2024"]] <- nrow(
+  read.csv(here::here("data", "tidy", "pub_petition_content_2024.csv"))
+)
 p2 <- pub_total %>%
   enframe(name = "year", value = "total") %>%
   mutate(year = as.numeric(gsub("year", "", year))) %>%
